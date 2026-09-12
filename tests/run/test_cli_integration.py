@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from minisweagent.run.mini import DEFAULT_CONFIG_FILE, app, main
+from leanimum.run.mini import DEFAULT_CONFIG_FILE, app, main
 
 
 def strip_ansi_codes(text: str) -> str:
@@ -18,11 +18,11 @@ def strip_ansi_codes(text: str) -> str:
 def test_configure_if_first_time_called():
     """Test that configure_if_first_time is called when running mini main."""
     with (
-        patch("minisweagent.run.mini.configure_if_first_time") as mock_configure,
-        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
-        patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.get_environment") as mock_get_env,
-        patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
+        patch("leanimum.run.mini.configure_if_first_time") as mock_configure,
+        patch("leanimum.run.mini.get_agent") as mock_get_agent,
+        patch("leanimum.run.mini.get_model") as mock_get_model,
+        patch("leanimum.run.mini.get_environment") as mock_get_env,
+        patch("leanimum.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -55,11 +55,11 @@ def test_configure_if_first_time_called():
 def test_mini_command_calls_run_interactive():
     """Test that mini command creates agent via get_agent."""
     with (
-        patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
-        patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.get_environment") as mock_get_env,
-        patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
+        patch("leanimum.run.mini.configure_if_first_time"),
+        patch("leanimum.run.mini.get_agent") as mock_get_agent,
+        patch("leanimum.run.mini.get_model") as mock_get_model,
+        patch("leanimum.run.mini.get_environment") as mock_get_env,
+        patch("leanimum.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -97,12 +97,12 @@ def test_mini_command_calls_run_interactive():
 def test_mini_calls_prompt_when_no_task_provided():
     """Test that mini calls prompt when no task is provided."""
     with (
-        patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini._multiline_prompt") as mock_prompt,
-        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
-        patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.get_environment") as mock_get_env,
-        patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
+        patch("leanimum.run.mini.configure_if_first_time"),
+        patch("leanimum.run.mini._multiline_prompt") as mock_prompt,
+        patch("leanimum.run.mini.get_agent") as mock_get_agent,
+        patch("leanimum.run.mini.get_model") as mock_get_model,
+        patch("leanimum.run.mini.get_environment") as mock_get_env,
+        patch("leanimum.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_prompt.return_value = "User provided task"
@@ -141,11 +141,11 @@ def test_mini_calls_prompt_when_no_task_provided():
 def test_mini_with_explicit_model():
     """Test that mini works with explicitly provided model."""
     with (
-        patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
-        patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.get_environment") as mock_get_env,
-        patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
+        patch("leanimum.run.mini.configure_if_first_time"),
+        patch("leanimum.run.mini.get_agent") as mock_get_agent,
+        patch("leanimum.run.mini.get_model") as mock_get_model,
+        patch("leanimum.run.mini.get_environment") as mock_get_env,
+        patch("leanimum.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -187,11 +187,11 @@ def test_mini_with_explicit_model():
 def test_yolo_mode_sets_correct_agent_config():
     """Test that yolo mode sets the correct agent configuration."""
     with (
-        patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
-        patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.get_environment") as mock_get_env,
-        patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
+        patch("leanimum.run.mini.configure_if_first_time"),
+        patch("leanimum.run.mini.get_agent") as mock_get_agent,
+        patch("leanimum.run.mini.get_model") as mock_get_model,
+        patch("leanimum.run.mini.get_environment") as mock_get_env,
+        patch("leanimum.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -229,11 +229,11 @@ def test_yolo_mode_sets_correct_agent_config():
 def test_confirm_mode_sets_correct_agent_config():
     """Test that when yolo=False, no explicit mode is set (defaults to None)."""
     with (
-        patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
-        patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.get_environment") as mock_get_env,
-        patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
+        patch("leanimum.run.mini.configure_if_first_time"),
+        patch("leanimum.run.mini.get_agent") as mock_get_agent,
+        patch("leanimum.run.mini.get_model") as mock_get_model,
+        patch("leanimum.run.mini.get_environment") as mock_get_env,
+        patch("leanimum.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -271,11 +271,11 @@ def test_confirm_mode_sets_correct_agent_config():
 def test_cost_limit_zero_is_preserved():
     """Test that an explicit cost_limit=0 is not dropped during config merge."""
     with (
-        patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
-        patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.get_environment") as mock_get_env,
-        patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
+        patch("leanimum.run.mini.configure_if_first_time"),
+        patch("leanimum.run.mini.get_agent") as mock_get_agent,
+        patch("leanimum.run.mini.get_model") as mock_get_model,
+        patch("leanimum.run.mini.get_environment") as mock_get_env,
+        patch("leanimum.run.mini.get_config_from_spec") as mock_get_config,
     ):
         mock_get_model.return_value = Mock()
         mock_get_env.return_value = Mock()
@@ -301,7 +301,7 @@ def test_cost_limit_zero_is_preserved():
 def test_mini_help():
     """Test that mini --help works correctly."""
     result = subprocess.run(
-        [sys.executable, "-m", "minisweagent", "--help"],
+        [sys.executable, "-m", "leanimum", "--help"],
         capture_output=True,
         text=True,
         timeout=10,
@@ -310,7 +310,7 @@ def test_mini_help():
     assert result.returncode == 0
     # Strip ANSI color codes for reliable text matching
     clean_output = strip_ansi_codes(result.stdout)
-    assert "Run mini-SWE-agent in your local environment." in clean_output
+    assert "Run Leanimum-agent in your local environment." in clean_output
     assert "--help" in clean_output
     assert "--config" in clean_output
     assert "--model" in clean_output
@@ -329,7 +329,7 @@ def test_mini_help_with_typer_runner():
     assert result.exit_code == 0
     # Strip ANSI color codes for reliable text matching
     clean_output = strip_ansi_codes(result.stdout)
-    assert "Run mini-SWE-agent in your local environment." in clean_output
+    assert "Run Leanimum-agent in your local environment." in clean_output
     assert "--help" in clean_output
     assert "--config" in clean_output
     assert "--model" in clean_output
@@ -338,21 +338,21 @@ def test_mini_help_with_typer_runner():
     assert "--output" in clean_output
 
 
-def test_python_m_minisweagent_help():
-    """Test that python -m minisweagent --help works correctly."""
+def test_python_m_leanimum_help():
+    """Test that python -m leanimum --help works correctly."""
     result = subprocess.run(
-        [sys.executable, "-m", "minisweagent", "--help"],
+        [sys.executable, "-m", "leanimum", "--help"],
         capture_output=True,
         text=True,
         timeout=10,
     )
 
     assert result.returncode == 0
-    assert "mini-SWE-agent" in result.stdout
+    assert "Leanimum-agent" in result.stdout
 
 
 def test_mini_script_help():
-    """Test that the mini script entry point help works."""
+    """Test that the upstream mini script alias still works."""
     result = subprocess.run(
         ["mini", "--help"],
         capture_output=True,
@@ -361,7 +361,7 @@ def test_mini_script_help():
     )
 
     assert result.returncode == 0
-    assert "mini-SWE-agent" in result.stdout
+    assert "Leanimum-agent" in result.stdout
 
 
 def test_mini_swe_agent_help():
@@ -375,11 +375,11 @@ def test_mini_swe_agent_help():
 
     assert result.returncode == 0
     clean_output = strip_ansi_codes(result.stdout)
-    assert "mini-SWE-agent" in clean_output
+    assert "Leanimum-agent" in clean_output
 
 
 def test_mini_extra_help():
-    """Test that mini-extra --help works correctly."""
+    """Test that the upstream mini-extra alias still works."""
     result = subprocess.run(
         ["mini-extra", "--help"],
         capture_output=True,
@@ -396,7 +396,7 @@ def test_mini_extra_help():
 
 
 def test_mini_e_help():
-    """Test that mini-e --help works correctly."""
+    """Test that the upstream mini-e alias still works."""
     result = subprocess.run(
         ["mini-e", "--help"],
         capture_output=True,
@@ -407,6 +407,21 @@ def test_mini_e_help():
     assert result.returncode == 0
     clean_output = strip_ansi_codes(result.stdout)
     assert "central entry point for all extra commands" in clean_output
+
+
+@pytest.mark.parametrize(
+    ("command", "expected_text"),
+    [
+        ("leani", "Run Leanimum-agent in your local environment."),
+        ("leanimum-agent", "Run Leanimum-agent in your local environment."),
+        ("leani-extra", "central entry point for all extra commands"),
+        ("leani-e", "central entry point for all extra commands"),
+    ],
+)
+def test_renamed_command_help(command: str, expected_text: str):
+    result = subprocess.run([command, "--help"], capture_output=True, text=True, timeout=10)
+    assert result.returncode == 0, result.stderr
+    assert expected_text in strip_ansi_codes(result.stdout)
 
 
 @pytest.mark.parametrize(
@@ -452,11 +467,11 @@ def test_mini_extra_config_help():
 def test_exit_immediately_flag_sets_confirm_exit_false():
     """Test that --exit-immediately flag sets confirm_exit to False in agent config."""
     with (
-        patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
-        patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.get_environment") as mock_get_env,
-        patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
+        patch("leanimum.run.mini.configure_if_first_time"),
+        patch("leanimum.run.mini.get_agent") as mock_get_agent,
+        patch("leanimum.run.mini.get_model") as mock_get_model,
+        patch("leanimum.run.mini.get_environment") as mock_get_env,
+        patch("leanimum.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -491,11 +506,11 @@ def test_exit_immediately_flag_sets_confirm_exit_false():
 def test_no_exit_immediately_flag_sets_confirm_exit_true():
     """Test that when --exit-immediately flag is not used, confirm_exit defaults to True."""
     with (
-        patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
-        patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.get_environment") as mock_get_env,
-        patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
+        patch("leanimum.run.mini.configure_if_first_time"),
+        patch("leanimum.run.mini.get_agent") as mock_get_agent,
+        patch("leanimum.run.mini.get_model") as mock_get_model,
+        patch("leanimum.run.mini.get_environment") as mock_get_env,
+        patch("leanimum.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -531,11 +546,11 @@ def test_exit_immediately_flag_with_typer_runner():
     from typer.testing import CliRunner
 
     with (
-        patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
-        patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.get_environment") as mock_get_env,
-        patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
+        patch("leanimum.run.mini.configure_if_first_time"),
+        patch("leanimum.run.mini.get_agent") as mock_get_agent,
+        patch("leanimum.run.mini.get_model") as mock_get_model,
+        patch("leanimum.run.mini.get_environment") as mock_get_env,
+        patch("leanimum.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -568,15 +583,15 @@ def test_output_file_is_created(tmp_path):
 
     # Create a temporary config file
     config_file = tmp_path / "test_config.yaml"
-    default_config_path = Path("src/minisweagent/config/default.yaml")
+    default_config_path = Path("src/leanimum/config/default.yaml")
     config_file.write_text(default_config_path.read_text())
 
     with (
-        patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.get_environment") as mock_get_env,
-        patch("minisweagent.agents.utils.prompt_user.prompt_session.prompt", return_value=""),
-        patch("minisweagent.agents.utils.prompt_user._multiline_prompt_session.prompt", return_value=""),
+        patch("leanimum.run.mini.configure_if_first_time"),
+        patch("leanimum.run.mini.get_model") as mock_get_model,
+        patch("leanimum.run.mini.get_environment") as mock_get_env,
+        patch("leanimum.agents.utils.prompt_user.prompt_session.prompt", return_value=""),
+        patch("leanimum.agents.utils.prompt_user._multiline_prompt_session.prompt", return_value=""),
     ):
         # Setup mocks
         mock_model = Mock()
@@ -602,7 +617,7 @@ def test_output_file_is_created(tmp_path):
         mock_get_model.return_value = mock_model
 
         # Environment execute raises Submitted when COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT is seen
-        from minisweagent.exceptions import Submitted
+        from leanimum.exceptions import Submitted
 
         def execute_side_effect(action):
             raise Submitted(

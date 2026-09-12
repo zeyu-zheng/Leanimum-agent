@@ -1,4 +1,4 @@
-"""Tests for minisweagent.config.__init__."""
+"""Tests for leanimum.config.__init__."""
 
 import os
 import subprocess
@@ -6,7 +6,7 @@ import sys
 
 import pytest
 
-from minisweagent.config import (
+from leanimum.config import (
     _key_value_spec_to_nested_dict,
     builtin_config_dir,
     get_config_from_spec,
@@ -123,7 +123,7 @@ class TestGetConfigFromSpec:
             "MSWEA_SILENT_STARTUP": "1",
         }
         code = (
-            "from minisweagent.config import get_config_from_spec; "
+            "from leanimum.config import get_config_from_spec; "
             f"assert len(get_config_from_spec(r'{config_file}')['system_template']) == 5"
         )
         result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=env)

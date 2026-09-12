@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Bump the mini-swe-agent version in __init__.py."""
+"""Bump the Leanimum-agent version in __init__.py."""
 
 import re
 import subprocess
 import sys
 from pathlib import Path
 
-INIT_FILE = Path(__file__).resolve().parents[1] / "src" / "minisweagent" / "__init__.py"
+INIT_FILE = Path(__file__).resolve().parents[1] / "src" / "leanimum" / "__init__.py"
 VERSION_RE = re.compile(r'^__version__\s*=\s*"([^"]+)"', re.MULTILINE)
 
 

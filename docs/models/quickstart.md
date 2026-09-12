@@ -303,7 +303,7 @@ For example:
 On top, there's a few more exotic model classes that you can use:
 
 * **`deterministic`** ([`DeterministicModel`](../reference/models/test_models.md)) - Returns predefined responses for testing and development purposes.
-* **`minisweagent.models.extra.roulette.RouletteModel` and `minisweagent.models.extra.roulette.InterleavingModel`** ([`RouletteModel`](../reference/models/extra.md) and [`InterleavingModel`](../reference/models/extra.md)) - Randomly selects or interleaves multiple configured models for each query. See [this blog post](https://www.swebench.com/SWE-bench/blog/2025/08/19/mini-roulette/) for more details.
+* **`leanimum.models.extra.roulette.RouletteModel` and `leanimum.models.extra.roulette.InterleavingModel`** ([`RouletteModel`](../reference/models/extra.md) and [`InterleavingModel`](../reference/models/extra.md)) - Randomly selects or interleaves multiple configured models for each query. See [this blog post](https://www.swebench.com/SWE-bench/blog/2025/08/19/mini-roulette/) for more details.
 
 As with the last two, you can also specify any import path to your own custom model class (even if it is not yet part of the mini-SWE-agent package).
 

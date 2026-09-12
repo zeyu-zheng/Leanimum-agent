@@ -55,11 +55,11 @@ For more configuration options, see [global configuration](../advanced/global_co
 
 ??? note "Run script"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/utilities/config.py)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/run/utilities/config.py)
     - [API reference](../reference/run/config.md)
 
     ```python
-    --8<-- "src/minisweagent/run/utilities/config.py"
+    --8<-- "src/leanimum/run/utilities/config.py"
     ```
 
 {% include-markdown "../_footer.md" %}

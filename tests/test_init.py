@@ -1,4 +1,4 @@
-"""Tests for minisweagent.__init__."""
+"""Tests for leanimum.__init__."""
 
 import os
 import subprocess
@@ -13,5 +13,5 @@ def test_startup_banner_survives_non_utf8_stdout(tmp_path):
         "MSWEA_SILENT_STARTUP": "",
         "MSWEA_GLOBAL_CONFIG_DIR": str(tmp_path),
     }
-    result = subprocess.run([sys.executable, "-c", "import minisweagent"], capture_output=True, text=True, env=env)
+    result = subprocess.run([sys.executable, "-c", "import leanimum"], capture_output=True, text=True, env=env)
     assert result.returncode == 0, result.stderr

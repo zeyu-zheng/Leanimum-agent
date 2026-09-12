@@ -95,7 +95,7 @@ Tool calling is the default. The CLI uses `mini.yaml` and `swebench.yaml` which 
 ```bash
 # Default (tool calling)
 mini
-python -m minisweagent.run.benchmarks.swebench
+python -m leanimum.run.benchmarks.swebench
 mini-extra swebench
 
 # Text-based parsing
@@ -218,7 +218,7 @@ def save(self, path: Path | None, *extra_dicts) -> dict: ...
 
 ### Exception changes
 
-All flow control exceptions now inherit from `InterruptAgentFlow` and moved to `minisweagent.exceptions`:
+All flow control exceptions now inherit from `InterruptAgentFlow` and moved to `leanimum.exceptions`:
 
 ```python
 InterruptAgentFlow (base)
@@ -236,10 +236,10 @@ InterruptAgentFlow (base)
 
 ```python
 # Old
-from minisweagent.agents.default import Submitted, FormatError
+from leanimum.agents.default import Submitted, FormatError
 
 # New
-from minisweagent.exceptions import Submitted, FormatError
+from leanimum.exceptions import Submitted, FormatError
 ```
 
 ### Agent.run() return value
