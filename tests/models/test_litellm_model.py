@@ -2,9 +2,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from minisweagent.exceptions import FormatError
-from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
-from minisweagent.models.utils.actions_toolcall import BASH_TOOL
+from leanimum.exceptions import FormatError
+from leanimum.models.litellm_model import LitellmModel, LitellmModelConfig
+from leanimum.models.utils.actions_toolcall import BASH_TOOL
 
 
 class TestLitellmModelConfig:
@@ -22,8 +22,8 @@ def _mock_litellm_response(tool_calls):
 
 
 class TestLitellmModel:
-    @patch("minisweagent.models.litellm_model.litellm.completion")
-    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
+    @patch("leanimum.models.litellm_model.litellm.completion")
+    @patch("leanimum.models.litellm_model.litellm.cost_calculator.completion_cost")
     def test_query_includes_bash_tool(self, mock_cost, mock_completion):
         tool_call = MagicMock()
         tool_call.function.name = "bash"
@@ -38,8 +38,8 @@ class TestLitellmModel:
         mock_completion.assert_called_once()
         assert mock_completion.call_args.kwargs["tools"] == [BASH_TOOL]
 
-    @patch("minisweagent.models.litellm_model.litellm.completion")
-    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
+    @patch("leanimum.models.litellm_model.litellm.completion")
+    @patch("leanimum.models.litellm_model.litellm.cost_calculator.completion_cost")
     def test_parse_actions_valid_tool_call(self, mock_cost, mock_completion):
         tool_call = MagicMock()
         tool_call.function.name = "bash"
@@ -52,8 +52,8 @@ class TestLitellmModel:
         result = model.query([{"role": "user", "content": "list files"}])
         assert result["extra"]["actions"] == [{"command": "ls -la", "tool_call_id": "call_abc"}]
 
-    @patch("minisweagent.models.litellm_model.litellm.completion")
-    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
+    @patch("leanimum.models.litellm_model.litellm.completion")
+    @patch("leanimum.models.litellm_model.litellm.cost_calculator.completion_cost")
     def test_parse_actions_no_tool_calls_raises(self, mock_cost, mock_completion):
         mock_completion.return_value = _mock_litellm_response(None)
         mock_cost.return_value = 0.001
@@ -62,8 +62,8 @@ class TestLitellmModel:
         with pytest.raises(FormatError):
             model.query([{"role": "user", "content": "test"}])
 
-    @patch("minisweagent.models.litellm_model.litellm.completion")
-    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
+    @patch("leanimum.models.litellm_model.litellm.completion")
+    @patch("leanimum.models.litellm_model.litellm.cost_calculator.completion_cost")
     def test_finish_reason_threaded_into_format_error_template(self, mock_cost, mock_completion):
         """The response finish_reason is exposed to format_error_template via template_kwargs, so a
         config can report a max_tokens truncation instead of the misleading "no tool call" error."""

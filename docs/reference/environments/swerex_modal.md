@@ -2,7 +2,7 @@
 
 !!! note "SWE-ReX Modal Environment class"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/environments/extra/swerex_modal.py)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/environments/extra/swerex_modal.py)
     - Requires [Modal](https://modal.com) account and authentication
 
 This environment executes commands in [Modal](https://modal.com) sandboxes using [SWE-ReX](https://github.com/swe-agent/swe-rex).
@@ -24,7 +24,7 @@ This environment executes commands in [Modal](https://modal.com) sandboxes using
 Evaluate GPT-5 mini on SWE-bench using Modal:
 ```
 mini-extra swebench \
-    --config src/minisweagent/config/extra/swebench_modal.yaml \
+    --config src/leanimum/config/extra/swebench_modal.yaml \
     --subset verified \
     --split test \
     --workers 100 \

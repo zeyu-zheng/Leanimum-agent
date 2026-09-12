@@ -2,16 +2,16 @@ import json
 import tempfile
 from pathlib import Path
 
-from minisweagent.agents.default import DefaultAgent
-from minisweagent.environments.local import LocalEnvironment
-from minisweagent.models.test_models import DeterministicModel, make_output
+from leanimum.agents.default import DefaultAgent
+from leanimum.environments.local import LocalEnvironment
+from leanimum.models.test_models import DeterministicModel, make_output
 
 
 def test_agent_save_includes_class_names():
     """Test that agent.save includes the full class names with import paths."""
     import yaml
 
-    config_path = Path("src/minisweagent/config/default.yaml")
+    config_path = Path("src/leanimum/config/default.yaml")
     with open(config_path) as f:
         default_config = yaml.safe_load(f)["agent"]
 
@@ -39,9 +39,9 @@ def test_agent_save_includes_class_names():
         assert "model_type" in config
         assert "environment_type" in config
 
-        assert config["agent_type"] == "minisweagent.agents.default.DefaultAgent"
-        assert config["model_type"] == "minisweagent.models.test_models.DeterministicModel"
-        assert config["environment_type"] == "minisweagent.environments.local.LocalEnvironment"
+        assert config["agent_type"] == "leanimum.agents.default.DefaultAgent"
+        assert config["model_type"] == "leanimum.models.test_models.DeterministicModel"
+        assert config["environment_type"] == "leanimum.environments.local.LocalEnvironment"
 
         assert saved_data["info"]["exit_status"] == "Submitted"
         assert saved_data["info"]["submission"] == "test result"
@@ -52,7 +52,7 @@ def test_agent_serialize():
     """Test that agent.serialize returns the correct structure."""
     import yaml
 
-    config_path = Path("src/minisweagent/config/default.yaml")
+    config_path = Path("src/leanimum/config/default.yaml")
     with open(config_path) as f:
         default_config = yaml.safe_load(f)["agent"]
 

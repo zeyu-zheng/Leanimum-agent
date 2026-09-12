@@ -1,4 +1,4 @@
-from minisweagent.utils.serialize import UNSET, recursive_merge
+from leanimum.utils.serialize import UNSET, recursive_merge
 
 
 def test_empty_input():

@@ -2,30 +2,30 @@
 
 !!! note "DefaultAgent class"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/agents/default.py)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/agents/default.py)
 
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/agents/default.py"
+        --8<-- "src/leanimum/agents/default.py"
         ```
 
 !!! tip "Understanding the control flow"
 
     Check out the [control flow guide](../../advanced/control_flow.md) for a visual explanation of the agent's control flow.
 
-::: minisweagent.agents.default.AgentConfig
+::: leanimum.agents.default.AgentConfig
 
-::: minisweagent.agents.default.DefaultAgent
+::: leanimum.agents.default.DefaultAgent
 
-::: minisweagent.exceptions.InterruptAgentFlow
+::: leanimum.exceptions.InterruptAgentFlow
 
-::: minisweagent.exceptions.Submitted
+::: leanimum.exceptions.Submitted
 
-::: minisweagent.exceptions.LimitsExceeded
+::: leanimum.exceptions.LimitsExceeded
 
-::: minisweagent.exceptions.FormatError
+::: leanimum.exceptions.FormatError
 
-::: minisweagent.exceptions.UserInterruption
+::: leanimum.exceptions.UserInterruption
 
 {% include-markdown "../../_footer.md" %}

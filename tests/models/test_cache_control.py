@@ -1,4 +1,4 @@
-from minisweagent.models.utils.cache_control import set_cache_control
+from leanimum.models.utils.cache_control import set_cache_control
 
 
 def test_set_cache_control_basic():

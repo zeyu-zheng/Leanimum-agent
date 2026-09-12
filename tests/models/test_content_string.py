@@ -1,6 +1,6 @@
 import pytest
 
-from minisweagent.models.utils.content_string import get_content_string
+from leanimum.models.utils.content_string import get_content_string
 
 
 class TestGetContentString:

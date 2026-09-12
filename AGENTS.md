@@ -1,16 +1,17 @@
-# mini-SWE-agent overview
+# Leanimum-agent overview
 
-- mini-SWE-agent implements an AI software engineering agent that solves github issues and similar programming challenges
+- Leanimum-agent is derived from mini-SWE-agent and is evolving toward bash-only Lean workflows.
+- This initial revision changes names and documentation only. The upstream agent behavior, prompts, environments, and benchmark runners are unchanged.
 - The idea of this project is to write the simplest, smallest, most readable agent.
 
 The project is structured as
 
 ```bash
-minisweagent/__init__  # Protocols/interfaces for all base classes
-minisweagent/agents  # Agent control flow & loop
-minisweagent/environments  # Executing agent actions
-minisweagent/models  # LM interfaces
-minisweagent/run  # Run scripts that serve as an entry point
+leanimum/__init__  # Protocols/interfaces for all base classes
+leanimum/agents  # Agent control flow & loop
+leanimum/environments  # Executing agent actions
+leanimum/models  # LM interfaces
+leanimum/run  # Run scripts that serve as an entry point
 ```
 
 - The project embraces polymorphism: Every individual class should be simple, but we offer alternatives

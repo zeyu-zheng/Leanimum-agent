@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from minisweagent.models import get_model
+from leanimum.models import get_model
 
 
 def _mock_litellm_completion(response_content="```mswea_bash_command\necho test\n```"):
@@ -25,10 +25,10 @@ def test_sonnet_4_cache_control_integration():
         {"role": "user", "content": "Can you help me with coding?"},
     ]
 
-    with patch("minisweagent.models.litellm_model.litellm.completion") as mock_completion:
+    with patch("leanimum.models.litellm_model.litellm.completion") as mock_completion:
         mock_completion.return_value = _mock_litellm_completion("```mswea_bash_command\necho 'I can help!'\n```")
 
-        with patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost") as mock_cost:
+        with patch("leanimum.models.litellm_model.litellm.cost_calculator.completion_cost") as mock_cost:
             mock_cost.return_value = 0.001
 
             # This is the key test: get_model with anthropic name should enable cache control
@@ -75,10 +75,10 @@ def test_get_model_anthropic_applies_cache_control(model_name):
         {"role": "user", "content": "Help me code."},
     ]
 
-    with patch("minisweagent.models.litellm_model.litellm.completion") as mock_completion:
+    with patch("leanimum.models.litellm_model.litellm.completion") as mock_completion:
         mock_completion.return_value = _mock_litellm_completion("```mswea_bash_command\necho 'help code'\n```")
 
-        with patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost") as mock_cost:
+        with patch("leanimum.models.litellm_model.litellm.cost_calculator.completion_cost") as mock_cost:
             mock_cost.return_value = 0.001
 
             # Get model through get_model - this should auto-configure cache control
@@ -133,10 +133,10 @@ def test_get_model_non_anthropic_no_cache_control(model_name):
         {"role": "user", "content": "Hello!"},
     ]
 
-    with patch("minisweagent.models.litellm_model.litellm.completion") as mock_completion:
+    with patch("leanimum.models.litellm_model.litellm.completion") as mock_completion:
         mock_completion.return_value = _mock_litellm_completion("```mswea_bash_command\necho hello\n```")
 
-        with patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost") as mock_cost:
+        with patch("leanimum.models.litellm_model.litellm.cost_calculator.completion_cost") as mock_cost:
             mock_cost.return_value = 0.001
 
             # Get model through get_model - should NOT auto-configure cache control

@@ -51,7 +51,7 @@ def run_mini_command(extra_options: list[str]) -> subprocess.CompletedProcess:
     cmd = [
         sys.executable,
         "-m",
-        "minisweagent",
+        "leanimum",
         "--exit-immediately",
         "-y",
         "--cost-limit",

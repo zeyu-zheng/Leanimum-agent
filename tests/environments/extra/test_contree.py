@@ -5,10 +5,10 @@ from unittest.mock import MagicMock, patch
 import pytest
 from contree_sdk.config import ContreeConfig
 
-from minisweagent.environments.extra.contree import (
+from leanimum.environments.extra.contree import (
     ContreeEnvironment,
 )
-from minisweagent.exceptions import Submitted
+from leanimum.exceptions import Submitted
 
 
 def _make_env(**kwargs) -> ContreeEnvironment:
@@ -17,7 +17,7 @@ def _make_env(**kwargs) -> ContreeEnvironment:
     mock_session.run.return_value = mock_session
 
     with (
-        patch("minisweagent.environments.extra.contree.ContreeSync"),
+        patch("leanimum.environments.extra.contree.ContreeSync"),
         patch.object(ContreeEnvironment, "_pull_image") as mock_pull,
     ):
         mock_pull.return_value.session.return_value = mock_session

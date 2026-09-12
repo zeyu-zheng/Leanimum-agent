@@ -6,8 +6,8 @@ from unittest.mock import Mock, patch
 import litellm
 import pytest
 
-from minisweagent.models import GLOBAL_MODEL_STATS
-from minisweagent.models.litellm_textbased_model import LitellmTextbasedModel
+from leanimum.models import GLOBAL_MODEL_STATS
+from leanimum.models.litellm_textbased_model import LitellmTextbasedModel
 
 
 def test_authentication_error_enhanced_message():
@@ -29,7 +29,7 @@ def test_authentication_error_enhanced_message():
             model._query([{"role": "user", "content": "test"}])
 
         # Check that the error message was enhanced
-        assert "You can permanently set your API key with `mini-extra config set KEY VALUE`." in str(exc_info.value)
+        assert "You can permanently set your API key with `leani-extra config set KEY VALUE`." in str(exc_info.value)
 
 
 def test_model_registry_loading():
