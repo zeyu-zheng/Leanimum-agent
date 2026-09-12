@@ -19,7 +19,7 @@ Useful switches:
 
 - `-h`/`--help`: Show help
 - `-t`/`--task`: Specify a task to run (else you will be prompted)
-- `-c`/`--config`: Specify a config file to use, else we will use [`mini.yaml`](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/mini.yaml) or the config `MSWEA_MINI_CONFIG_PATH` environment variable (see [global configuration](../advanced/global_configuration.md)).
+- `-c`/`--config`: Specify a config file to use, else we will use [`mini.yaml`](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/config/mini.yaml) or the config `MSWEA_MINI_CONFIG_PATH` environment variable (see [global configuration](../advanced/global_configuration.md)).
   It's enough to specify the name of the config file, e.g., `-c mini.yaml` (see [global configuration](../advanced/global_configuration.md) for how it is resolved).
 - `-m`/`--model`: Specify a model to use, else we will use the model `MSWEA_MODEL_NAME` environment variable (see [global configuration](../advanced/global_configuration.md))
 - `-y`/`--yolo`: Start in `yolo` mode (see below)
@@ -46,28 +46,28 @@ You can also press `Ctrl+C` to interrupt the agent at any time, allowing you to 
 
 ??? note "Default config"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/mini.yaml)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/config/mini.yaml)
 
     ```yaml
-    --8<-- "src/minisweagent/config/mini.yaml"
+    --8<-- "src/leanimum/config/mini.yaml"
     ```
 
 ??? note "Run script"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/mini.py)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/run/mini.py)
     - [API reference](../reference/run/mini.md)
 
     ```python
-    --8<-- "src/minisweagent/run/mini.py"
+    --8<-- "src/leanimum/run/mini.py"
     ```
 
 ??? note "Agent class"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/agents/interactive.py)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/agents/interactive.py)
     - [API reference](../reference/agents/interactive.md)
 
     ```python
-    --8<-- "src/minisweagent/agents/interactive.py"
+    --8<-- "src/leanimum/agents/interactive.py"
     ```
 
 {% include-markdown "../_footer.md" %}

@@ -2,14 +2,14 @@
 
 !!! note "Docker Environment class"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/environments/docker.py)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/environments/docker.py)
 
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/environments/docker.py"
+        --8<-- "src/leanimum/environments/docker.py"
         ```
 
-::: minisweagent.environments.docker
+::: leanimum.environments.docker
 
 {% include-markdown "../../_footer.md" %}

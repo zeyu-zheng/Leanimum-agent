@@ -2,8 +2,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from minisweagent.exceptions import FormatError
-from minisweagent.models.utils.actions_toolcall import (
+from leanimum.exceptions import FormatError
+from leanimum.models.utils.actions_toolcall import (
     BASH_TOOL,
     format_toolcall_observation_messages,
     parse_toolcall_actions,

@@ -3,9 +3,9 @@ import time
 
 import pytest
 
-import minisweagent.models
-from minisweagent.exceptions import FormatError
-from minisweagent.models.test_models import (
+import leanimum.models
+from leanimum.exceptions import FormatError
+from leanimum.models.test_models import (
     DeterministicModel,
     DeterministicModelConfig,
     DeterministicResponseAPIToolcallModel,
@@ -31,15 +31,15 @@ def test_basic_functionality_and_cost_tracking(reset_global_stats):
     result = model.query([{"role": "user", "content": "test"}])
     assert result["content"] == "```mswea_bash_command\necho hello\n```"
     assert result["extra"]["actions"] == [{"command": "echo hello"}]
-    assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 1
-    assert minisweagent.models.GLOBAL_MODEL_STATS.cost == 1.0
+    assert leanimum.models.GLOBAL_MODEL_STATS.n_calls == 1
+    assert leanimum.models.GLOBAL_MODEL_STATS.cost == 1.0
 
     # Test second call and sequential outputs
     result = model.query([{"role": "user", "content": "test"}])
     assert result["content"] == "```mswea_bash_command\necho world\n```"
     assert result["extra"]["actions"] == [{"command": "echo world"}]
-    assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 2
-    assert minisweagent.models.GLOBAL_MODEL_STATS.cost == 2.0
+    assert leanimum.models.GLOBAL_MODEL_STATS.n_calls == 2
+    assert leanimum.models.GLOBAL_MODEL_STATS.cost == 2.0
 
 
 def test_custom_cost_and_multiple_models(reset_global_stats):
@@ -53,12 +53,12 @@ def test_custom_cost_and_multiple_models(reset_global_stats):
 
     result1 = model1.query([{"role": "user", "content": "test"}])
     assert result1["content"] == "```mswea_bash_command\necho r1\n```"
-    assert minisweagent.models.GLOBAL_MODEL_STATS.cost == 2.5
+    assert leanimum.models.GLOBAL_MODEL_STATS.cost == 2.5
 
     result2 = model2.query([{"role": "user", "content": "test"}])
     assert result2["content"] == "```mswea_bash_command\necho r2\n```"
-    assert minisweagent.models.GLOBAL_MODEL_STATS.cost == 5.5
-    assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 2
+    assert leanimum.models.GLOBAL_MODEL_STATS.cost == 5.5
+    assert leanimum.models.GLOBAL_MODEL_STATS.n_calls == 2
 
 
 def test_config_dataclass():
@@ -122,7 +122,7 @@ def test_toolcall_model_basic(reset_global_stats):
     result = model.query([{"role": "user", "content": "list files"}])
     assert result["tool_calls"] == tool_calls
     assert result["extra"]["actions"] == actions
-    assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 1
+    assert leanimum.models.GLOBAL_MODEL_STATS.n_calls == 1
 
 
 def test_toolcall_model_format_observation(reset_global_stats):
@@ -168,7 +168,7 @@ def test_response_api_model_basic(reset_global_stats):
     result = model.query([{"role": "user", "content": "list files"}])
     assert result["object"] == "response"
     assert result["extra"]["actions"] == actions
-    assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 1
+    assert leanimum.models.GLOBAL_MODEL_STATS.n_calls == 1
     # Check output structure
     assert len(result["output"]) == 2  # message + function_call
     assert result["output"][0]["type"] == "message"

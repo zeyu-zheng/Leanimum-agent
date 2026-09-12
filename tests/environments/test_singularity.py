@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import pytest
 
-from minisweagent.environments.singularity import SingularityEnvironment, SingularityEnvironmentConfig
+from leanimum.environments.singularity import SingularityEnvironment, SingularityEnvironmentConfig
 
 
 def is_singularity_available():

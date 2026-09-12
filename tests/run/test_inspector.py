@@ -6,7 +6,7 @@ from unittest.mock import patch
 import pytest
 import typer
 
-from minisweagent.run.utilities.inspector import TrajectoryInspector, main
+from leanimum.run.utilities.inspector import TrajectoryInspector, main
 
 
 def get_screen_text(app: TrajectoryInspector) -> str:
@@ -371,11 +371,11 @@ def test_trajectory_inspector_binding_labels():
     assert bindings["scroll_up"] == "↑"
 
 
-@patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
+@patch("leanimum.run.utilities.inspector.TrajectoryInspector.run")
 def test_main_no_reasoning_flag(mock_run, temp_trajectory_files):
     """Test that --no-reasoning passes show_reasoning=False to TrajectoryInspector."""
     valid_file = temp_trajectory_files[0]
-    with patch("minisweagent.run.utilities.inspector.TrajectoryInspector.__init__", return_value=None) as mock_init:
+    with patch("leanimum.run.utilities.inspector.TrajectoryInspector.__init__", return_value=None) as mock_init:
         main(str(valid_file), reasoning=False)
         mock_init.assert_called_once_with([valid_file], show_reasoning=False)
         mock_run.assert_called_once()
@@ -521,7 +521,7 @@ async def test_trajectory_inspector_ansi_content(sample_ansi_trajectory):
             assert "\x00" not in content
 
 
-@patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
+@patch("leanimum.run.utilities.inspector.TrajectoryInspector.run")
 def test_main_with_single_file(mock_run, temp_trajectory_files):
     """Test main function with a single trajectory file."""
     valid_file = temp_trajectory_files[0]  # simple.traj.json
@@ -533,7 +533,7 @@ def test_main_with_single_file(mock_run, temp_trajectory_files):
     assert mock_run.call_count == 1
 
 
-@patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
+@patch("leanimum.run.utilities.inspector.TrajectoryInspector.run")
 def test_main_with_directory_containing_trajectories(mock_run, temp_trajectory_files):
     """Test main function with a directory containing trajectory files."""
     directory = temp_trajectory_files[0].parent
@@ -543,7 +543,7 @@ def test_main_with_directory_containing_trajectories(mock_run, temp_trajectory_f
     mock_run.assert_called_once()
 
 
-@patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
+@patch("leanimum.run.utilities.inspector.TrajectoryInspector.run")
 def test_main_with_directory_no_trajectories(mock_run):
     """Test main function with a directory containing no trajectory files."""
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -558,7 +558,7 @@ def test_main_with_directory_no_trajectories(mock_run):
         mock_run.assert_not_called()
 
 
-@patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
+@patch("leanimum.run.utilities.inspector.TrajectoryInspector.run")
 def test_main_with_nonexistent_path(mock_run):
     """Test main function with a path that doesn't exist."""
     nonexistent_path = "/this/path/does/not/exist"
@@ -569,7 +569,7 @@ def test_main_with_nonexistent_path(mock_run):
     mock_run.assert_not_called()
 
 
-@patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
+@patch("leanimum.run.utilities.inspector.TrajectoryInspector.run")
 def test_main_with_current_directory_default(mock_run, temp_trajectory_files):
     """Test main function with default argument (current directory)."""
     directory = temp_trajectory_files[0].parent

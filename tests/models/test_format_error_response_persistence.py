@@ -16,7 +16,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from minisweagent.exceptions import FormatError
+from leanimum.exceptions import FormatError
 
 # --------------------------------------------------------------------------- #
 # Helpers
@@ -80,7 +80,7 @@ def _bad_response_api_dict() -> dict[str, Any]:
 
 
 def test_litellm_model_format_error_persists_response() -> None:
-    from minisweagent.models.litellm_model import LitellmModel
+    from leanimum.models.litellm_model import LitellmModel
 
     response = MagicMock()
     response.choices = [MagicMock()]
@@ -112,7 +112,7 @@ def test_litellm_model_format_error_persists_response() -> None:
 
 
 def test_litellm_response_model_format_error_persists_response_with_model_dump() -> None:
-    from minisweagent.models.litellm_response_model import LitellmResponseModel
+    from leanimum.models.litellm_response_model import LitellmResponseModel
 
     response = MagicMock()
     response.output = [{"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}]
@@ -137,7 +137,7 @@ def test_litellm_response_model_format_error_persists_response_with_model_dump()
 
 def test_litellm_response_model_format_error_persists_response_plain_dict_fallback() -> None:
     """When the response object lacks model_dump, dict(response) is used."""
-    from minisweagent.models.litellm_response_model import LitellmResponseModel
+    from leanimum.models.litellm_response_model import LitellmResponseModel
 
     response = _bad_response_api_dict()  # plain dict, no model_dump
     model = LitellmResponseModel(model_name="test/model")
@@ -160,7 +160,7 @@ def test_litellm_response_model_format_error_persists_response_plain_dict_fallba
 
 
 def test_openrouter_model_format_error_persists_response() -> None:
-    from minisweagent.models.openrouter_model import OpenRouterModel
+    from leanimum.models.openrouter_model import OpenRouterModel
 
     response = _bad_chat_completion_dict()
     model = OpenRouterModel(model_name="test/model")
@@ -185,7 +185,7 @@ def test_openrouter_model_format_error_persists_response() -> None:
 
 
 def test_openrouter_response_model_format_error_persists_response() -> None:
-    from minisweagent.models.openrouter_response_model import OpenRouterResponseModel
+    from leanimum.models.openrouter_response_model import OpenRouterResponseModel
 
     response = _bad_response_api_dict()
     model = OpenRouterResponseModel(model_name="test/model")
@@ -211,7 +211,7 @@ def test_openrouter_response_model_format_error_persists_response() -> None:
 
 def test_portkey_model_format_error_persists_response(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("PORTKEY_API_KEY", "test-key")
-    from minisweagent.models.portkey_model import PortkeyModel
+    from leanimum.models.portkey_model import PortkeyModel
 
     response = MagicMock()
     response.choices = [MagicMock()]
@@ -219,7 +219,7 @@ def test_portkey_model_format_error_persists_response(monkeypatch: pytest.Monkey
     serialized = {"id": "resp_1", "choices": [{"message": {"tool_calls": [{"function": {"name": "unknown_tool"}}]}}]}
     response.model_dump.return_value = serialized
 
-    with patch("minisweagent.models.portkey_model.Portkey"):
+    with patch("leanimum.models.portkey_model.Portkey"):
         model = PortkeyModel(model_name="gpt-4o")
 
     with (
@@ -246,14 +246,14 @@ def test_portkey_response_model_format_error_persists_response_with_model_dump(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("PORTKEY_API_KEY", "test-key")
-    from minisweagent.models.portkey_response_model import PortkeyResponseAPIModel
+    from leanimum.models.portkey_response_model import PortkeyResponseAPIModel
 
     response = MagicMock()
     response.output = [{"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}]
     serialized = {"id": "resp_2", "output": response.output}
     response.model_dump.return_value = serialized
 
-    with patch("minisweagent.models.portkey_response_model.Portkey"):
+    with patch("leanimum.models.portkey_response_model.Portkey"):
         model = PortkeyResponseAPIModel(model_name="gpt-4o")
 
     with (
@@ -276,7 +276,7 @@ def test_portkey_response_model_format_error_persists_response_with_model_dump(
 
 
 def test_requesty_model_format_error_persists_response() -> None:
-    from minisweagent.models.requesty_model import RequestyModel
+    from leanimum.models.requesty_model import RequestyModel
 
     response = _bad_chat_completion_dict()
     model = RequestyModel(model_name="test/model")
@@ -304,7 +304,7 @@ def test_persisted_response_round_trips_through_json() -> None:
     """The whole point of the fix is that the trajectory log can dump the
     payload. If model_dump(mode='json') is missing, datetimes/Decimals leak
     through and json.dumps raises TypeError."""
-    from minisweagent.models.litellm_model import LitellmModel
+    from leanimum.models.litellm_model import LitellmModel
 
     response = MagicMock()
     response.choices = [MagicMock()]
@@ -336,7 +336,7 @@ def test_persisted_response_round_trips_through_json() -> None:
 def test_format_error_still_propagates_after_persisting_response() -> None:
     """The except block must re-raise. If a future change accidentally swallows
     the FormatError (e.g. forgets `raise`), this test catches it."""
-    from minisweagent.models.openrouter_model import OpenRouterModel
+    from leanimum.models.openrouter_model import OpenRouterModel
 
     response = _bad_chat_completion_dict()
     model = OpenRouterModel(model_name="test/model")
@@ -358,7 +358,7 @@ def test_format_error_still_propagates_after_persisting_response() -> None:
 def test_litellm_textbased_model_format_error_persists_response() -> None:
     """LitellmTextbasedModel overrides _parse_actions but not query(); the fix
     must reach the parse_regex_actions code path via inherited query()."""
-    from minisweagent.models.litellm_textbased_model import LitellmTextbasedModel
+    from leanimum.models.litellm_textbased_model import LitellmTextbasedModel
 
     response = MagicMock()
     response.choices = [MagicMock()]
@@ -386,7 +386,7 @@ def test_litellm_textbased_model_format_error_persists_response() -> None:
 def test_openrouter_textbased_model_format_error_persists_response() -> None:
     """OpenRouterTextbasedModel overrides _parse_actions but not query(); the fix
     must reach the parse_regex_actions code path via inherited query()."""
-    from minisweagent.models.openrouter_textbased_model import OpenRouterTextbasedModel
+    from leanimum.models.openrouter_textbased_model import OpenRouterTextbasedModel
 
     # OpenRouterTextbasedModel uses plain dict responses (dict from response.json()).
     response = {
@@ -420,7 +420,7 @@ def test_format_error_not_swallowed_when_model_dump_raises() -> None:
     """If response.model_dump(mode='json') raises (e.g. serialization error),
     the original FormatError must still propagate AND extra['response'] must be
     set to repr(response) — the spec contract holds unconditionally."""
-    from minisweagent.models.litellm_model import LitellmModel
+    from leanimum.models.litellm_model import LitellmModel
 
     response = MagicMock()
     response.choices = [MagicMock()]
@@ -449,7 +449,7 @@ def test_litellm_response_model_format_error_not_swallowed_when_model_dump_raise
     """If response.model_dump(mode='json') raises inside the FormatError handler,
     the original FormatError must still propagate AND extra['response'] must be
     set to repr(response) — the repr fallback holds for LitellmResponseModel."""
-    from minisweagent.models.litellm_response_model import LitellmResponseModel
+    from leanimum.models.litellm_response_model import LitellmResponseModel
 
     response = MagicMock()
     response.output = [{"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}]
@@ -477,14 +477,14 @@ def test_portkey_model_format_error_not_swallowed_when_model_dump_raises(
     the original FormatError must still propagate AND extra['response'] must be
     set to repr(response) — the repr fallback holds for PortkeyModel."""
     monkeypatch.setenv("PORTKEY_API_KEY", "test-key")
-    from minisweagent.models.portkey_model import PortkeyModel
+    from leanimum.models.portkey_model import PortkeyModel
 
     response = MagicMock()
     response.choices = [MagicMock()]
     response.choices[0].message.tool_calls = [_bad_tool_call_mock()]
     response.model_dump.side_effect = TypeError("unserializable object")
 
-    with patch("minisweagent.models.portkey_model.Portkey"):
+    with patch("leanimum.models.portkey_model.Portkey"):
         model = PortkeyModel(model_name="gpt-4o")
 
     with (
@@ -507,13 +507,13 @@ def test_portkey_response_model_format_error_not_swallowed_when_model_dump_raise
     the original FormatError must still propagate AND extra['response'] must be
     set to repr(response) — the repr fallback holds for PortkeyResponseAPIModel."""
     monkeypatch.setenv("PORTKEY_API_KEY", "test-key")
-    from minisweagent.models.portkey_response_model import PortkeyResponseAPIModel
+    from leanimum.models.portkey_response_model import PortkeyResponseAPIModel
 
     response = MagicMock()
     response.output = [{"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}]
     response.model_dump.side_effect = TypeError("unserializable object")
 
-    with patch("minisweagent.models.portkey_response_model.Portkey"):
+    with patch("leanimum.models.portkey_response_model.Portkey"):
         model = PortkeyResponseAPIModel(model_name="gpt-4o")
 
     with (

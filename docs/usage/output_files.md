@@ -27,11 +27,11 @@ Trajectory files contain the full history of an agent run, including all message
     },
     "config": {
       "agent": { ... },  // agent configuration
-      "agent_type": "minisweagent.agents.default.DefaultAgent",
+      "agent_type": "leanimum.agents.default.DefaultAgent",
       "model": { ... },  // model configuration
-      "model_type": "minisweagent.models.litellm_model.LitellmModel",
+      "model_type": "leanimum.models.litellm_model.LitellmModel",
       "environment": { ... },  // environment configuration
-      "environment_type": "minisweagent.environments.local.LocalEnvironment"
+      "environment_type": "leanimum.environments.local.LocalEnvironment"
     },
     "mini_version": "2.0.0",  // version of mini-SWE-agent used
     "exit_status": "Submitted",  // final status (Submitted, LimitsExceeded, etc.)

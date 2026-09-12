@@ -1,5 +1,4 @@
-site_name: mini-SWE-agent documentation
-site_url: https://mini-swe-agent.com
+site_name: Leanimum-agent documentation
 theme:
   name: material
   icon:
@@ -63,7 +62,7 @@ nav:
     - "Overview": index.md
     - "Quick start": quickstart.md
     - "Command line usage":
-      - "<code>mini</code>": usage/mini.md
+      - "<code>leani</code>": usage/mini.md
       - "Config": usage/config.md
       - "SWE-bench": usage/swebench.md
       - "ProgramBench": usage/programbench.md
@@ -110,8 +109,8 @@ nav:
       - "SwerexModalEnvironment": "reference/environments/swerex_modal.md"
     - Run Scripts:
       - "Hello World": "reference/run/hello_world.md"
-      - "mini": "reference/run/mini.md"
-      - "mini-extra": "reference/run/mini_extra.md"
+      - "leani": "reference/run/mini.md"
+      - "leani-extra": "reference/run/mini_extra.md"
       - "Config": "reference/run/config.md"
       - "Inspector": "reference/run/inspector.md"
       - "SWE-bench (batch)": "reference/run/swebench.md"
@@ -152,8 +151,8 @@ plugins:
               - "!^_"
               - "!^model_config"
               - "!^model_post_init"
-repo_url: https://github.com/SWE-agent/mini-SWE-agent
-repo_name: SWE-agent/mini-SWE-agent
+repo_url: https://github.com/zeyu-zheng/Leanimum-agent
+repo_name: zeyu-zheng/Leanimum-agent
 edit_uri: edit/main/docs/
 extra_javascript:
   - assets/js/sh-annotation.js

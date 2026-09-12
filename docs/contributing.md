@@ -15,8 +15,8 @@ We happily accept contributions!
 
 - `mini-swe-agent` aims to stay minimalistic, hackable, and of high quality code.
 - To extend features, we prefer to add a new version of the one of the four components (see [cookbook](advanced/cookbook.md)), rather than making the existing components more complex.
-- Components should be relatively self-contained, but if there are utilities that might be shared, add a `utils` folder (like [this one](https://github.com/SWE-agent/mini-swe-agent/tree/main/src/minisweagent/models/utils)). But keep it simple!
-- If your component is a bit more specific, add it into an `extra` folder (like [this one](https://github.com/SWE-agent/mini-swe-agent/tree/main/src/minisweagent/run/extra))
+- Components should be relatively self-contained, but if there are utilities that might be shared, add a `utils` folder (like [this one](https://github.com/zeyu-zheng/Leanimum-agent/tree/main/src/leanimum/models/utils)). But keep it simple!
+- If your component is a bit more specific, add it into an `extra` folder (like [this one](https://github.com/zeyu-zheng/Leanimum-agent/tree/main/src/leanimum/run/extra))
 - Our target audience is anyone who doesn't shy away from modifying a bit of code (especially a run script) to get what they want.
 - Therefore, not everything needs to be configurable with the config files, but it should be easy to create a run script that makes use of it.
 - Many LMs write very verbose code -- please clean it up! Same goes for the tests. They should still be concise and readable.

@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from minisweagent.models import GLOBAL_MODEL_STATS
+from leanimum.models import GLOBAL_MODEL_STATS
 
 
 def pytest_addoption(parser):

@@ -1,6 +1,6 @@
 import pytest
 
-from minisweagent.models.utils.openai_multimodal import (
+from leanimum.models.utils.openai_multimodal import (
     DEFAULT_MULTIMODAL_REGEX,
     _expand_content_string,
     expand_multimodal_content,
@@ -152,7 +152,7 @@ def test_expand_multimodal_content_preserves_original():
 
 def test_model_format_message_with_multimodal():
     """Test that model.format_message applies multimodal transformation when configured."""
-    from minisweagent.models.test_models import DeterministicModel
+    from leanimum.models.test_models import DeterministicModel
 
     model = DeterministicModel(outputs=[], multimodal_regex=DEFAULT_MULTIMODAL_REGEX)
     result = model.format_message(
@@ -167,7 +167,7 @@ def test_model_format_message_with_multimodal():
 
 def test_model_format_message_without_multimodal():
     """Test that model.format_message returns plain dict when multimodal is disabled."""
-    from minisweagent.models.test_models import DeterministicModel
+    from leanimum.models.test_models import DeterministicModel
 
     model = DeterministicModel(outputs=[])
     result = model.format_message(role="user", content="Hello world")

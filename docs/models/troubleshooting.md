@@ -79,7 +79,7 @@ very inconvenient APIs.
 This can lead to errors likethis:
 
 ```
-  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/minisweagent/models/portkey_model.py", line 85, in query
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/leanimum/models/portkey_model.py", line 85, in query
     cost = litellm.cost_calculator.completion_cost(response)
   File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/litellm/cost_calculator.py", line 973, in completion_cost
     raise e
