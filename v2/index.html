@@ -111,7 +111,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#continue-reading" class="md-skip">
+        <a href="#leanimum-agent" class="md-skip">
           Skip to content
         </a>
       
@@ -127,9 +127,7 @@
               </button>
             
             
-<a href="usage/programbench/">
-  🎉 Run mini-swe-agent on our new &amp; extremely challenging benchmark, ProgramBench
-</a>
+<a href="usage/reuf2f/">Leanimum-agent: bash-only Lean workflows and ReuF2F</a>
 
           </div>
           
@@ -324,44 +322,6 @@
   
 
       
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://www.swebench.com/blog.html" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Blog
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://swebench.com" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Leaderboard
-
-      </a>
-    </li>
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -543,8 +503,6 @@
       
         
       
-        
-      
     
     
     
@@ -651,42 +609,14 @@
   
   
     <li class="md-nav__item">
-      <a href="usage/swebench/" class="md-nav__link">
+      <a href="usage/reuf2f/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    SWE-bench
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="usage/programbench/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ProgramBench
+    ReuF2F
   
 
     
@@ -2151,10 +2081,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -2345,70 +2271,14 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/run/swebench/" class="md-nav__link">
+      <a href="reference/run/reuf2f/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    SWE-bench (batch)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="reference/run/swebench_single/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SWE-bench (single)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="reference/run/programbench/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ProgramBench
+    ReuF2F
   
 
     
@@ -2433,60 +2303,6 @@
           </ul>
         </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://www.swebench.com/blog.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Blog
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://swebench.com" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Leaderboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -2508,58 +2324,8 @@
   
   
   
+    
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-      
-        <li class="md-nav__item">
-  <a href="#continue-reading" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Continue reading:
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#news" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📣 News
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#new-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📣 New features
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#documentation-updates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        📣 Documentation updates
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -2572,7 +2338,6 @@
               
               <article class="md-content__inner md-typeset">
                 
-
                   
 
 
@@ -2585,249 +2350,25 @@
   
 
 
-<div class="admonition note">
-<p class="admonition-title">Leanimum-agent: inherited upstream reference</p>
-<p>This documentation is retained from mini-SWE-agent during a naming-only transition.
-The Python package is now <code>leanimum</code> and the main command is <code>leani</code>.
-The material below describes the upstream project, not Leanimum-agent benchmark results.
-See the <a href="https://github.com/zeyu-zheng/Leanimum-agent#readme">Leanimum-agent README</a>
-for the current project status and source installation instructions.</p>
-</div>
-<div align="center">
-<a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="assets/mini-swe-agent-banner.svg" data-desc-position="bottom"><img src="assets/mini-swe-agent-banner.svg" alt="mini-swe-agent banner" style="height: 7em"></a>
-
-<h1 style="margin-bottom: 1ex;">The 100 line AI agent that's actually useful</h1>
-
-</div>
-
-<div align="center">
-
-<a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ">
-    <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&amp;logo=slack&amp;logoColor=white" alt="Slack">
-</a>
-<a href="https://github.com/SWE-agent/mini-swe-agent">
-    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/swe-agent/mini-swe-agent?style=for-the-badge&amp;logo=github&amp;label=GitHub&amp;labelColor=black&amp;color=green">
-</a>
-<a href="https://pypi.org/project/mini-swe-agent/">
-    <img src="https://img.shields.io/pypi/v/mini-swe-agent?style=for-the-badge&amp;logo=python&amp;logoColor=white&amp;labelColor=black&amp;color=deeppink" alt="PyPI - Version">
-</a>
-
-</div>
-
-<div class="admonition warning">
-<p class="admonition-title">This is mini-swe-agent v2</p>
-<p>Read the <a href="https://mini-swe-agent.com/latest/advanced/v2_migration/">migration guide</a>. For the previous version, check out the <a href="https://mini-swe-agent.com/v1/">v1 documentation</a> or the <a href="https://github.com/SWE-agent/mini-swe-agent/tree/v1">v1 branch</a>.</p>
-</div>
-<p>In 2024, <a href="https://swebench.com">SWE-bench</a> &amp; <a href="https://swe-agent.com">SWE-agent</a> helped kickstart the coding agent revolution.</p>
-<p>We now ask: <strong>What if our agent was 100x simpler, and still worked nearly as well?</strong></p>
-<p><code>mini</code> is</p>
+<h1 id="leanimum-agent">Leanimum-agent</h1>
+<p>Leanimum-agent is a minimal bash-only assistant for Lean proofs and programs,
+derived from mini-SWE-agent. It searches libraries, edits files, and iterates on
+compiler output through one model-facing <code>bash</code> tool.</p>
 <ul>
-<li><strong>Widely adopted</strong>: Used by Meta, NVIDIA, Essential AI, IBM, Nebius, Anyscale, Princeton University, Stanford University, and many more.</li>
-<li><strong>Minimal</strong>: Just <a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/agents/default.py">100 lines of python</a> (+100 total for <a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/environments/local.py">env</a>,
-<a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/models/litellm_model.py">model</a>, <a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/run/hello_world.py">script</a>) — no fancy dependencies!</li>
-<li><strong>Performant:</strong> Scores &gt;74% on the <a href="https://www.swebench.com/">SWE-bench verified benchmark</a>; starts much faster than Claude Code</li>
-<li><strong>Deployable:</strong> Supports <strong>local environments</strong>, <strong>docker/podman</strong>, <strong>singularity/apptainer</strong>, <strong>bublewrap</strong>, <strong>contree</strong>, and more</li>
-<li><strong>Compatible:</strong> Supports all models via <strong>litellm</strong>, <strong>openrouter</strong>, <strong>portkey</strong>, and more. Support for <code>/completion</code> and <code>/response</code> endpoints, interleaved thinking etc.</li>
-<li>Built by the Princeton &amp; Stanford team behind <a href="https://swebench.com">SWE-bench</a>, <a href="https://swe-agent.com">SWE-agent</a>, and more</li>
-<li><strong>Tested:</strong> <a href="https://codecov.io/gh/SWE-agent/mini-swe-agent"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/swe-agent/mini-swe-agent?style=flat-square"></a></li>
+<li><a href="quickstart/">Quick start</a>: install from source and run a Lean task.</li>
+<li><a href="usage/reuf2f/">ReuF2F</a>: the only built-in benchmark, using a separate local checkout.</li>
+<li><a href="advanced/yaml_configuration/">Configuration</a>: tool-call and text-based Lean prompts.</li>
+<li><a href="advanced/environments/">Execution environments</a>: retained local and remote backends.</li>
+<li><a href="usage/output_files/">Trajectories and outputs</a>: inspect runs without confusing submission with acceptance.</li>
 </ul>
-<details class="note">
-<summary>Why use mini-SWE-agent for research?</summary>
-<p><a href="https://swe-agent.com/latest/">SWE-agent</a> jump-started the development of AI agents in 2024. Back then, we placed a lot of emphasis on tools and special interfaces for the agent. However, one year later, a lot of this is not needed at all to build a useful agent!</p>
-<p>In fact, the <code>mini</code> agent:</p>
-<ul>
-<li><strong>Does not have any tools other than bash</strong> — it doesn't even use the tool-calling interface of the LMs.
-  This means that you can run it with literally any model.
-  When running in sandboxed environments you also don't need to take care of installing a single package — all it needs is bash.</li>
-<li><strong>Has a completely linear history</strong> — every step of the agent just appends to the messages and that's it.
-  So there's no difference between the trajectory and the messages that you pass on to the LM.
-  Great for debugging &amp; fine-tuning.</li>
-<li><strong>Executes actions with <code>subprocess.run</code></strong> — every action is completely independent (as opposed to keeping a stateful shell session running). This makes it trivial to execute the actions in sandboxes (literally just switch out <code>subprocess.run</code> with <code>docker exec</code>) and to scale up effortlessly.
-  Seriously, this is <a href="faq/#why-no-shell-session">a big deal</a>, trust me.</li>
-</ul>
-<p>This makes it perfect as a baseline system and for a system that puts the language model (rather than the agent scaffold) in the middle of our attention.
-You can see the result on the <a href="https://www.swebench.com/">SWE-bench (bash only)</a> leaderboard, that evaluates the performance of different LMs with <code>mini</code>.</p>
-</details>
-<details class="note">
-<summary>Why use mini-SWE-agent as a tool?</summary>
-<p>Some agents are overfitted research artifacts. Others are UI-heavy frontend monsters.</p>
-<p>The <code>mini</code> agent wants to be a hackable tool, not a black box.</p>
-<ul>
-<li><strong>Simple</strong> enough to understand at a glance</li>
-<li><strong>Convenient</strong> enough to use in daily workflows</li>
-<li><strong>Flexible</strong> to extend</li>
-</ul>
-<p>Unlike other agents (including our own <a href="https://swe-agent.com/latest/">swe-agent</a>), it is radically simpler, because it:</p>
-<ul>
-<li><strong>Does not have any tools other than bash</strong> — it doesn't even use the tool-calling interface of the LMs.
-  Instead of implementing custom tools for every specific thing the agent might want to do, the focus is fully on the LM utilizing the shell to its full potential.
-  Want it to do something specific like opening a PR?
-  Just tell the LM to figure it out rather than spending time to implement it in the agent.</li>
-<li><strong>Executes actions with <code>subprocess.run</code></strong> — every action is completely independent (as opposed to keeping a stateful shell session running).
-  This is <a href="https://mini-swe-agent.com/latest/faq/#why-no-shell-session">a big deal</a> for the stability of the agent, trust me.</li>
-<li><strong>Has a completely linear history</strong> — every step of the agent just appends to the messages that are passed to the LM in the next step and that's it.
-  This is great for debugging and understanding what the LM is prompted with.</li>
-</ul>
-</details>
-<details class="note">
-<summary>Should I use mini-SWE-agent or swe-agent?</summary>
-<p>You should consider <code>mini-swe-agent</code> your default choice.
-In particular, you should use <code>mini-swe-agent</code> if</p>
-<ul>
-<li>You want a quick command line tool that works locally</li>
-<li>You want an agent with a very simple control flow</li>
-<li>You want even faster, simpler &amp; more stable sandboxing &amp; benchmark evaluations</li>
-<li>You are doing FT or RL and don't want to overfit to a specific agent scaffold</li>
-</ul>
-<p>You should use <code>swe-agent</code> if</p>
-<ul>
-<li>You want to experiment with different sets of tools, each with their own interface</li>
-<li>You want to experiment with different history processors</li>
-</ul>
-<p>What you get with both</p>
-<ul>
-<li>Excellent performance on SWE-Bench</li>
-<li>A trajectory browser</li>
-</ul>
-</details>
-<table>
-<tbody><tr>
-<td width="50%">
-<a href="usage/mini"><strong>CLI</strong></a> (<code>mini</code>)
-</td>
-<td>
-<a href="usage/swebench/"><strong>Batch inference</strong></a>
-</td>
-</tr>
-<tr>
-<td width="50%">
-  <div class="gif-container" data-glightbox-disabled="">
-    <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/mini.png?raw=true" data-desc-position="bottom"><img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/mini.png?raw=true" data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini.gif?raw=true" alt="mini" data-glightbox="false"></a>
-  </div>
-</td>
-<td>
-<div class="gif-container" data-glightbox-disabled="">
-  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/swebench.png?raw=true" data-desc-position="bottom"><img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/swebench.png?raw=true" data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/swebench.gif?raw=true" alt="swebench" data-glightbox="false"></a>
-</div>
-</td>
-</tr>
-<tr>
-<td>
-<a href="usage/inspector/"><strong>Trajectory browser</strong></a>
-</td>
-<td>
-<a href="advanced/cookbook/"><strong>Python bindings</strong></a>
-</td>
-</tr>
-<tr>
-<td>
-<div class="gif-container" data-glightbox-disabled="">
-  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/inspector.png?raw=true" data-desc-position="bottom"><img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/inspector.png?raw=true" data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/inspector.gif?raw=true" alt="inspector" data-glightbox="false"></a>
-</div>
-</td>
-<td>
-<pre><code class="language-python">agent = DefaultAgent(
-    LitellmModel(model_name=...),
-    LocalEnvironment(),
-)
-agent.run("Write a sudoku game")</code></pre>
-</td>
-</tr>
-</tbody></table>
-
-<div class="admonition info">
-<p class="admonition-title">Upgrading to v2?</p>
-<p>Check out our <a href="advanced/v2_migration/">v2 migration guide</a> for all the changes and how to update your code.</p>
-</div>
-<h2 id="continue-reading">Continue reading:</h2>
-<div class="grid cards">
-  <a href="quickstart/" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">launch</span>
-        <span class="nav-card-title">Installation &amp; Quick Start</span>
-      </div>
-      <p class="nav-card-description">Get started with mini-SWE-agent</p>
-    </div>
-  </a>
-
-  <a href="usage/mini/" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">flash_on</span>
-        <span class="nav-card-title">Usage: Simple UI</span>
-      </div>
-      <p class="nav-card-description">Learn to use the <code>mini</code> command</p>
-    </div>
-  </a>
-
-  <a href="faq/" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">FAQ</span>
-      </div>
-      <p class="nav-card-description">Common questions and answers</p>
-    </div>
-  </a>
-
-  <a href="advanced/yaml_configuration/" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">settings</span>
-        <span class="nav-card-title">Configuration</span>
-      </div>
-      <p class="nav-card-description">Setup and customize your agent</p>
-    </div>
-  </a>
-
-  <a href="advanced/cookbook/" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">fitness_center</span>
-        <span class="nav-card-title">Power up</span>
-      </div>
-      <p class="nav-card-description">Start hacking the agent!</p>
-    </div>
-  </a>
-</div>
-
-<h2 id="news">📣 News</h2>
-<ul>
-<li><a href="https://labs.ramp.com/swebench">mini-swe-agent now powers Ramp SWE-Bench</a></li>
-<li><a href="https://deepswe.datacurve.ai/blog#evaluation-harness">mini-swe-agent beats Claude Code and Codex on DeepSWE</a></li>
-<li><a href="usage/programbench/">Run mini-swe-agent on our new &amp; extremely challenging benchmark, ProgramBench</a></li>
-<li><a href="https://minimal-agent.com/">New tutorial on building minimal AI agents</a></li>
-<li>Nov 19: <a href="https://x.com/KLieret/status/1991164693839270372">Gemini 3 Pro reaches 74% on SWE-bench verified with mini-swe-agent!</a></li>
-<li>Aug 19: <a href="https://www.swebench.com/post-250820-mini-roulette.html">New blogpost: Randomly switching between GPT-5 and Sonnet 4 boosts performance</a></li>
-</ul>
-<h2 id="new-features">📣 New features</h2>
-<p>Please check the <a href="https://github.com/SWE-agent/mini-swe-agent/releases">github release notes</a> for the latest updates.</p>
-<h2 id="documentation-updates">📣 Documentation updates</h2>
-<ul>
-<li>Jul 27: More notes on <a href="models/local_models/">local models</a></li>
-</ul>
-<div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">bug_report</span>
-        <span class="nav-card-title">Something broken/unclear?</span>
-      </div>
-      <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
-    </div>
-  </a>
-</div>
+<p>Comparator remains an external CLI. Prompts describe how to reuse or prepare
+compatible tools and invoke them through bash. A trusted final verdict requires
+independent verification, not an agent's self-report.</p>
+<p>The ReuF2F runner defaults to one Linux Docker container per instance, following
+the upstream batch runner. Use the benchmark's documented verifier in a separate
+trusted environment for final scoring. No Leanimum-agent benchmark score is claimed here.</p>
+<p>The <a href="https://github.com/SWE-agent/mini-swe-agent">upstream project</a> provides the
+underlying agent architecture. Upstream performance claims are not Lean results.</p>
 
 
 
@@ -2843,36 +2384,6 @@ agent.run("Write a sudoku game")</code></pre>
 
 
                 
-
-
-<div class="floating-bubbles">
-<div class="floating-bubbles-title">Our projects</div>
-  <a href="https://swe-agent.com/" class="bubble" title="SWE-agent">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sweagent_logo.svg" alt="SWE-agent">
-    <span class="bubble-tooltip">SWE-agent</span>
-  </a>
-  <a href="https://swe-rex.com/" class="bubble" title="SWE-rex">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swerex_logo.svg" alt="SWE-rex">
-    <span class="bubble-tooltip">SWE-ReX</span>
-  </a>
-  <a href="https://swesmith.com" class="bubble" title="SWE-smith">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swesmith_logo.png" alt="SWE-smith">
-    <span class="bubble-tooltip">SWE-smith</span>
-  </a>
-  <a href="https://swebench.com" class="bubble" title="SWE-bench">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swebench_logo.png" alt="SWE-bench">
-    <span class="bubble-tooltip">SWE-bench</span>
-  </a>
-  <a href="https://codeclash.ai" class="bubble" title="CodeClash">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/codeclash_logo.svg" alt="CodeClash">
-    <span class="bubble-tooltip">CodeClash</span>
-  </a>
-  <a href="https://www.swebench.com/sb-cli/" class="bubble" title="sb-cli">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sbcli_logo.svg" alt="sb-cli">
-    <span class="bubble-tooltip">sb-cli</span>
-  </a>
-</div>
-
               </article>
             </div>
           
@@ -2952,4 +2463,4 @@ agent.run("Write a sudoku game")</code></pre>
   
 <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
 document$.subscribe(()=>{ lightbox.reload(); });
-</script></body></html><!-- Floating Bubbles -->
+</script></body></html>

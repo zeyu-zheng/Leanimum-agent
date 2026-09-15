@@ -129,9 +129,7 @@
               </button>
             
             
-<a href="../../../usage/programbench/">
-  🎉 Run mini-swe-agent on our new &amp; extremely challenging benchmark, ProgramBench
-</a>
+<a href="../../../usage/reuf2f/">Leanimum-agent: bash-only Lean workflows and ReuF2F</a>
 
           </div>
           
@@ -326,44 +324,6 @@
   
 
       
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://www.swebench.com/blog.html" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Blog
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://swebench.com" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Leaderboard
-
-      </a>
-    </li>
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -540,8 +500,6 @@
       
         
       
-        
-      
     
     
     
@@ -648,42 +606,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/swebench/" class="md-nav__link">
+      <a href="../../../usage/reuf2f/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    SWE-bench
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../usage/programbench/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ProgramBench
+    ReuF2F
   
 
     
@@ -2224,10 +2154,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -2418,70 +2344,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../run/swebench/" class="md-nav__link">
+      <a href="../../run/reuf2f/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    SWE-bench (batch)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../run/swebench_single/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SWE-bench (single)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../run/programbench/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ProgramBench
+    ReuF2F
   
 
     
@@ -2506,60 +2376,6 @@
           </ul>
         </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://www.swebench.com/blog.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Blog
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://swebench.com" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Leaderboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -2625,7 +2441,6 @@
               
               <article class="md-content__inner md-typeset">
                 
-
                   
 
 
@@ -2651,7 +2466,7 @@
 <ol>
 <li>
 <p>Install the full dependencies:
-   </p><div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"mini-swe-agent[full]"</span>
+   </p><div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[full]"</span>
 </code></pre></div><p></p>
 </li>
 <li>
@@ -2661,14 +2476,12 @@
 </li>
 </ol>
 <h2 id="usage">Usage</h2>
-<p>Evaluate GPT-5 mini on SWE-bench using Modal:
-</p><div class="highlight"><pre><span></span><code>mini-extra swebench \
-    --config src/leanimum/config/extra/swebench_modal.yaml \
-    --subset verified \
-    --split test \
-    --workers 100 \
-    -o ./results/gpt5-mini-modal
-</code></pre></div><p></p>
+<p>Use this backend through the general Lean CLI with a prepared environment config:</p>
+<div class="highlight"><pre><span></span><code>leani<span class="w"> </span>-c<span class="w"> </span>mini.yaml<span class="w"> </span>-c<span class="w"> </span>/path/to/environment.yaml<span class="w"> </span>-t<span class="w"> </span><span class="s2">"Complete and check the Lean task."</span>
+</code></pre></div>
+<p>Set <code>environment.environment_class</code> to <code>swerex_modal</code> and provide the backend's
+required image, workspace, and credentials. The dedicated ReuF2F runner currently
+integrates task preparation only for Docker/Podman and explicit local execution; it does not provision this backend automatically.</p>
 <div class="grid cards">
   <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
@@ -2705,36 +2518,6 @@
 
 
                 
-
-
-<div class="floating-bubbles">
-<div class="floating-bubbles-title">Our projects</div>
-  <a href="https://swe-agent.com/" class="bubble" title="SWE-agent">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sweagent_logo.svg" alt="SWE-agent">
-    <span class="bubble-tooltip">SWE-agent</span>
-  </a>
-  <a href="https://swe-rex.com/" class="bubble" title="SWE-rex">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swerex_logo.svg" alt="SWE-rex">
-    <span class="bubble-tooltip">SWE-ReX</span>
-  </a>
-  <a href="https://swesmith.com" class="bubble" title="SWE-smith">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swesmith_logo.png" alt="SWE-smith">
-    <span class="bubble-tooltip">SWE-smith</span>
-  </a>
-  <a href="https://swebench.com" class="bubble" title="SWE-bench">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swebench_logo.png" alt="SWE-bench">
-    <span class="bubble-tooltip">SWE-bench</span>
-  </a>
-  <a href="https://codeclash.ai" class="bubble" title="CodeClash">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/codeclash_logo.svg" alt="CodeClash">
-    <span class="bubble-tooltip">CodeClash</span>
-  </a>
-  <a href="https://www.swebench.com/sb-cli/" class="bubble" title="sb-cli">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sbcli_logo.svg" alt="sb-cli">
-    <span class="bubble-tooltip">sb-cli</span>
-  </a>
-</div>
-
               </article>
             </div>
           
@@ -2830,4 +2613,4 @@
   
 <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
 document$.subscribe(()=>{ lightbox.reload(); });
-</script></body></html><!-- Floating Bubbles -->
+</script></body></html>

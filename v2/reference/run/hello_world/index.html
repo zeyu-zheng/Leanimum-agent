@@ -129,9 +129,7 @@
               </button>
             
             
-<a href="../../../usage/programbench/">
-  🎉 Run mini-swe-agent on our new &amp; extremely challenging benchmark, ProgramBench
-</a>
+<a href="../../../usage/reuf2f/">Leanimum-agent: bash-only Lean workflows and ReuF2F</a>
 
           </div>
           
@@ -326,44 +324,6 @@
   
 
       
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://www.swebench.com/blog.html" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Blog
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://swebench.com" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Leaderboard
-
-      </a>
-    </li>
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -540,8 +500,6 @@
       
         
       
-        
-      
     
     
     
@@ -648,42 +606,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/swebench/" class="md-nav__link">
+      <a href="../../../usage/reuf2f/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    SWE-bench
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../usage/programbench/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ProgramBench
+    ReuF2F
   
 
     
@@ -2155,10 +2085,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -2435,70 +2361,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../swebench/" class="md-nav__link">
+      <a href="../reuf2f/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    SWE-bench (batch)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../swebench_single/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SWE-bench (single)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../programbench/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ProgramBench
+    ReuF2F
   
 
     
@@ -2523,60 +2393,6 @@
           </ul>
         </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://www.swebench.com/blog.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Blog
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://swebench.com" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Leaderboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -2659,7 +2475,6 @@
               
               <article class="md-content__inner md-typeset">
                 
-
                   
 
 
@@ -2694,7 +2509,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum</span><span class="w"> </span><span class="kn">import</span> <span class="n">package_dir</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.agents.default</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultAgent</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.environments.local</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalEnvironment</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.models.litellm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LitellmModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.models.litellm_textbased_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LitellmTextbasedModel</span>
 
 <span class="n">app</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Typer</span><span class="p">()</span>
 
@@ -2712,8 +2527,8 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultAgent</span><span class="p">:</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
     <span class="n">agent</span> <span class="o">=</span> <span class="n">DefaultAgent</span><span class="p">(</span>
-        <span class="n">LitellmModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">),</span>
-        <span class="n">LocalEnvironment</span><span class="p">(),</span>
+        <span class="n">LitellmTextbasedModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">),</span>
+        <span class="n">LocalEnvironment</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">),</span>
         <span class="o">**</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">package_dir</span> <span class="o">/</span> <span class="s2">"config"</span> <span class="o">/</span> <span class="s2">"default.yaml"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())[</span><span class="s2">"agent"</span><span class="p">],</span>
     <span class="p">)</span>
     <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
@@ -2847,8 +2662,8 @@ For a more complete example, see mini.py</p>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultAgent</span><span class="p">:</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
     <span class="n">agent</span> <span class="o">=</span> <span class="n">DefaultAgent</span><span class="p">(</span>
-        <span class="n">LitellmModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">),</span>
-        <span class="n">LocalEnvironment</span><span class="p">(),</span>
+        <span class="n">LitellmTextbasedModel</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">),</span>
+        <span class="n">LocalEnvironment</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">),</span>
         <span class="o">**</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">package_dir</span> <span class="o">/</span> <span class="s2">"config"</span> <span class="o">/</span> <span class="s2">"default.yaml"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())[</span><span class="s2">"agent"</span><span class="p">],</span>
     <span class="p">)</span>
     <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
@@ -2901,36 +2716,6 @@ For a more complete example, see mini.py</p>
 
 
                 
-
-
-<div class="floating-bubbles">
-<div class="floating-bubbles-title">Our projects</div>
-  <a href="https://swe-agent.com/" class="bubble" title="SWE-agent">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sweagent_logo.svg" alt="SWE-agent">
-    <span class="bubble-tooltip">SWE-agent</span>
-  </a>
-  <a href="https://swe-rex.com/" class="bubble" title="SWE-rex">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swerex_logo.svg" alt="SWE-rex">
-    <span class="bubble-tooltip">SWE-ReX</span>
-  </a>
-  <a href="https://swesmith.com" class="bubble" title="SWE-smith">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swesmith_logo.png" alt="SWE-smith">
-    <span class="bubble-tooltip">SWE-smith</span>
-  </a>
-  <a href="https://swebench.com" class="bubble" title="SWE-bench">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swebench_logo.png" alt="SWE-bench">
-    <span class="bubble-tooltip">SWE-bench</span>
-  </a>
-  <a href="https://codeclash.ai" class="bubble" title="CodeClash">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/codeclash_logo.svg" alt="CodeClash">
-    <span class="bubble-tooltip">CodeClash</span>
-  </a>
-  <a href="https://www.swebench.com/sb-cli/" class="bubble" title="sb-cli">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sbcli_logo.svg" alt="sb-cli">
-    <span class="bubble-tooltip">sb-cli</span>
-  </a>
-</div>
-
               </article>
             </div>
           
@@ -3026,4 +2811,4 @@ For a more complete example, see mini.py</p>
   
 <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
 document$.subscribe(()=>{ lightbox.reload(); });
-</script></body></html><!-- Floating Bubbles -->
+</script></body></html>

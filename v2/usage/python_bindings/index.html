@@ -129,9 +129,7 @@
               </button>
             
             
-<a href="../programbench/">
-  🎉 Run mini-swe-agent on our new &amp; extremely challenging benchmark, ProgramBench
-</a>
+<a href="../reuf2f/">Leanimum-agent: bash-only Lean workflows and ReuF2F</a>
 
           </div>
           
@@ -326,44 +324,6 @@
   
 
       
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://www.swebench.com/blog.html" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Blog
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://swebench.com" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Leaderboard
-
-      </a>
-    </li>
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -545,8 +505,6 @@
       
         
       
-        
-      
     
     
     
@@ -653,42 +611,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../swebench/" class="md-nav__link">
+      <a href="../reuf2f/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    SWE-bench
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../programbench/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ProgramBench
+    ReuF2F
   
 
     
@@ -2213,10 +2143,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -2407,70 +2333,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/run/swebench/" class="md-nav__link">
+      <a href="../../reference/run/reuf2f/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    SWE-bench (batch)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/run/swebench_single/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SWE-bench (single)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/run/programbench/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ProgramBench
+    ReuF2F
   
 
     
@@ -2495,60 +2365,6 @@
           </ul>
         </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://www.swebench.com/blog.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Blog
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://swebench.com" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Leaderboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -2603,7 +2419,6 @@
               
               <article class="md-content__inner md-typeset">
                 
-
                   
 
 
@@ -2619,23 +2434,26 @@
 <h1 id="python-bindings">Python bindings</h1>
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
-<p>This page shows the most basic example of how to use mini-SWE-agent as a Python library.
+<p>This page shows how to use Leanimum-agent as a Python library with the built-in Lean prompt.
 For more advanced usage, subclassing, and mix &amp; match of components, see <a href="../../advanced/cookbook/">subclassing and more</a>.</p>
 </div>
 <h2 id="hello-world">Hello world</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.agents.default</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultAgent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_config_from_spec</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.environments.local</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalEnvironment</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.environments</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_environment</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
-<span class="n">task</span> <span class="o">=</span> <span class="s2">"Write a hello world program"</span>
+<span class="n">task</span> <span class="o">=</span> <span class="s2">"Write and check a hello world program in Lean"</span>
 <span class="n">model_name</span> <span class="o">=</span> <span class="s2">"anthropic/claude-sonnet-4-5-20250929"</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">get_config_from_spec</span><span class="p">(</span><span class="s2">"mini"</span><span class="p">)</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">DefaultAgent</span><span class="p">(</span>
-    <span class="n">get_model</span><span class="p">(</span><span class="n">input_model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">),</span>
-    <span class="n">LocalEnvironment</span><span class="p">(),</span>
+    <span class="n">get_model</span><span class="p">(</span><span class="n">input_model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">"model"</span><span class="p">]),</span>
+    <span class="n">get_environment</span><span class="p">({</span><span class="o">**</span><span class="n">config</span><span class="p">[</span><span class="s2">"environment"</span><span class="p">],</span> <span class="s2">"cwd"</span><span class="p">:</span> <span class="s2">"/absolute/path/to/lean-project"</span><span class="p">},</span> <span class="n">default_type</span><span class="o">=</span><span class="s2">"local"</span><span class="p">),</span>
+    <span class="o">**</span><span class="n">config</span><span class="p">[</span><span class="s2">"agent"</span><span class="p">],</span>
 <span class="p">)</span>
 
 <span class="c1"># Run the agent</span>
@@ -2677,36 +2495,6 @@ For more advanced usage, subclassing, and mix &amp; match of components, see <a 
 
 
                 
-
-
-<div class="floating-bubbles">
-<div class="floating-bubbles-title">Our projects</div>
-  <a href="https://swe-agent.com/" class="bubble" title="SWE-agent">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sweagent_logo.svg" alt="SWE-agent">
-    <span class="bubble-tooltip">SWE-agent</span>
-  </a>
-  <a href="https://swe-rex.com/" class="bubble" title="SWE-rex">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swerex_logo.svg" alt="SWE-rex">
-    <span class="bubble-tooltip">SWE-ReX</span>
-  </a>
-  <a href="https://swesmith.com" class="bubble" title="SWE-smith">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swesmith_logo.png" alt="SWE-smith">
-    <span class="bubble-tooltip">SWE-smith</span>
-  </a>
-  <a href="https://swebench.com" class="bubble" title="SWE-bench">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swebench_logo.png" alt="SWE-bench">
-    <span class="bubble-tooltip">SWE-bench</span>
-  </a>
-  <a href="https://codeclash.ai" class="bubble" title="CodeClash">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/codeclash_logo.svg" alt="CodeClash">
-    <span class="bubble-tooltip">CodeClash</span>
-  </a>
-  <a href="https://www.swebench.com/sb-cli/" class="bubble" title="sb-cli">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sbcli_logo.svg" alt="sb-cli">
-    <span class="bubble-tooltip">sb-cli</span>
-  </a>
-</div>
-
               </article>
             </div>
           
@@ -2802,4 +2590,4 @@ For more advanced usage, subclassing, and mix &amp; match of components, see <a 
   
 <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
 document$.subscribe(()=>{ lightbox.reload(); });
-</script></body></html><!-- Floating Bubbles -->
+</script></body></html>

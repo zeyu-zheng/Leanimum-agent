@@ -129,9 +129,7 @@
               </button>
             
             
-<a href="../../usage/programbench/">
-  🎉 Run mini-swe-agent on our new &amp; extremely challenging benchmark, ProgramBench
-</a>
+<a href="../../usage/reuf2f/">Leanimum-agent: bash-only Lean workflows and ReuF2F</a>
 
           </div>
           
@@ -326,44 +324,6 @@
   
 
       
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://www.swebench.com/blog.html" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Blog
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://swebench.com" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Leaderboard
-
-      </a>
-    </li>
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -545,8 +505,6 @@
       
         
       
-        
-      
     
     
     
@@ -653,42 +611,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/swebench/" class="md-nav__link">
+      <a href="../../usage/reuf2f/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    SWE-bench
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../usage/programbench/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ProgramBench
+    ReuF2F
   
 
     
@@ -968,10 +898,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#generating-swe-bench-trajectories-with-vllm" class="md-nav__link">
+  <a href="#generating-reuf2f-trajectories-with-a-local-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Generating SWE-bench trajectories with vLLM
+        Generating ReuF2F trajectories with a local model
       
     </span>
   </a>
@@ -2265,10 +2195,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -2459,70 +2385,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/run/swebench/" class="md-nav__link">
+      <a href="../../reference/run/reuf2f/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    SWE-bench (batch)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/run/swebench_single/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SWE-bench (single)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/run/programbench/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ProgramBench
+    ReuF2F
   
 
     
@@ -2547,60 +2417,6 @@
           </ul>
         </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://www.swebench.com/blog.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Blog
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://swebench.com" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Leaderboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -2681,10 +2497,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#generating-swe-bench-trajectories-with-vllm" class="md-nav__link">
+  <a href="#generating-reuf2f-trajectories-with-a-local-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Generating SWE-bench trajectories with vLLM
+        Generating ReuF2F trajectories with a local model
       
     </span>
   </a>
@@ -2709,7 +2525,6 @@
               
               <article class="md-content__inner md-typeset">
                 
-
                   
 
 
@@ -2764,7 +2579,7 @@ This is done with the <code>model_kwargs</code> dictionary which is directly pas
 <span class="w">  </span><span class="nt">system_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">You are a helpful assistant that can interact with a computer.</span>
 <span class="w">  </span><span class="nt">instance_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">Please solve this issue: {{task}}</span>
+<span class="w">    </span><span class="no">Please complete this Lean task: {{task}}</span>
 
 <span class="w">    </span><span class="no">You can execute bash commands and edit files to implement the necessary changes.</span>
 
@@ -2773,10 +2588,10 @@ This is done with the <code>model_kwargs</code> dictionary which is directly pas
 <span class="w">    </span><span class="no">This workflow should be done step-by-step so that you can iterate on your changes and any possible problems.</span>
 
 <span class="w">    </span><span class="no">1. Analyze the codebase by finding and reading relevant files</span>
-<span class="w">    </span><span class="no">2. Create a script to reproduce the issue</span>
-<span class="w">    </span><span class="no">3. Edit the source code to resolve the issue</span>
-<span class="w">    </span><span class="no">4. Verify your fix works by running your script again</span>
-<span class="w">    </span><span class="no">5. Test edge cases to ensure your fix is robust</span>
+<span class="w">    </span><span class="no">2. Search the project and Mathlib for relevant definitions and lemmas</span>
+<span class="w">    </span><span class="no">3. Edit the Lean code, preserving theorem statements and avoiding `sorry` or new axioms</span>
+<span class="w">    </span><span class="no">4. Check your changes with `lake env lean path/to/Target.lean` using the project's `lean-toolchain`</span>
+<span class="w">    </span><span class="no">5. Verify proofs with [Comparator](https://github.com/leanprover/comparator); follow its setup instructions if needed</span>
 <span class="w">    </span><span class="no">6. Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.</span>
 <span class="w">       </span><span class="no">Do not combine it with any other command. &lt;important&gt;After this command, you cannot continue working on this task.&lt;/important&gt;</span>
 
@@ -2819,10 +2634,10 @@ This is done with the <code>model_kwargs</code> dictionary which is directly pas
 <span class="w">    </span><span class="no">### Create a new file:</span>
 
 <span class="w">    </span><span class="no">```bash</span>
-<span class="w">    </span><span class="no">cat &lt;&lt;'EOF' &gt; newfile.py</span>
-<span class="w">    </span><span class="no">import numpy as np</span>
-<span class="w">    </span><span class="no">hello = "world"</span>
-<span class="w">    </span><span class="no">print(hello)</span>
+<span class="w">    </span><span class="no">cat &lt;&lt;'EOF' &gt; newfile.lean</span>
+<span class="w">    </span><span class="no">import Mathlib</span>
+<span class="w">    </span><span class="no">example (n : Nat) : n + 0 = n := by</span>
+<span class="w">      </span><span class="no">simp</span>
 <span class="w">    </span><span class="no">EOF</span>
 <span class="w">    </span><span class="no">```</span>
 
@@ -2836,34 +2651,35 @@ This is done with the <code>model_kwargs</code> dictionary which is directly pas
 
 <span class="w">    </span><span class="no">```bash</span>
 <span class="w">    </span><span class="no"># Replace all occurrences</span>
-<span class="w">    </span><span class="no">sed -i 's/old_string/new_string/g' filename.py</span>
+<span class="w">    </span><span class="no">sed -i 's/old_string/new_string/g' filename.lean</span>
 
 <span class="w">    </span><span class="no"># Replace only first occurrence</span>
-<span class="w">    </span><span class="no">sed -i 's/old_string/new_string/' filename.py</span>
+<span class="w">    </span><span class="no">sed -i 's/old_string/new_string/' filename.lean</span>
 
 <span class="w">    </span><span class="no"># Replace first occurrence on line 1</span>
-<span class="w">    </span><span class="no">sed -i '1s/old_string/new_string/' filename.py</span>
+<span class="w">    </span><span class="no">sed -i '1s/old_string/new_string/' filename.lean</span>
 
 <span class="w">    </span><span class="no"># Replace all occurrences in lines 1-10</span>
-<span class="w">    </span><span class="no">sed -i '1,10s/old_string/new_string/g' filename.py</span>
+<span class="w">    </span><span class="no">sed -i '1,10s/old_string/new_string/g' filename.lean</span>
 <span class="w">    </span><span class="no">```</span>
 
 <span class="w">    </span><span class="no">### View file content:</span>
 
 <span class="w">    </span><span class="no">```bash</span>
 <span class="w">    </span><span class="no"># View specific lines with numbers</span>
-<span class="w">    </span><span class="no">nl -ba filename.py | sed -n '10,20p'</span>
+<span class="w">    </span><span class="no">nl -ba filename.lean | sed -n '10,20p'</span>
 <span class="w">    </span><span class="no">```</span>
 
 <span class="w">    </span><span class="no">### Any other command you want to run</span>
 
 <span class="w">    </span><span class="no">```bash</span>
-<span class="w">    </span><span class="no">anything</span>
+<span class="w">    </span><span class="no">rg -n --hidden --no-ignore 'lemma_name' .lake/packages/mathlib/Mathlib</span>
 <span class="w">    </span><span class="no">```</span>
 <span class="w">  </span><span class="nt">step_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 <span class="w">  </span><span class="nt">cost_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.</span>
 <span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">confirm</span>
 <span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span>
 <span class="w">  </span><span class="nt">env</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">PAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
 <span class="w">    </span><span class="nt">MANPAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
@@ -3159,36 +2975,15 @@ then this must also match <code>litellm_provider</code> in the config!</p>
 <span class="nn">...</span>
 </code></pre></div>
 <h2 id="concrete-examples">Concrete examples</h2>
-<h3 id="generating-swe-bench-trajectories-with-vllm">Generating SWE-bench trajectories with vLLM</h3>
-<p>This example shows how to generate SWE-bench trajectories using <a href="https://docs.vllm.ai/en/latest/">vLLM</a> as the local inference engine.</p>
-<p>First, launch a vLLM server with your chosen model. For example:</p>
-<div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>ricdomolm/mini-coder-1.7b<span class="w"> </span><span class="p">&amp;</span>
+<h3 id="generating-reuf2f-trajectories-with-a-local-model">Generating ReuF2F trajectories with a local model</h3>
+<p>After starting a compatible local inference server, put its model settings in
+an overlay configuration and merge that with <code>reuf2f.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code>leani-extra<span class="w"> </span>reuf2f<span class="w"> </span>--subset<span class="w"> </span>/tmp/reuf2f-tasks<span class="w"> </span>--slice<span class="w"> </span><span class="m">0</span>:1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-c<span class="w"> </span>reuf2f.yaml<span class="w"> </span>-c<span class="w"> </span>/path/to/local-model.yaml<span class="w"> </span>-o<span class="w"> </span>/tmp/reuf2f-local-run
 </code></pre></div>
-<p>By default, the server will be available at <code>http://localhost:8000</code>.</p>
-<p>Second, edit the mini-swe-agent SWE-bench config file located in <code>src/leanimum/config/benchmarks/swebench.yaml</code> to include your local vLLM model:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"hosted_vllm/ricdomolm/mini-coder-1.7b"</span><span class="w">  </span><span class="c1"># or hosted_vllm/path/to/local/model</span>
-<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">api_base</span><span class="p">:</span><span class="w"> </span><span class="s">"http://localhost:8000/v1"</span><span class="w">  </span><span class="c1"># adjust if using a non-default port/address</span>
-</code></pre></div>
-<p>If you need a custom registry, as detailed above, create a <code>registry.json</code> file:</p>
-<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>registry.json<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
-<span class="s">{</span>
-<span class="s">  "ricdomolm/mini-coder-1.7b": {</span>
-<span class="s">    "max_tokens": 40960,</span>
-<span class="s">    "input_cost_per_token": 0.0,</span>
-<span class="s">    "output_cost_per_token": 0.0,</span>
-<span class="s">    "litellm_provider": "hosted_vllm",</span>
-<span class="s">    "mode": "chat"</span>
-<span class="s">  }</span>
-<span class="s">}</span>
-<span class="s">EOF</span>
-</code></pre></div>
-<p>Now you’re ready to generate trajectories! Let's solve the <code>django__django-11099</code> instance of SWE-bench Verified:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">LITELLM_MODEL_REGISTRY_PATH</span><span class="o">=</span>registry.json<span class="w"> </span>mini-extra<span class="w"> </span>swebench<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--output<span class="w"> </span>test/<span class="w"> </span>--subset<span class="w"> </span>verified<span class="w"> </span>--split<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filter<span class="w"> </span><span class="s1">'^(django__django-11099)$'</span>
-</code></pre></div>
-<p>You should now see the generated trajectory in the <code>test/</code> directory.</p>
+<p>Use a tool-call-capable model for the default benchmark prompt. For ordinary Lean
+tasks with a text-only model, use <code>leani -c mini_textbased.yaml</code> with your model
+settings. See <a href="../../usage/reuf2f/">ReuF2F</a> for preparation and independent grading.</p>
 <div class="grid cards">
   <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
@@ -3225,36 +3020,6 @@ then this must also match <code>litellm_provider</code> in the config!</p>
 
 
                 
-
-
-<div class="floating-bubbles">
-<div class="floating-bubbles-title">Our projects</div>
-  <a href="https://swe-agent.com/" class="bubble" title="SWE-agent">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sweagent_logo.svg" alt="SWE-agent">
-    <span class="bubble-tooltip">SWE-agent</span>
-  </a>
-  <a href="https://swe-rex.com/" class="bubble" title="SWE-rex">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swerex_logo.svg" alt="SWE-rex">
-    <span class="bubble-tooltip">SWE-ReX</span>
-  </a>
-  <a href="https://swesmith.com" class="bubble" title="SWE-smith">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swesmith_logo.png" alt="SWE-smith">
-    <span class="bubble-tooltip">SWE-smith</span>
-  </a>
-  <a href="https://swebench.com" class="bubble" title="SWE-bench">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swebench_logo.png" alt="SWE-bench">
-    <span class="bubble-tooltip">SWE-bench</span>
-  </a>
-  <a href="https://codeclash.ai" class="bubble" title="CodeClash">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/codeclash_logo.svg" alt="CodeClash">
-    <span class="bubble-tooltip">CodeClash</span>
-  </a>
-  <a href="https://www.swebench.com/sb-cli/" class="bubble" title="sb-cli">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sbcli_logo.svg" alt="sb-cli">
-    <span class="bubble-tooltip">sb-cli</span>
-  </a>
-</div>
-
               </article>
             </div>
           
@@ -3350,4 +3115,4 @@ then this must also match <code>litellm_provider</code> in the config!</p>
   
 <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
 document$.subscribe(()=>{ lightbox.reload(); });
-</script></body></html><!-- Floating Bubbles -->
+</script></body></html>

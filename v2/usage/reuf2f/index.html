@@ -6,10 +6,10 @@
       
       
       
-        <link rel="prev" href="../environments/">
+        <link rel="prev" href="../config/">
       
       
-        <link rel="next" href="../../faq/">
+        <link rel="next" href="../inspector/">
       
       
         
@@ -20,7 +20,7 @@
     
     
       
-        <title>v2 migration guide - Leanimum-agent documentation</title>
+        <title>ReuF2F - Leanimum-agent documentation</title>
       
     
     
@@ -113,7 +113,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#v20-migration-guide" class="md-skip">
+        <a href="#reuf2f" class="md-skip">
           Skip to content
         </a>
       
@@ -129,7 +129,7 @@
               </button>
             
             
-<a href="../../usage/reuf2f/">Leanimum-agent: bash-only Lean workflows and ReuF2F</a>
+<a href="./">Leanimum-agent: bash-only Lean workflows and ReuF2F</a>
 
           </div>
           
@@ -169,7 +169,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              v2 migration guide
+              ReuF2F
             
           </span>
         </div>
@@ -490,8 +490,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -512,11 +514,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3">
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3" checked="">
         
           
           <label class="md-nav__link" for="__nav_1_3" id="__nav_1_3_label" tabindex="0">
@@ -537,7 +539,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -555,7 +557,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/mini/" class="md-nav__link">
+      <a href="../mini/" class="md-nav__link">
         
   
   
@@ -583,7 +585,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/config/" class="md-nav__link">
+      <a href="../config/" class="md-nav__link">
         
   
   
@@ -608,10 +610,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../usage/reuf2f/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ReuF2F
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -627,6 +656,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#prepare-once-run-independently" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare once, run independently
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shared-docker-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Docker image
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execution-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution backend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predictions-retries-and-grading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Predictions, retries and grading
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-and-other-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing and other workflows
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -639,7 +743,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/inspector/" class="md-nav__link">
+      <a href="../inspector/" class="md-nav__link">
         
   
   
@@ -667,7 +771,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/output_files/" class="md-nav__link">
+      <a href="../output_files/" class="md-nav__link">
         
   
   
@@ -909,7 +1013,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../global_configuration/" class="md-nav__link">
+      <a href="../../advanced/global_configuration/" class="md-nav__link">
         
   
   
@@ -937,7 +1041,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../yaml_configuration/" class="md-nav__link">
+      <a href="../../advanced/yaml_configuration/" class="md-nav__link">
         
   
   
@@ -970,10 +1074,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -994,11 +1096,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" checked="">
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6">
         
           
           <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
@@ -1019,7 +1121,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1037,7 +1139,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/python_bindings/" class="md-nav__link">
+      <a href="../python_bindings/" class="md-nav__link">
         
   
   
@@ -1065,7 +1167,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../control_flow/" class="md-nav__link">
+      <a href="../../advanced/control_flow/" class="md-nav__link">
         
   
   
@@ -1093,7 +1195,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cookbook/" class="md-nav__link">
+      <a href="../../advanced/cookbook/" class="md-nav__link">
         
   
   
@@ -1121,7 +1223,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../environments/" class="md-nav__link">
+      <a href="../../advanced/environments/" class="md-nav__link">
         
   
   
@@ -1146,37 +1248,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../advanced/v2_migration/" class="md-nav__link">
         
   
   
@@ -1192,142 +1267,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-      
-        <li class="md-nav__item">
-  <a href="#whats-new" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What's new
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-do-i-need-to-change" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What do I need to change?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#config-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Config changes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tool-calling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tool calling
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#trajectory-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Trajectory format
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#removed-renamed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Removed &amp; renamed
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture changes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Architecture changes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#protocol-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Protocol changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#exception-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Exception changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#agentrun-return-value" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Agent.run() return value
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2501,10 +2440,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
-  <a href="#whats-new" class="md-nav__link">
+  <a href="#prepare-once-run-independently" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What's new
+        Prepare once, run independently
       
     </span>
   </a>
@@ -2512,10 +2451,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-do-i-need-to-change" class="md-nav__link">
+  <a href="#shared-docker-image" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What do I need to change?
+        Shared Docker image
       
     </span>
   </a>
@@ -2523,10 +2462,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#config-changes" class="md-nav__link">
+  <a href="#execution-backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Config changes
+        Execution backend
       
     </span>
   </a>
@@ -2534,10 +2473,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#tool-calling" class="md-nav__link">
+  <a href="#predictions-retries-and-grading" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tool calling
+        Predictions, retries and grading
       
     </span>
   </a>
@@ -2545,74 +2484,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#trajectory-format" class="md-nav__link">
+  <a href="#testing-and-other-workflows" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Trajectory format
+        Testing and other workflows
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#removed-renamed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Removed &amp; renamed
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture changes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Architecture changes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#protocol-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Protocol changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#exception-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Exception changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#agentrun-return-value" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Agent.run() return value
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2633,7 +2511,7 @@
 
 
   
-    <a href="https://github.com/zeyu-zheng/Leanimum-agent/edit/main/docs/advanced/v2_migration.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/zeyu-zheng/Leanimum-agent/edit/main/docs/usage/reuf2f.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"></path></svg>
     </a>
@@ -2641,253 +2519,227 @@
   
 
 
-<blockquote>
-<p>Historical upstream v2 migration reference. Leanimum uses Lean prompts and ReuF2F as its only benchmark.</p>
-</blockquote>
-<h1 id="v20-migration-guide">v2.0 Migration Guide</h1>
-<div class="admonition danger">
-<p class="admonition-title">Breaking Changes</p>
-<p><strong>mini-swe-agent v2.0</strong> brings major improvements but requires migration.
-To stay with v1.x, pin your dependency: <code>mini-swe-agent~=1.0</code>.
-See the <a href="https://mini-swe-agent.com/v1/">v1 documentation</a> or the <a href="https://github.com/SWE-agent/mini-swe-agent/tree/v1">v1 branch on GitHub</a>.</p>
-</div>
-<h2 id="whats-new">What's new</h2>
-<ul>
-<li><strong>Tool calls</strong>: Native tool calling API support (now the default)</li>
-<li><strong>Multimodal input</strong>: Support for images and other content types</li>
-</ul>
-<h2 id="what-do-i-need-to-change">What do I need to change?</h2>
-<blockquote>
-<p>I only use the mini CLI with default configs</p>
-</blockquote>
-<p>No changes needed.</p>
-<blockquote>
-<p>I use custom configs</p>
-</blockquote>
-<p>You might need to move some config keys. See <a href="#config-changes">Config changes</a>.</p>
-<blockquote>
-<p>I parse/analyze trajectories</p>
-</blockquote>
-<p>Some metadata fields moved to <code>extra</code>. See <a href="#trajectory-format">Trajectory format</a>.</p>
-<blockquote>
-<p>I use the python bindings or built custom subclasses</p>
-</blockquote>
-<p>You will need to refactor. An agent can refactor your code based on the instructions below.</p>
-<h2 id="config-changes">Config changes</h2>
-<p>If you only changed <code>system_template</code> and <code>instance_template</code>, no changes needed.</p>
-<p><strong>Move from <code>agent</code> to <code>model</code>:</strong></p>
-<ul>
-<li><code>observation_template</code> (renamed from <code>action_observation_template</code>)</li>
-<li><code>format_error_template</code></li>
-<li><code>action_regex</code> (only for text-based parsing)</li>
-</ul>
-<p><strong>Removed:</strong></p>
-<ul>
-<li><code>timeout_template</code></li>
-</ul>
-<p><strong>Code block format changed:</strong></p>
-<p>Default action regex changed from <code>```bash</code> to <code>```mswea_bash_command</code> to avoid conflicts with bash examples in prompts.</p>
-<p><strong>Completion signal changed:</strong></p>
-<p>From <code>echo MINI_SWE_AGENT_FINAL_OUTPUT</code> to <code>echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT</code>.</p>
-<p><strong>New structure:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">system_template</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span>
-<span class="w">  </span><span class="nt">instance_template</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span>
-<span class="w">  </span><span class="nt">step_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-<span class="w">  </span><span class="nt">cost_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.</span>
-<span class="nt">environment</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">cwd</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span>
-<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
-<span class="nt">model</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span>
-<span class="w">  </span><span class="nt">observation_template</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span>
-<span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="s">"..."</span>
-</code></pre></div>
-<p><strong>CLI now supports multiple configs and key-value overrides:</strong></p>
-<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-c<span class="w"> </span>mini.yaml<span class="w"> </span>-c<span class="w"> </span>model.model_kwargs.temperature<span class="o">=</span><span class="m">0</span>.5
-mini<span class="w"> </span>-c<span class="w"> </span>reuf2f.yaml<span class="w"> </span>-c<span class="w"> </span>agent.step_limit<span class="o">=</span><span class="m">100</span>
-mini<span class="w"> </span>-c<span class="w"> </span>mini.yaml<span class="w"> </span>-c<span class="w"> </span>/path/to/model.yaml
-</code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If you use <code>-c</code>, you will not load the full default config, so make sure to always specify your config file in addition to any overrides/updates.</p>
-</div>
-<h2 id="tool-calling">Tool calling</h2>
-<p>v2.0 uses native tool calling by default (instead of regex-based text parsing).</p>
-<p><strong>What's the difference?</strong></p>
-<ul>
-<li>Tool calling (default): Model uses native tool calling API to invoke a "bash" tool</li>
-<li>Text-based (legacy): Model outputs commands in markdown code blocks (or similar), regex extracts them</li>
-</ul>
-<p><strong>How to use it:</strong></p>
-<p>Tool calling is the default. The CLI uses <code>mini.yaml</code> and <code>reuf2f.yaml</code> which are configured for tool calling.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Default (tool calling)</span>
-mini
-python<span class="w"> </span>-m<span class="w"> </span>leanimum.run.benchmarks.reuf2f
-leani-extra<span class="w"> </span>reuf2f<span class="w"> </span>--repo<span class="w"> </span>/path/to/ReuF2F
+<h1 id="reuf2f">ReuF2F</h1>
+<p>ReuF2F prepares tasks and grades patches. Leanimum only launches solver environments,
+runs the agent and collects predictions/trajectories, following the upstream
+mini-SWE-agent batch flow. There is no benchmark exporter or Comparator grading
+implementation in this repository.</p>
+<h2 id="prepare-once-run-independently">Prepare once, run independently</h2>
+<p>In the benchmark checkout, run its <code>reuf2f prepare-tasks /tmp/reuf2f-tasks</code> command.
+Use the installed CLI or the Python interpreter prescribed by that checkout.
+Give this runner the resulting <strong>release directory</strong>, not the benchmark checkout:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Start one shared-image container per selected task.</span>
+leani-extra<span class="w"> </span>reuf2f<span class="w"> </span>--subset<span class="w"> </span>/tmp/reuf2f-tasks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--filter<span class="w"> </span><span class="s1">'^berger-modified-egz$'</span><span class="w"> </span>-m<span class="w"> </span>YOUR_MODEL<span class="w"> </span>-o<span class="w"> </span>/tmp/reuf2f-run
 
-<span class="c1"># Text-based parsing</span>
-mini<span class="w"> </span>-c<span class="w"> </span>mini_textbased.yaml
+<span class="c1"># Parallel batch with one budget per task, not one per direction.</span>
+leani-extra<span class="w"> </span>reuf2f<span class="w"> </span>--subset<span class="w"> </span>/tmp/reuf2f-tasks<span class="w"> </span>--slice<span class="w"> </span><span class="m">0</span>:5<span class="w"> </span>--workers<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-c<span class="w"> </span>reuf2f.yaml<span class="w"> </span>-c<span class="w"> </span>agent.step_limit<span class="o">=</span><span class="m">100</span><span class="w"> </span>-c<span class="w"> </span>agent.cost_limit<span class="o">=</span><span class="m">5</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-m<span class="w"> </span>YOUR_MODEL<span class="w"> </span>-o<span class="w"> </span>/tmp/reuf2f-batch
 </code></pre></div>
-<p><strong>For custom configs:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span><span class="w">  </span><span class="c1"># tool calling (default)</span>
-<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropic/claude-sonnet-4-5-20250929</span>
-
-<span class="c1"># or for text-based:</span>
-<span class="nt">model</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm_textbased</span>
-<span class="w">  </span><span class="nt">action_regex</span><span class="p">:</span><span class="w"> </span><span class="s">"```mswea_bash_command\\s*\\n(.*?)\\n```"</span>
+<p>The release has <code>tasks.jsonl</code> with <code>instance_id</code>, <code>source_revision</code>, <code>base_commit</code>,
+<code>source_file</code>, <code>problem_statement</code>, and a committed workspace at <code>tasks/INSTANCE_ID/workspace</code>.
+The runner reads the expected five-file baseline from that commit, ignoring
+working-tree edits. It transports the source and consistency data, not replacement
+TOML/toolchain/lockfile contents. After initialization:</p>
+<div class="highlight"><pre><span></span><code>/testbed/
+  berger2019modified.lean   # example: retain the original filename
+  lean-toolchain
+  lakefile.toml             # image configuration, only Main root replaced
+  lake-manifest.json
+  .gitignore
+  .git/                     # fresh local repository with one initial commit
+  .lake/                    # image-local dependencies/build artifacts
 </code></pre></div>
-<h2 id="trajectory-format">Trajectory format</h2>
+<p>Each task retains its original filename, namespaces, definitions and theorem text.
+For example, <code>berger2019modified.lean</code> has <code>berger2019modified.conjecture_4_2</code>
+and the appended <code>berger2019modified.conjecture_4_2_neg</code>. The release's
+<code>problem_statement</code> identifies the file and both full theorem names. Negation is
+prepared and independently verified by ReuF2F, not regenerated by this runner.
+One agent chooses either direction within its budget; the unchosen theorem may
+remain <code>sorry</code>, but the selected proof must not depend on it, even indirectly.
+The agent checks with <code>lake build</code> (the exported package has a default target),
+or <code>lake build berger2019modified</code> for this example. Comparator runs separately.
+No <code>TASK.md</code>, <code>Submission/</code>, second copy of the problem, benchmark checkout,
+<code>AGENTS.md</code>, per-task grading controller, or fixed <code>ReuF2FEval</code> namespace is injected.
+The shared image also contains generic Comparator/lean4export/Landrun tools;
+agent self-checks remain separate from official grading in a fresh container.</p>
+<h2 id="shared-docker-image">Shared Docker image</h2>
+<p>Defaults are <code>zeyuzhenghub/lean4:v4.33.0</code>, <code>linux/amd64</code>, and <code>/testbed</code>. The updated
+image recipe still needs building and publishing; its availability is not implied
+by the default tag. Regenerate task releases for Lean v4.33.0 rather than using
+the old toolchain's releases.
+There is no task-specific build/push. These defaults live
+only in <code>reuf2f.yaml</code>; the runner does not duplicate image/platform/workdir defaults.
+The benchmark command timeout is 1200 seconds. No agent wall-clock limit is set;
+the existing 250-step/$3 limits and 3-hour container lifetime remain unchanged.
+These are separate controls: removing the agent wall-clock limit does not remove
+the container's lifetime limit.
+Use <code>-c reuf2f.yaml -c environment.image=...</code> to pin a digest for a published run. Podman works through
+<code>-c environment.executable=podman</code>. Keep <code>--platform linux/amd64</code> if overriding
+<code>environment.run_args</code> for resource limits.</p>
+<p>Before the first model query, the runner keeps <code>lakefile.toml</code>, <code>lean-toolchain</code>,
+<code>lake-manifest.json</code> and <code>.lake</code>. It changes only <code>roots = ["Main"]</code> to the task
+module in the existing TOML, adds the Lean source and <code>.gitignore</code>, checks the
+expected TOML hash and exact locked dependency entries, verifies installed commits
+and tracked files, and builds the named module. It checks that preflight left
+those initial files unchanged, then creates a normal local Git commit. No release
+commit objects or whole replacement project configs are uploaded. A mismatch fails
+setup: no <code>lake update</code> or silent fallback. The image needs bash, Python, Git, Lean,
+the matching TOML recipe and cached dependencies. Docker mounts no host directories,
+credentials or socket by default. These are consistency checks, not a security guarantee.</p>
+<p>No host fallback occurs if the selected container engine is missing. Apply host memory/process/disk and
+network limits appropriate for untrusted solver commands. The model client runs on
+the driver; provider credentials are not forwarded unless explicitly configured.
+Real Docker preflight and benchmark isolated Comparator smoke are release gates;
+local subprocess tests alone do not establish that either works on an evaluation host.</p>
+<h2 id="execution-backend">Execution backend</h2>
+<p>The upstream <code>--environment-class</code> option overrides <code>environment.environment_class</code>
+in config. ReuF2F supports only:</p>
 <ul>
-<li>In v1, all messages in the trajectory's <code>messages</code> field were "hand-formatted", i.e., had a <code>content: str</code> and <code>role: str</code> field.</li>
-<li><strong>In v2, we use the model's native output as the basis for the message and only add the <code>extra</code> field to it</strong>.</li>
+<li><code>docker</code> (default): start the shared image and upload the prepared task. Podman
+  uses this same class with <code>-c reuf2f.yaml -c environment.executable=podman</code>.</li>
+<li><code>local</code> (explicit): execute shell commands in the driver's environment, without
+  starting another container. This can be a disposable host or an outer container
+  that already provides Lean. <strong>There is no per-task security isolation.</strong></li>
 </ul>
-<p>If you use a model that uses the standard <code>/completion</code> endpoint, then you will still always have a <code>content: str</code> and <code>role: str</code> field.
-However, if you use the <a href="https://platform.openai.com/docs/api-reference/responses"><code>/response</code></a> endpoint, then things might look different.</p>
-<p>In other words: the exact message structure depends on the model you use.</p>
-<ul>
-<li>Advantage: Any model message structure is supported</li>
-<li>Disadvantage: If you parse trajectories, you might need to adapt to the message structure of the model you use.</li>
-</ul>
-<h2 id="removed-renamed">Removed &amp; renamed</h2>
-<p><strong>Removed features:</strong></p>
-<ul>
-<li><strong>"Visual" UI</strong>: The <code>-v</code> flag for the alternate, textual based <code>mini -v</code> CLI is no longer supported. This was a tough decision to make, but in the end the visual mode didn't see the adoption we wanted and is significantly more complex to maintain than the default interface.</li>
-<li><strong>Rotating API keys</strong>: <code>ANTHROPIC_API_KEYS</code> with <code>::</code> separator no longer supported. Use single <code>ANTHROPIC_API_KEY</code>.</li>
-<li><strong><code>github_issue</code> run script</strong>: The dedicated <code>github_issue.py</code> run script was removed. Use the <code>mini</code> CLI instead.</li>
-<li><strong><code>MSWEA_MODEL_API_KEY</code> environment variable</strong>: No longer used to override API keys.</li>
-</ul>
-<p><strong>Removed model classes:</strong></p>
-<ul>
-<li><strong><code>anthropic</code> model class</strong>: Removed. Use <code>litellm</code> model class for Anthropic models (make sure that cache control is enabled).</li>
-</ul>
-<p><strong>Renamed model classes:</strong></p>
-<table>
-<thead>
-<tr>
-<th>v1 name</th>
-<th>v2 name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>litellm_response_api</code></td>
-<td><code>litellm_response</code></td>
-</tr>
-<tr>
-<td><code>portkey_response_api</code></td>
-<td><code>portkey_response</code></td>
-</tr>
-</tbody>
-</table>
-<p><strong>New model classes:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>litellm_textbased</code></td>
-<td>Text-based parsing (regex) instead of tool calls</td>
-</tr>
-<tr>
-<td><code>openrouter_textbased</code></td>
-<td>Text-based parsing for OpenRouter</td>
-</tr>
-<tr>
-<td><code>openrouter_response</code></td>
-<td>OpenRouter with response API</td>
-</tr>
-</tbody>
-</table>
-<p><strong>New environment:</strong></p>
-<ul>
-<li><strong><code>swerex_modal</code></strong>: Run environments on Modal (requires <code>pip install mini-swe-agent[modal]</code>)</li>
-</ul>
-<h2 id="architecture-changes">Architecture changes</h2>
+<p>The prepared Lean project for local runs is selected with <code>environment.cwd</code>:</p>
+<div class="highlight"><pre><span></span><code>leani-extra<span class="w"> </span>reuf2f<span class="w"> </span>--subset<span class="w"> </span>/tmp/reuf2f-tasks<span class="w"> </span>--slice<span class="w"> </span><span class="m">0</span>:1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--environment-class<span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-c<span class="w"> </span>reuf2f.yaml<span class="w"> </span>-c<span class="w"> </span>environment.cwd<span class="o">=</span>/path/to/prepared-lean-project<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-m<span class="w"> </span>YOUR_MODEL<span class="w"> </span>-o<span class="w"> </span>/tmp/reuf2f-local-run
+</code></pre></div>
+<p>The prepared project must have the matching image <code>lakefile.toml</code> (Project with
+root Main), <code>lean-toolchain</code>, <code>lake-manifest.json</code>, installed Lean on PATH and
+dependencies already checked out/cached in <code>.lake/packages</code>. On a host
+using the shared image as its outer environment, <code>/testbed</code> serves this purpose.
+The runner does not install or update dependencies. It copies the task into a
+fresh <code>OUTPUT/INSTANCE_ID/workspace-*</code> directory, copies those configs from the
+prepared environment (not the release), changes the Main root, links the prepared dependencies,
+checks their revisions/tracked files, builds the task, and creates an initial Git
+commit there. The prepared project's files and the release are not cleaned,
+overwritten, or used as the agent's working tree. Local attempt workspaces are
+retained with the run output, including on errors and retries.</p>
+<p>Concurrent local tasks have separate source/build directories but share the linked
+dependency cache and the host's resources. An agent can still read host files or
+modify those shared dependencies: use a no-secret disposable environment. This is
+not equivalent to separate Docker containers. Use a compatible Linux environment
+or override the prompt's Linux assumptions if running locally elsewhere.</p>
+<p>A Docker failure is never retried as local. Singularity, SWE-ReX, Modal, ConTree and
+Bubblewrap are not enabled for ReuF2F; generic <code>leani</code> backends remain unchanged.
+The selector is only an agent runtime setting, not part of the released task or
+prediction schema, and does not change the independent Comparator evaluator.</p>
+<p>The shared image is maintained in the ReuF2F repository's <code>docker/</code> directory,
+adapting SWE-bench's directory discovery to <code>tags/&lt;instance_id&gt;/task.yaml</code> plus
+adjacent <code>Dockerfile</code>, inside the existing checkout rather than another Git repo.
+Only image recipes use <code>tags/</code>; prepared mathematical task releases still use <code>tasks/</code>. Run
+<code>reuf2f images build ./docker</code> from the ReuF2F checkout. Each entry identifies a
+shared Lean environment, not a mathematical item. The recipe specifies the installed
+Lean/Mathlib version; <code>task.yaml</code> specifies the environment ID, image name and platform.
+No version argument or build-argument injection is used.
+<code>reuf2f images push ./docker</code> is a separate, explicit upload step. In Docker mode the
+agent runner only starts an available image; local mode starts no image. Neither
+builds or pushes images per task. See ReuF2F's <code>docker/README.md</code>.</p>
+<h2 id="predictions-retries-and-grading">Predictions, retries and grading</h2>
+<p>The runner writes an ID-keyed <code>preds.json</code> in the standard three-field format:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"berger-modified-egz"</span><span class="p">:{</span><span class="nt">"instance_id"</span><span class="p">:</span><span class="s2">"berger-modified-egz"</span><span class="p">,</span><span class="nt">"model_name_or_path"</span><span class="p">:</span><span class="s2">"model"</span><span class="p">,</span><span class="nt">"model_patch"</span><span class="p">:</span><span class="s2">"diff --git a/berger2019modified.lean b/berger2019modified.lean\n..."</span><span class="p">}}</span>
+</code></pre></div>
+<p>Submission follows the pinned upstream mini-SWE-agent protocol:</p>
 <ol>
-<li>
-<p><strong>Responsibility shift</strong>: Models now parse actions and format observations. This enables switching between tool calls and text parsing by changing model classes. The Agent class is now a simpler coordinator.</p>
-</li>
-<li>
-<p><strong>Stateless models</strong>: Cost tracking moved to Agent. The <code>cost</code> and <code>n_calls</code> attributes were removed from the Model protocol.</p>
-</li>
-<li>
-<p><strong>Pydantic configs</strong>: <code>AgentConfig</code> (and other configs) changed from <code>dataclass</code> to Pydantic <code>BaseModel</code>. This requires <code>pydantic &gt;= 2.0</code>.</p>
-</li>
-<li>
-<p><strong>New protocol methods</strong>: All classes implement <code>get_template_vars()</code> and <code>serialize()</code> instead of requiring specific attributes.</p>
-</li>
+<li>The agent edits its task file and local Lean modules under names it chooses.
+   For <code>Support/Lemmas.lean</code>, add <code>[[lean_lib]]</code> with <code>name = "Support"</code> to lakefile.toml
+   and <code>import Support.Lemmas</code> in the task. Keep Project's root and dependencies;
+   run <code>lake build</code> to build the task and its imported dependencies.</li>
+<li>It adds new helpers to Git's index (<code>git add -N -- PATHS</code>) and writes
+   <code>git diff -- berger2019modified.lean lakefile.toml Support/Lemmas.lean &gt; patch.txt</code>
+   for the example above (list the actual files changed).
+   As in upstream, the prompt says <code>Do NOT commit your changes.</code> It does not supply
+   a fixed commit ID or try to recover changes the agent has already committed.</li>
+<li>It inspects the patch, then submits with a separate command:</li>
 </ol>
-<h3 id="protocol-changes">Protocol changes</h3>
-<p>If you want to write a custom Model, Environment or Agent compatible with <code>mini-swe-agent</code>, you don't need to subclass anything.
-Rather, mini-swe-agent fully uses duck typing with <a href="https://typing.python.org/en/latest/spec/protocol.html">protocols</a>
-(tl;dr: as long as you implement the required methods, you can use any class as a Model, Environment or Agent).
-Config options like <code>--config-class</code> also take full import classes, so you can put your classes wherever you want.</p>
-<p><strong>Model protocol:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Removed attributes</span>
-<span class="n">cost</span><span class="p">:</span> <span class="nb">float</span>      <span class="c1"># moved to Agent</span>
-<span class="n">n_calls</span><span class="p">:</span> <span class="nb">int</span>     <span class="c1"># moved to Agent</span>
-
-<span class="c1"># New methods</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">format_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span> <span class="o">...</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">format_observation_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">outputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">template_vars</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span> <span class="o">...</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span> <span class="o">...</span>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span>COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cat<span class="w"> </span>patch.txt
 </code></pre></div>
-<p><strong>Environment protocol:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Changed signature</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span> <span class="o">...</span>  <span class="c1"># was: (command: str) -&gt; dict[str, str]</span>
-
-<span class="c1"># New method</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span> <span class="o">...</span>
-</code></pre></div>
-<p><strong>Agent protocol:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Removed attributes (you don't need to implement these anymore, but you can)</span>
-<span class="n">model</span><span class="p">:</span> <span class="n">Model</span>
-<span class="n">env</span><span class="p">:</span> <span class="n">Environment</span>
-<span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
-
-<span class="c1"># Changed return type</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span> <span class="o">...</span>  <span class="c1"># was: tuple[str, str]</span>
-
-<span class="c1"># New method</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">extra_dicts</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span> <span class="o">...</span>
-</code></pre></div>
-<h3 id="exception-changes">Exception changes</h3>
-<p>All flow control exceptions now inherit from <code>InterruptAgentFlow</code> and moved to <code>leanimum.exceptions</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">InterruptAgentFlow</span> <span class="p">(</span><span class="n">base</span><span class="p">)</span>
-<span class="err">├──</span> <span class="n">Submitted</span> <span class="p">(</span><span class="n">task</span> <span class="n">completed</span><span class="p">)</span>
-<span class="err">├──</span> <span class="n">LimitsExceeded</span> <span class="p">(</span><span class="n">cost</span><span class="o">/</span><span class="n">step</span> <span class="n">limit</span><span class="p">)</span>
-<span class="err">├──</span> <span class="n">FormatError</span> <span class="p">(</span><span class="n">invalid</span> <span class="n">model</span> <span class="n">output</span><span class="p">)</span>
-<span class="err">└──</span> <span class="n">UserInterruption</span> <span class="p">(</span><span class="n">user</span> <span class="n">cancelled</span><span class="p">)</span>  <span class="c1"># new</span>
-</code></pre></div>
-<p><strong>Removed exception classes:</strong></p>
+<p>The existing environment converts that command's output into <code>submission</code>, and the
+upstream runner saves it directly as <code>model_patch</code>. There is no post-run workspace
+scan, source snapshot protocol, archive, or second Git repository on the driver.
+<code>patch.txt</code> is created by the agent when submitting, not a required input file.
+New helpers need <code>git add -N</code>; ordinary <code>git diff</code> omits staged/committed changes.
+The agent is responsible for creating and inspecting its patch. On errors/budget exits without
+a submission, the prediction is empty rather than automatically salvaged from the
+workspace. A nonzero submission command does not finish the task.</p>
+<p>Generation does not validate the patch or interpret a success message as a score.
+For example, submitting <code>accepted</code> literally stores that text as a patch, which the
+benchmark rejects. The <strong>original trusted release</strong>, never the container's Git state,
+is the evaluator's authority. ReuF2F checks paths, file types, sizes, statements,
+axioms and proofs after replay in a fresh root grading container, using Comparator's
+upstream Landrun calls. There is no additional worker-user or custom seccomp layer.
+Container root is not a tamper-proof boundary between submitted code and grading
+artifacts. Missing evaluation infrastructure is an error, not a host fallback.</p>
+<p>The output contains only the upstream-style artifacts:</p>
 <ul>
-<li><code>NonTerminatingException</code> - use <code>InterruptAgentFlow</code> base class</li>
-<li><code>TerminatingException</code> - use <code>InterruptAgentFlow</code> base class</li>
-<li><code>ExecutionTimeoutError</code> - removed (no longer used)</li>
+<li><code>preds.json</code>: three-field predictions.</li>
+<li><code>leanimum.log</code> and <code>exit_statuses_TIMESTAMP.yaml</code>: logs and termination status,
+  including setup failures before an agent can be constructed.</li>
+<li><code>INSTANCE_ID/INSTANCE_ID.traj.json</code>: messages, budgets, termination and config;
+  the release <code>source_revision</code> and <code>base_commit</code> are included here as data provenance,
+  not as the container's local HEAD or a diff instruction.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="c1"># Old</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.agents.default</span><span class="w"> </span><span class="kn">import</span> <span class="n">Submitted</span><span class="p">,</span> <span class="n">FormatError</span>
-
-<span class="c1"># New</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Submitted</span><span class="p">,</span> <span class="n">FormatError</span>
-</code></pre></div>
-<h3 id="agentrun-return-value">Agent.run() return value</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Old (v1)</span>
-<span class="n">submission</span><span class="p">,</span> <span class="n">exit_status</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>  <span class="c1"># tuple[str, str]</span>
-
-<span class="c1"># New (v2)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>  <span class="c1"># dict</span>
-<span class="n">submission</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">"submission"</span><span class="p">]</span>
-<span class="n">exit_status</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">"exit_status"</span><span class="p">]</span>
-</code></pre></div>
-<p>The <code>run()</code> method returns the <code>extra</code> dict from the final exit message. For full trajectory data, use <code>agent.save(path)</code> or <code>agent.serialize()</code>.</p>
+<p>There are no separate <code>task.json</code> or <code>result.json</code> files. Trajectories are saved
+when an agent was constructed. Model initialization failures are logged by batch
+error handling and write no prediction or trajectory, as upstream; normal resume
+retries these IDs. After model initialization, environment/setup failures are
+recorded in the log, batch status and an empty prediction. Containers are cleaned
+up even on failure. <code>Submitted</code> is
+not a proof verdict. Pass <code>preds.json</code> and the original trusted release to ReuF2F's
+<code>eval RELEASE -p preds.json --run-id RUN</code> on the separate prepared evaluation
+host. ReuF2F saves <code>logs/evaluation/RUN/results.json</code> and per-instance reports;
+repeat the same command to resume. <code>reuf2f report RUN</code> re-grades the saved process
+exit evidence without running Lean or Comparator again. Use <code>-d RELEASE</code> when the
+release has moved or run metadata is missing; <code>--repo</code> locates the benchmark checkout.
+Repeat <code>-i ID</code> for a subset-only report. The optional predictions snapshot can be
+replaced by saved per-instance patch artifacts; no input-equality checks are added
+at re-grading time. Keep each run associated with the same experiment.
+Full raw process streams
+are saved alongside the per-instance reports. ReuF2F evaluation uses <code>-i/--instance</code> and
+<code>-j/--workers</code>; this agent runner uses upstream <code>--filter</code>/<code>--slice</code>.
+ReuF2F checks proof and refutation concurrently, with one shared deadline and one
+point for either accepted direction. It creates separate temporary Lake projects
+inside a fresh root grading container using Comparator's upstream Landrun calls;
+it never reuses the solver container or runs submitted Lean on the host. <code>-j N</code> can run up to
+<code>2N</code> Comparator processes. This does not increase the agent's model budget.
+Invalid per-item patches and infrastructure failures are recorded without losing
+other instances' results. An older release remains usable after unrelated
+benchmark commits when its selected source/metadata and dependency config match.</p>
+<p>Selection retains <code>--filter</code> (regex), <code>--slice</code>, deterministic <code>--shuffle</code>,
+<code>--workers</code>, and recursively merged <code>-c</code> configs. <code>--subset</code> supplies the local
+release directory; the old <code>--tasks</code>, <code>--problem</code> and <code>--list</code> interfaces are removed.
+There is no <code>--split</code>: this benchmark release has no split dimension.
+Use <code>--slice 0:N</code> to limit a run. The redundant <code>--limit</code> and <code>--image</code> shortcuts
+are removed; image overrides use the existing config mechanism.
+Without <code>-o/--output</code>, run artifacts are written to the current directory, as in
+the upstream runner. Pass <code>-o DIRECTORY</code> to choose another location; no timestamp
+directory is generated automatically.
+Existing prediction IDs, including failed attempts, are skipped unless
+<code>--redo-existing</code> is set. Output must be outside the release directory. The old
+<code>--repo</code> catalog reader, <code>--prepare-only</code> generator, and archive submission path
+have been removed rather than kept as a second implementation.</p>
+<p>Regenerate older releases whose <code>problem_statement</code> still asks for a supplied
+<code>base_commit</code> or fixed <code>Main.lean</code>/<code>ReuF2FEval</code> names. Records without
+<code>source_file</code> are not supported. New releases contain no agent-side fixed-commit instruction;
+the release's <code>base_commit</code> field remains for trusted file loading and grading.</p>
+<h2 id="testing-and-other-workflows">Testing and other workflows</h2>
+<p>ReuF2F tests exercise both actual local subprocess execution and Docker/Podman.
+Docker tests skip when no engine is available; this does not select local as a
+fallback. Evaluator integration tests use the same shared Lean image, rebuilt with
+its fixed verifier tools on a compatible Linux Docker host. Grading follows the
+upstream root-user execution model, without a separate worker-user or custom
+seccomp layer. Comparator retains its own Landrun build/export calls.
+There is no separate grading image: ReuF2F starts a new container from the shared
+image and never reuses the solver container.
+The generic <code>leani</code> CLI continues to support upstream backends for other workflows.</p>
+<p>Legacy releases containing <code>lakefile.lean</code> must be regenerated. The evaluator
+accepts TOML library layout and local Lean sources; it does not trust submitted
+dependency/plugin/compiler-option overrides or build artifacts.</p>
 
 
 
@@ -2925,7 +2777,7 @@ Config options like <code>--config-class</code> also take full import classes, s
       <nav class="md-footer__inner md-grid" aria-label="Footer">
         
           
-          <a href="../environments/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Environments">
+          <a href="../config/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Config">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
@@ -2935,20 +2787,20 @@ Config options like <code>--config-class</code> also take full import classes, s
                 Previous
               </span>
               <div class="md-ellipsis">
-                Environments
+                Config
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../faq/" class="md-footer__link md-footer__link--next" aria-label="Next: FAQ">
+          <a href="../inspector/" class="md-footer__link md-footer__link--next" aria-label="Next: Inspector">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                FAQ
+                Inspector
               </div>
             </div>
             <div class="md-footer__button md-icon">

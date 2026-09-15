@@ -129,9 +129,7 @@
               </button>
             
             
-<a href="../programbench/">
-  🎉 Run mini-swe-agent on our new &amp; extremely challenging benchmark, ProgramBench
-</a>
+<a href="../reuf2f/">Leanimum-agent: bash-only Lean workflows and ReuF2F</a>
 
           </div>
           
@@ -326,44 +324,6 @@
   
 
       
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://www.swebench.com/blog.html" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Blog
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://swebench.com" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Leaderboard
-
-      </a>
-    </li>
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -536,8 +496,6 @@
   
     
     
-      
-        
       
         
       
@@ -746,42 +704,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../swebench/" class="md-nav__link">
+      <a href="../reuf2f/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    SWE-bench
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../programbench/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ProgramBench
+    ReuF2F
   
 
     
@@ -2246,10 +2176,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -2440,70 +2366,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/run/swebench/" class="md-nav__link">
+      <a href="../../reference/run/reuf2f/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    SWE-bench (batch)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/run/swebench_single/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SWE-bench (single)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/run/programbench/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ProgramBench
+    ReuF2F
   
 
     
@@ -2528,60 +2398,6 @@
           </ul>
         </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://www.swebench.com/blog.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Blog
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://swebench.com" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Leaderboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -2669,7 +2485,6 @@
               
               <article class="md-content__inner md-typeset">
                 
-
                   
 
 
@@ -2730,7 +2545,7 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 <span class="w">  </span><span class="nt">system_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">You are a helpful assistant that can interact with a computer.</span>
 <span class="w">  </span><span class="nt">instance_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">Please solve this issue: {{task}}</span>
+<span class="w">    </span><span class="no">Please complete this Lean task: {{task}}</span>
 
 <span class="w">    </span><span class="no">You can execute bash commands and edit files to implement the necessary changes.</span>
 
@@ -2739,10 +2554,10 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 <span class="w">    </span><span class="no">This workflow should be done step-by-step so that you can iterate on your changes and any possible problems.</span>
 
 <span class="w">    </span><span class="no">1. Analyze the codebase by finding and reading relevant files</span>
-<span class="w">    </span><span class="no">2. Create a script to reproduce the issue</span>
-<span class="w">    </span><span class="no">3. Edit the source code to resolve the issue</span>
-<span class="w">    </span><span class="no">4. Verify your fix works by running your script again</span>
-<span class="w">    </span><span class="no">5. Test edge cases to ensure your fix is robust</span>
+<span class="w">    </span><span class="no">2. Search the project and Mathlib for relevant definitions and lemmas</span>
+<span class="w">    </span><span class="no">3. Edit the Lean code, preserving theorem statements and avoiding `sorry` or new axioms</span>
+<span class="w">    </span><span class="no">4. Check your changes with `lake env lean path/to/Target.lean` using the project's `lean-toolchain`</span>
+<span class="w">    </span><span class="no">5. Verify proofs with [Comparator](https://github.com/leanprover/comparator); follow its setup instructions if needed</span>
 <span class="w">    </span><span class="no">6. Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.</span>
 <span class="w">       </span><span class="no">Do not combine it with any other command. &lt;important&gt;After this command, you cannot continue working on this task.&lt;/important&gt;</span>
 
@@ -2785,10 +2600,10 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 <span class="w">    </span><span class="no">### Create a new file:</span>
 
 <span class="w">    </span><span class="no">```bash</span>
-<span class="w">    </span><span class="no">cat &lt;&lt;'EOF' &gt; newfile.py</span>
-<span class="w">    </span><span class="no">import numpy as np</span>
-<span class="w">    </span><span class="no">hello = "world"</span>
-<span class="w">    </span><span class="no">print(hello)</span>
+<span class="w">    </span><span class="no">cat &lt;&lt;'EOF' &gt; newfile.lean</span>
+<span class="w">    </span><span class="no">import Mathlib</span>
+<span class="w">    </span><span class="no">example (n : Nat) : n + 0 = n := by</span>
+<span class="w">      </span><span class="no">simp</span>
 <span class="w">    </span><span class="no">EOF</span>
 <span class="w">    </span><span class="no">```</span>
 
@@ -2802,34 +2617,35 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 
 <span class="w">    </span><span class="no">```bash</span>
 <span class="w">    </span><span class="no"># Replace all occurrences</span>
-<span class="w">    </span><span class="no">sed -i 's/old_string/new_string/g' filename.py</span>
+<span class="w">    </span><span class="no">sed -i 's/old_string/new_string/g' filename.lean</span>
 
 <span class="w">    </span><span class="no"># Replace only first occurrence</span>
-<span class="w">    </span><span class="no">sed -i 's/old_string/new_string/' filename.py</span>
+<span class="w">    </span><span class="no">sed -i 's/old_string/new_string/' filename.lean</span>
 
 <span class="w">    </span><span class="no"># Replace first occurrence on line 1</span>
-<span class="w">    </span><span class="no">sed -i '1s/old_string/new_string/' filename.py</span>
+<span class="w">    </span><span class="no">sed -i '1s/old_string/new_string/' filename.lean</span>
 
 <span class="w">    </span><span class="no"># Replace all occurrences in lines 1-10</span>
-<span class="w">    </span><span class="no">sed -i '1,10s/old_string/new_string/g' filename.py</span>
+<span class="w">    </span><span class="no">sed -i '1,10s/old_string/new_string/g' filename.lean</span>
 <span class="w">    </span><span class="no">```</span>
 
 <span class="w">    </span><span class="no">### View file content:</span>
 
 <span class="w">    </span><span class="no">```bash</span>
 <span class="w">    </span><span class="no"># View specific lines with numbers</span>
-<span class="w">    </span><span class="no">nl -ba filename.py | sed -n '10,20p'</span>
+<span class="w">    </span><span class="no">nl -ba filename.lean | sed -n '10,20p'</span>
 <span class="w">    </span><span class="no">```</span>
 
 <span class="w">    </span><span class="no">### Any other command you want to run</span>
 
 <span class="w">    </span><span class="no">```bash</span>
-<span class="w">    </span><span class="no">anything</span>
+<span class="w">    </span><span class="no">rg -n --hidden --no-ignore 'lemma_name' .lake/packages/mathlib/Mathlib</span>
 <span class="w">    </span><span class="no">```</span>
 <span class="w">  </span><span class="nt">step_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 <span class="w">  </span><span class="nt">cost_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.</span>
 <span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">confirm</span>
 <span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span>
 <span class="w">  </span><span class="nt">env</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">PAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
 <span class="w">    </span><span class="nt">MANPAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
@@ -2930,7 +2746,7 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 
 <span class="s2">[bold green]-c mini.yaml -c model.model_kwargs.temperature=0.5[/bold green]</span>
 
-<span class="s2">[bold green]-c swebench.yaml agent.mode=yolo[/bold green]</span>
+<span class="s2">[bold green]-c mini.yaml -c environment.timeout=600[/bold green]</span>
 <span class="s2">"""</span>
 
 <span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -2944,7 +2760,7 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
     <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--model-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model class to use (e.g., 'litellm' or 'leanimum.models.litellm_model.LitellmModel')"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
     <span class="n">agent_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--agent-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Agent class to use (e.g., 'interactive' or 'leanimum.agents.interactive.InteractiveAgent')"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
     <span class="n">environment_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--environment-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Environment class to use (e.g., 'local' or 'leanimum.environments.local.LocalEnvironment')"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
-    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"-t"</span><span class="p">,</span> <span class="s2">"--task"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Task/problem statement"</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"-t"</span><span class="p">,</span> <span class="s2">"--task"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Lean proof or programming task"</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
     <span class="n">yolo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">"-y"</span><span class="p">,</span> <span class="s2">"--yolo"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Run without confirmation"</span><span class="p">),</span>
     <span class="n">cost_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"-l"</span><span class="p">,</span> <span class="s2">"--cost-limit"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Cost limit. Set to 0 to disable."</span><span class="p">),</span>
     <span class="n">config_spec</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">DEFAULT_CONFIG_FILE</span><span class="p">)],</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"--config"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">_CONFIG_SPEC_HELP_TEXT</span><span class="p">),</span>
@@ -3249,36 +3065,6 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 
 
                 
-
-
-<div class="floating-bubbles">
-<div class="floating-bubbles-title">Our projects</div>
-  <a href="https://swe-agent.com/" class="bubble" title="SWE-agent">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sweagent_logo.svg" alt="SWE-agent">
-    <span class="bubble-tooltip">SWE-agent</span>
-  </a>
-  <a href="https://swe-rex.com/" class="bubble" title="SWE-rex">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swerex_logo.svg" alt="SWE-rex">
-    <span class="bubble-tooltip">SWE-ReX</span>
-  </a>
-  <a href="https://swesmith.com" class="bubble" title="SWE-smith">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swesmith_logo.png" alt="SWE-smith">
-    <span class="bubble-tooltip">SWE-smith</span>
-  </a>
-  <a href="https://swebench.com" class="bubble" title="SWE-bench">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swebench_logo.png" alt="SWE-bench">
-    <span class="bubble-tooltip">SWE-bench</span>
-  </a>
-  <a href="https://codeclash.ai" class="bubble" title="CodeClash">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/codeclash_logo.svg" alt="CodeClash">
-    <span class="bubble-tooltip">CodeClash</span>
-  </a>
-  <a href="https://www.swebench.com/sb-cli/" class="bubble" title="sb-cli">
-    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sbcli_logo.svg" alt="sb-cli">
-    <span class="bubble-tooltip">sb-cli</span>
-  </a>
-</div>
-
               </article>
             </div>
           
@@ -3374,4 +3160,4 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
   
 <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
 document$.subscribe(()=>{ lightbox.reload(); });
-</script></body></html><!-- Floating Bubbles -->
+</script></body></html>
