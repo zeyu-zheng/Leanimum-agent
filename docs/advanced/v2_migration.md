@@ -1,3 +1,5 @@
+> Historical upstream v2 migration reference. Leanimum uses Lean prompts and ReuF2F as its only benchmark.
+
 # v2.0 Migration Guide
 
 !!! danger "Breaking Changes"
@@ -72,7 +74,7 @@ model:
 
 ```bash
 mini -c mini.yaml -c model.model_kwargs.temperature=0.5
-mini -c swebench.yaml -c agent.step_limit=100
+mini -c reuf2f.yaml -c agent.step_limit=100
 mini -c mini.yaml -c /path/to/model.yaml
 ```
 
@@ -90,16 +92,15 @@ v2.0 uses native tool calling by default (instead of regex-based text parsing).
 
 **How to use it:**
 
-Tool calling is the default. The CLI uses `mini.yaml` and `swebench.yaml` which are configured for tool calling.
+Tool calling is the default. The CLI uses `mini.yaml` and `reuf2f.yaml` which are configured for tool calling.
 
 ```bash
 # Default (tool calling)
 mini
-python -m leanimum.run.benchmarks.swebench
-mini-extra swebench
+python -m leanimum.run.benchmarks.reuf2f
+leani-extra reuf2f --repo /path/to/ReuF2F
 
 # Text-based parsing
-mini-extra swebench -c swebench_backticks.yaml
 mini -c mini_textbased.yaml
 ```
 

@@ -48,7 +48,7 @@ Here's a few popular models and the required API keys:
 [bold yellow]You can leave any setting blank to skip it.[/bold yellow]
 
 More information at https://mini-swe-agent.com/latest/quickstart/
-To find the best model, check the leaderboard at https://swebench.com/
+Choose a model appropriate for your Lean task and evaluation budget.
 """
 
 

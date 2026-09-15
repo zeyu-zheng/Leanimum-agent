@@ -30,7 +30,7 @@ global_config_file = Path(global_config_dir) / ".env"
 if not os.getenv("MSWEA_SILENT_STARTUP"):
     Console().print(
         f"This is [bold green]Leanimum-agent[/bold green] version [bold green]{__version__}[/bold green].\n"
-        "Derived from mini-SWE-agent; this revision preserves the upstream agent behavior.\n"
+        "Bash-only Lean workflows, derived from mini-SWE-agent.\n"
         f"Loading global config from [bold green]'{global_config_file}'[/bold green]",
     )
 dotenv.load_dotenv(dotenv_path=global_config_file)

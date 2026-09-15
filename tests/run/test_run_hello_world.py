@@ -27,7 +27,7 @@ def test_run_hello_world_end_to_end(local_test_data):
     expected_observations = local_test_data["expected_observations"]
 
     with (
-        patch("leanimum.run.hello_world.LitellmModel") as mock_model_class,
+        patch("leanimum.run.hello_world.LitellmTextbasedModel") as mock_model_class,
         patch("os.environ", {"MSWEA_MODEL_NAME": "tardis"}),
     ):
         mock_model_class.return_value = _make_model_from_fixture(model_responses)

@@ -1,7 +1,18 @@
 # Leanimum-agent overview
 
-- Leanimum-agent is derived from mini-SWE-agent and is evolving toward bash-only Lean workflows.
-- This initial revision changes names and documentation only. The upstream agent behavior, prompts, environments, and benchmark runners are unchanged.
+- Leanimum-agent is derived from mini-SWE-agent and provides bash-only Lean proof and programming workflows.
+- ReuF2F is the only built-in benchmark. Do not edit its trusted source while preparing or running agent submissions.
+- Consume a prepared ReuF2F task release via `--subset`; do not recreate mathematical targets or grading here. Each task injects one dual-target Lean file retaining its original filename/theorem name, with an appended `_neg` theorem into the shared `zeyuzhenghub/lean4:v4.33.0` image on `linux/amd64`. Read `source_file` from the prepared release and build that module; do not hard-code `Main` or reimplement negation generation. Check initial file contents, then create a normal local Git commit; do not transfer release commit objects or require matching commit IDs. Use upstream's ordinary `git diff -- PATHS` and `Do NOT commit your changes.` prompt, then store `submission` as `model_patch`. Do not add a fixed-commit prompt parameter, post-run source collector or separate task/result JSON files.
+- Keep the image lakefile.toml and change only Project's Main root to source_file's module. Retain the image toolchain/lockfile; check them instead of uploading replacements. Local mode needs the same prepared TOML/lockfile. Agents may add local Lean libraries under chosen names and edit TOML library layout; submit those changes with the source diff. Do not restrict helpers to a predefined Helpers directory or generate ReuF2FAnswers. Legacy lakefile.lean releases must be regenerated.
+- Keep the model tool interface bash-only. Comparator is an external CLI; no LSP or custom verification tool is required.
+- Model initialization follows the pinned upstream runner: call get_model before the per-instance try/finally. An initialization exception reaches batch error handling without writing a prediction or trajectory, so the next run retries that ID. Do not synthesize an empty prediction/model-name fallback for this case. Later environment/agent failures retain upstream empty-submission handling.
+- Candidate generation and independent grading are separate. Never treat Submitted or a self-reported success as a verified proof.
+- ReuF2F uses a 1200-second per-command timeout, no agent wall-clock limit, and the existing 3-hour container lifetime. Keep generic agent configurations unchanged.
+- The ReuF2F batch runner exposes upstream's `--environment-class` / `environment.environment_class` with exactly `docker` (default, including Podman) and explicitly selected `local`. Local uses a prepared Lean project at `environment.cwd`, creates a fresh per-attempt workspace and reuses that project's locked `.lake/packages`; it has no task isolation and never replaces a failed Docker launch. Do not restore other ReuF2F backends or any evaluator bypass. Shared image build/push belongs to ReuF2F. Independent grading uses fresh Docker
+  containers owned by ReuF2F, not host execution or the solver container; no
+  model API keys/host paths/sockets cross that boundary. Solver and grader use the
+  same versioned Lean image (including generic verifier tools), not the same
+  container. Generic agent/model/environment implementations stay unchanged.
 - The idea of this project is to write the simplest, smallest, most readable agent.
 
 The project is structured as
@@ -105,6 +116,6 @@ Use these component names in parentheses for `fix`, `feat`, `enh`, and `ref` com
 - `env` - Changes to environments (docker, local, singularity, bubblewrap, swerex)
 - `config` - Changes to configuration files or config handling
 - `run` - Changes to run scripts (mini, hello_world)
-- `benchmarks` - Changes to benchmark runners (swebench, inspector)
+- `benchmarks` - Changes to the ReuF2F runner and batch utilities
 - `cli` - Changes to CLI argument handling
 - `deps` - Dependency updates

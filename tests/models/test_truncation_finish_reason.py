@@ -14,7 +14,7 @@ from leanimum.models.utils.actions_toolcall_response import (
 )
 
 _TEMPLATE = "{% if finish_reason == 'length' %}cut off{% else %}{{ error }}{% endif %}"
-# mirrors the production condition in mini.yaml / swebench.yaml / programbench.yaml
+# mirrors the production condition in mini.yaml / reuf2f.yaml
 _TOOLCALL_TEMPLATE = (
     "{% if finish_reason is defined and (finish_reason == 'length' "
     "or (finish_reason == 'tool_calls' and not has_tool_calls)) %}cut off{% else %}{{ error }}{% endif %}"

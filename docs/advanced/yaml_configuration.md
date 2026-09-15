@@ -97,33 +97,15 @@ You can customize this behavior by setting the `action_regex` field to support d
     If you set a custom action_regex (e.g. `<action>(.*?)</action>`), you must use the same output format across all prompt templates (system_template, instance_template, format_error_template, etc.), ensuring the LLM wraps commands accordingly. See the example below for a complete configuration.
 
 
-??? example "Using XML format instead of markdown"
+The built-in text-mode Lean configuration is `mini_textbased.yaml`:
 
-    This example uses the same structure as the default mini.yaml config, but with `<action>` tags instead of markdown code blocks:
+```bash
+leani -c mini_textbased.yaml -t "Complete the specified Lean proof."
+```
 
-    ```yaml
-    --8<-- "src/leanimum/config/benchmarks/swebench_xml.yaml"
-    ```
-
-    You can also directly load this config by specifying `--config swebench_xml`.
-
-
-??? example "Default markdown format"
-
-    This is the default configuration (already the default, you don't need to specify this):
-
-
-    ```yaml
-    model:
-      action_regex: ```mswea_bash_command\s*\n(.*?)\n```
-    agent:
-      system_template: |
-        Your response must contain exactly ONE bash code block.
-
-        ```mswea_bash_command
-        your_command_here
-        ```
-    ```
+It selects `litellm_textbased` and a matching `mswea_bash_command` parser.
+Custom regex formats are still supported by text-based model adapters, but there
+is no separate XML benchmark configuration. Tool-call models use `mini.yaml`.
 
 !!! warning "Linebreaks & escaping"
 

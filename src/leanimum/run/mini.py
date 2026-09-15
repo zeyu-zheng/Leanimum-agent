@@ -43,7 +43,7 @@ Examples:
 
 [bold green]-c mini.yaml -c model.model_kwargs.temperature=0.5[/bold green]
 
-[bold green]-c swebench.yaml agent.mode=yolo[/bold green]
+[bold green]-c mini.yaml -c environment.timeout=600[/bold green]
 """
 
 console = Console(highlight=False)
@@ -57,7 +57,7 @@ def main(
     model_class: str | None = typer.Option(None, "--model-class", help="Model class to use (e.g., 'litellm' or 'leanimum.models.litellm_model.LitellmModel')", rich_help_panel="Advanced"),
     agent_class: str | None = typer.Option(None, "--agent-class", help="Agent class to use (e.g., 'interactive' or 'leanimum.agents.interactive.InteractiveAgent')", rich_help_panel="Advanced"),
     environment_class: str | None = typer.Option(None, "--environment-class", help="Environment class to use (e.g., 'local' or 'leanimum.environments.local.LocalEnvironment')", rich_help_panel="Advanced"),
-    task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
+    task: str | None = typer.Option(None, "-t", "--task", help="Lean proof or programming task", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
     cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
     config_spec: list[str] = typer.Option([str(DEFAULT_CONFIG_FILE)], "-c", "--config", help=_CONFIG_SPEC_HELP_TEXT),

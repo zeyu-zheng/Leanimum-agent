@@ -11,7 +11,7 @@ This environment executes commands in [Modal](https://modal.com) sandboxes using
 
 1. Install the full dependencies:
    ```bash
-   pip install "mini-swe-agent[full]"
+   pip install -e ".[full]"
    ```
 
 2. Set up Modal authentication:
@@ -21,14 +21,14 @@ This environment executes commands in [Modal](https://modal.com) sandboxes using
 
 ## Usage
 
-Evaluate GPT-5 mini on SWE-bench using Modal:
+Use this backend through the general Lean CLI with a prepared environment config:
+
+```bash
+leani -c mini.yaml -c /path/to/environment.yaml -t "Complete and check the Lean task."
 ```
-mini-extra swebench \
-    --config src/leanimum/config/extra/swebench_modal.yaml \
-    --subset verified \
-    --split test \
-    --workers 100 \
-    -o ./results/gpt5-mini-modal
-```
+
+Set `environment.environment_class` to `swerex_modal` and provide the backend's
+required image, workspace, and credentials. The dedicated ReuF2F runner currently
+integrates task preparation only for Docker/Podman and explicit local execution; it does not provision this backend automatically.
 
 {% include-markdown "../../_footer.md" %}

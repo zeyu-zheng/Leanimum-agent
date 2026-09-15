@@ -1,112 +1,37 @@
 # Output files
 
-!!! abstract "Overview"
+## Agent trajectories
 
-    mini-SWE-agent saves run results in JSON format. This page documents the structure of these output files.
+The `.traj.json` schema retains `trajectory_format: mini-swe-agent-1.1` for
+compatibility with the inspector. It stores messages, configuration, cost and
+termination status. `Submitted` means the agent requested completion, not that a
+proof has been independently accepted.
 
-## Trajectory files (`.traj.json`)
+## ReuF2F batch outputs
 
-!!! warning "v2.0 format changes"
+- `preds.json`: an ID-keyed mapping of exactly `instance_id`, `model_name_or_path`,
+  and `model_patch`. The runner stores the agent's `submission` as patch text,
+  following upstream mini-SWE-agent. Errors or budget exits without a patch have
+  an empty prediction; workspaces are not automatically collected.
+  Existing IDs are skipped unless `--redo-existing` is set.
+- `leanimum.log`: runner log, including pre-agent setup errors.
+- `exit_statuses_TIMESTAMP.yaml`: batch progress termination report.
+- `INSTANCE_ID/INSTANCE_ID.traj.json`: messages, config, costs and termination;
+  release `source_revision` and `base_commit` are also recorded as data provenance,
+  not the container's initial commit or final HEAD. Saved whenever
+  an agent was constructed, including model errors and budget exits.
 
-    The output format changed in v2.0 (`trajectory_format: mini-swe-agent-1.1`). See the [v2 migration guide](../advanced/v2_migration.md) for more information.
+With explicitly selected local execution, `INSTANCE_ID/workspace-*` also retains
+each attempt's source and build files. These are diagnostic output, not grading
+authority; submission is still solely the patch in `preds.json`.
 
-!!! tip "Viewing trajectory files"
+No separate `task.json`, `result.json`, submission archive, or agent-side score is
+produced. `Submitted` only identifies the upstream termination protocol; even an
+arbitrary success string is stored as untrusted patch text, not a proof verdict.
+ReuF2F's independent evaluator consumes predictions and the original trusted release.
 
-    Use the [inspector](inspector.md) to browse trajectory files interactively.
+See [ReuF2F](reuf2f.md) for preparation, container preflight and independent grading.
 
-Trajectory files contain the full history of an agent run, including all messages, configuration, and metadata.
-
-### Structure
-
-```json
-{
-  "info": {
-    "model_stats": {
-      "instance_cost": 0.05,  // total cost of API calls for this run
-      "api_calls": 12  // number of API calls made
-    },
-    "config": {
-      "agent": { ... },  // agent configuration
-      "agent_type": "leanimum.agents.default.DefaultAgent",
-      "model": { ... },  // model configuration
-      "model_type": "leanimum.models.litellm_model.LitellmModel",
-      "environment": { ... },  // environment configuration
-      "environment_type": "leanimum.environments.local.LocalEnvironment"
-    },
-    "mini_version": "2.0.0",  // version of mini-SWE-agent used
-    "exit_status": "Submitted",  // final status (Submitted, LimitsExceeded, etc.)
-    "submission": "..."  // final output/patch submitted by the agent (if any)
-  },
-  "messages": [  // full conversation history
-    {"role": "system", "content": "..."},
-    {"role": "user", "content": "..."},
-    {"role": "assistant", "content": "..."},
-    ...
-  ],
-  "trajectory_format": "mini-swe-agent-1.1"  // format version identifier
-}
+```bash
+leani-extra inspect /path/to/INSTANCE_ID.traj.json
 ```
-
-
-Messages follow the [OpenAI chat format](https://platform.openai.com/docs/api-reference/chat) with an additional `extra` field for mini-SWE-agent metadata. Models may add other fields to messages (e.g., `tool_calls`, `reasoning_content`).
-
-!!! note "Toolcall models"
-    When using toolcall-based models (e.g., `LitellmToolcallModel`), the roles differ slightly: assistant messages include `tool_calls` instead of content, and observation messages use `role: "tool"` with a `tool_call_id` field.
-
-```json
-// System message (agent instructions)
-{"role": "system", "content": "You are a helpful assistant..."}
-
-// User message (task description)
-{"role": "user", "content": "Please solve this issue: ..."}
-
-// Assistant message (model response with parsed actions)
-{
-  "role": "assistant",
-  "content": "Let me check the files...\n\n```mswea_bash_command\nls -la\n```",
-  "extra": {
-    "actions": [{"command": "ls -la"}],  // parsed actions to execute
-    "cost": 0.003,  // cost of this API call
-    "timestamp": 1706000000.0,  // unix timestamp of when this message was created
-    "response": { ... }  // raw API response
-  }
-}
-
-// Observation message (execution result)
-{
-  "role": "user",
-  "content": "<returncode>0</returncode>\n<output>\nfile1.py\nfile2.py\n</output>",
-  "extra": {
-    "returncode": 0,
-    "timestamp": 1706000001.0
-  }
-}
-
-// Final message (when agent submits)
-{
-  "role": "user",
-  "content": "",
-  "extra": {
-    "exit_status": "Submitted",
-    "submission": "diff --git a/file.py..."
-  }
-}
-```
-
-
-## `preds.json` format
-
-The predictions file aggregates results from all instances in a format compatible with SWE-bench evaluation:
-
-```json
-{
-  "owner__repo__123": {  // keyed by instance_id
-    "model_name_or_path": "anthropic/claude-sonnet-4-5-20250929",  // model used
-    "instance_id": "owner__repo__123",  // SWE-bench instance identifier
-    "model_patch": "diff --git a/file.py b/file.py\n..."  // generated patch (unified diff)
-  },
-  ...
-}
-```
-
-{% include-markdown "../_footer.md" %}

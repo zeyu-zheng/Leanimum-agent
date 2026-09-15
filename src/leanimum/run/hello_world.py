@@ -12,7 +12,7 @@ import yaml
 from leanimum import package_dir
 from leanimum.agents.default import DefaultAgent
 from leanimum.environments.local import LocalEnvironment
-from leanimum.models.litellm_model import LitellmModel
+from leanimum.models.litellm_textbased_model import LitellmTextbasedModel
 
 app = typer.Typer()
 
@@ -30,8 +30,8 @@ def main(
 ) -> DefaultAgent:
     logging.basicConfig(level=logging.DEBUG)
     agent = DefaultAgent(
-        LitellmModel(model_name=model_name),
-        LocalEnvironment(),
+        LitellmTextbasedModel(model_name=model_name),
+        LocalEnvironment(timeout=600),
         **yaml.safe_load(Path(package_dir / "config" / "default.yaml").read_text())["agent"],
     )
     agent.run(task)

@@ -125,12 +125,6 @@ def assert_observations_match(expected_observations: list[str], messages: list[d
 
 
 @pytest.fixture
-def github_test_data():
-    """Load GitHub issue test fixtures"""
-    return get_test_data("github_issue")
-
-
-@pytest.fixture
 def local_test_data():
     """Load local test fixtures"""
     return get_test_data("local")

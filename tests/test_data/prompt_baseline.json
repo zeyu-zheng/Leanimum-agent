@@ -1,0 +1,98 @@
+{
+  "upstream_commit": "04d809ceab9df28f9adaed044884180159172930",
+  "prompts": {
+    "mini": {
+      "system_template": "You are a helpful assistant that can interact with a computer.\n",
+      "words": 466,
+      "lines": 97,
+      "headings": [
+        "## Recommended Workflow",
+        "## Command Execution Rules",
+        "## Useful command examples",
+        "### Create a new file:",
+        "### Edit files with sed:",
+        "# Replace all occurrences",
+        "# Replace only first occurrence",
+        "# Replace first occurrence on line 1",
+        "# Replace all occurrences in lines 1-10",
+        "### View file content:",
+        "# View specific lines with numbers",
+        "### Any other command you want to run"
+      ],
+      "rules_start": "## Command Execution Rules",
+      "rules_end": "<system_information>",
+      "rules_sha256": "c1e0128ba8c3611f0ab0c802590ef876d1ac3039810872b62560ce984c1870e6",
+      "observation_template_sha256": "bf5a29fe56e297588a40b3a8df70c8eb4d4664d205a930fa62e72560382b2916",
+      "format_error_template_sha256": "03b5a9fab17867bf9942520c21f044bfc7779f07ac7253646ef0b71ae0caa32e"
+    },
+    "mini_textbased": {
+      "system_template": "You are a helpful assistant that can interact with a computer.\n\nYour response must contain exactly ONE bash code block with ONE command (or commands connected with && or ||).\nInclude a THOUGHT section before your command where you explain your reasoning process.\nFormat your response as shown in <format_example>.\n\n<format_example>\nYour reasoning and analysis here. Explain why you want to perform the action.\n\n```mswea_bash_command\nyour_command_here\n```\n</format_example>\n\nFailure to follow these rules will cause your response to be rejected.\n",
+      "words": 438,
+      "lines": 100,
+      "headings": [
+        "## Recommended Workflow",
+        "## Important Rules",
+        "## Formatting your response",
+        "## Useful command examples",
+        "### Create a new file:",
+        "### Edit files with sed:",
+        "# Replace all occurrences",
+        "# Replace only first occurrence",
+        "# Replace first occurrence on line 1",
+        "# Replace all occurrences in lines 1-10",
+        "### View file content:",
+        "# View specific lines with numbers",
+        "### Any other command you want to run"
+      ],
+      "rules_start": "## Important Rules",
+      "rules_end": "<system_information>",
+      "rules_sha256": "01ca97bb8bba383d0f10d98b099c12ce152afb6d26cf674741de13a85387a5f3",
+      "observation_template_sha256": "4cd54626f03be2dd572eeffbe31d9421d73c167d4feb79dc3c1b4336d0568e31",
+      "format_error_template_sha256": "c35ca18f1c4ae1a8bd7eb5ca650fb3cd22db7a972680d4aeea4f689704253683"
+    },
+    "default": {
+      "system_template": "You are a helpful assistant that can interact with a computer.\n\nYour response must contain exactly ONE bash code block with ONE command (or commands connected with && or ||).\nInclude a THOUGHT section before your command where you explain your reasoning process.\nFormat your response as shown in <format_example>.\n\n<format_example>\nYour reasoning and analysis here. Explain why you want to perform the action.\n\n```mswea_bash_command\nyour_command_here\n```\n</format_example>\n\nFailure to follow these rules will cause your response to be rejected.\n",
+      "words": 438,
+      "lines": 100,
+      "headings": [
+        "## Recommended Workflow",
+        "## Important Rules",
+        "## Formatting your response",
+        "## Useful command examples",
+        "### Create a new file:",
+        "### Edit files with sed:",
+        "# Replace all occurrences",
+        "# Replace only first occurrence",
+        "# Replace first occurrence on line 1",
+        "# Replace all occurrences in lines 1-10",
+        "### View file content:",
+        "# View specific lines with numbers",
+        "### Any other command you want to run"
+      ],
+      "rules_start": "## Important Rules",
+      "rules_end": "<system_information>",
+      "rules_sha256": "01ca97bb8bba383d0f10d98b099c12ce152afb6d26cf674741de13a85387a5f3",
+      "observation_template_sha256": "4cd54626f03be2dd572eeffbe31d9421d73c167d4feb79dc3c1b4336d0568e31",
+      "format_error_template_sha256": "3234148e4e09ceeb50c7d3175938027e8484d8a0f1165e62c45c385afda5699e"
+    },
+    "swebench": {
+      "system_template": "You are a helpful assistant that can interact with a computer shell to solve programming tasks.\n",
+      "words": 728,
+      "lines": 108,
+      "headings": [
+        "# Task Instructions",
+        "## Overview",
+        "## Important Boundaries",
+        "## Recommended Workflow",
+        "## Command Execution Rules",
+        "## Environment Details",
+        "## Submission"
+      ],
+      "rules_start": "## Command Execution Rules",
+      "rules_end": "Example of a CORRECT response:",
+      "rules_sha256": "ccc5bfd5f04559d6897027f91d9fc73f699788956d9ebc731b90005e2c2516e6",
+      "observation_template_sha256": "4cd54626f03be2dd572eeffbe31d9421d73c167d4feb79dc3c1b4336d0568e31",
+      "format_error_template_sha256": "0f35cfbd448dd46e17e80b571d346256d4a75cd5ceffafc5c0d088ed0e1c0d9a"
+    }
+  }
+}

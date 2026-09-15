@@ -19,7 +19,7 @@ This environment executes commands in [ConTree](https://contree.dev) sandboxes u
 
 1. Install the dependencies:
    ```bash
-   pip install "mini-swe-agent[contree]"
+   pip install -e ".[contree]"
    ```
 
 2. Set up ConTree token and base_url:
@@ -30,16 +30,14 @@ This environment executes commands in [ConTree](https://contree.dev) sandboxes u
 
 ## Usage
 
-Run mini-swe-agent like with any other environment:
-```
-mini-extra swebench \
-    --subset verified \
-    --split test \
-    --workers 100
-    --environment-class contree
+Use this backend through the general Lean CLI with a prepared environment config:
+
+```bash
+leani -c mini.yaml -c /path/to/environment.yaml -t "Complete and check the Lean task."
 ```
 
-It can be specified both through cli parameter or by setting `environment_class` to `contree` in your swebench.yaml config
+Set `environment.environment_class` to `contree` and provide the backend's
+required image, workspace, and credentials. The dedicated ReuF2F runner currently
+integrates task preparation only for Docker/Podman and explicit local execution; it does not provision this backend automatically.
 
 {% include-markdown "../../_footer.md" %}
-
