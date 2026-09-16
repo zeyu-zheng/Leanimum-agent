@@ -1,6 +1,6 @@
 # API Reference
 
-This section provides detailed documentation for all classes and modules in mini-SWE-agent.
+This section provides detailed documentation for the maintained Leanimum-agent classes and modules.
 
 !!! tip "Understanding the agent"
     Before diving into the API reference, we recommend reading the [control flow documentation](../advanced/control_flow.md) to understand how the agent works.

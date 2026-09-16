@@ -30,9 +30,9 @@ class TestConfigSetup:
             # Verify the file was created and contains the expected content
             assert config_file.exists()
             content = config_file.read_text()
-            assert "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'" in content
+            assert "LEANA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'" in content
             assert "ANTHROPIC_API_KEY='sk-test123'" in content
-            assert "MSWEA_CONFIGURED='true'" in content
+            assert "LEANA_CONFIGURED='true'" in content
 
     def test_setup_with_model_only(self, tmp_path):
         """Test setup when user only provides model name."""
@@ -48,8 +48,8 @@ class TestConfigSetup:
             setup()
 
             content = config_file.read_text()
-            assert "MSWEA_MODEL_NAME='gpt-4'" in content
-            assert "MSWEA_CONFIGURED='true'" in content
+            assert "LEANA_MODEL_NAME='gpt-4'" in content
+            assert "LEANA_CONFIGURED='true'" in content
             # Should not contain any API key
             assert "ANTHROPIC_API_KEY" not in content
             assert "OPENAI_API_KEY" not in content
@@ -69,8 +69,8 @@ class TestConfigSetup:
 
             content = config_file.read_text()
             # Should only have configured flag
-            assert "MSWEA_CONFIGURED='true'" in content
-            assert "MSWEA_MODEL_NAME" not in content
+            assert "LEANA_CONFIGURED='true'" in content
+            assert "LEANA_MODEL_NAME" not in content
 
     def test_setup_with_existing_env_vars(self, tmp_path):
         """Test setup when environment variables already exist."""
@@ -80,7 +80,7 @@ class TestConfigSetup:
             patch("leanimum.run.utilities.config.global_config_file", config_file),
             patch("leanimum.run.utilities.config.prompt") as mock_prompt,
             patch("leanimum.run.utilities.config.console.print"),
-            patch.dict(os.environ, {"MSWEA_MODEL_NAME": "existing-model", "ANTHROPIC_API_KEY": "existing-key"}),
+            patch.dict(os.environ, {"LEANA_MODEL_NAME": "existing-model", "ANTHROPIC_API_KEY": "existing-key"}),
         ):
             # When prompted, user accepts defaults (existing values)
             mock_prompt.side_effect = ["existing-model", "ANTHROPIC_API_KEY", "existing-key"]
@@ -88,7 +88,7 @@ class TestConfigSetup:
             setup()
 
             content = config_file.read_text()
-            assert "MSWEA_MODEL_NAME='existing-model'" in content
+            assert "LEANA_MODEL_NAME='existing-model'" in content
             assert "ANTHROPIC_API_KEY='existing-key'" in content
 
     def test_setup_key_name_but_no_value(self, tmp_path):
@@ -105,8 +105,8 @@ class TestConfigSetup:
             setup()
 
             content = config_file.read_text()
-            assert "MSWEA_MODEL_NAME='gpt-4'" in content
-            assert "MSWEA_CONFIGURED='true'" in content
+            assert "LEANA_MODEL_NAME='gpt-4'" in content
+            assert "LEANA_CONFIGURED='true'" in content
             # Should not contain the API key since no value was provided
             assert "OPENAI_API_KEY" not in content
             mock_print.assert_any_call(
@@ -122,11 +122,11 @@ class TestConfigSet:
         config_file = tmp_path / ".env"
 
         with patch("leanimum.run.utilities.config.global_config_file", config_file):
-            set("MSWEA_MODEL_NAME", "anthropic/claude-sonnet-4-5-20250929")
+            set("LEANA_MODEL_NAME", "anthropic/claude-sonnet-4-5-20250929")
 
             assert config_file.exists()
             content = config_file.read_text()
-            assert "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'" in content
+            assert "LEANA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'" in content
 
     def test_set_with_no_arguments_prompts_for_both(self, tmp_path):
         """Test set command when no arguments provided - should prompt for both key and value."""
@@ -181,17 +181,6 @@ class TestConfigSet:
             content = config_file.read_text()
             assert "prompted_key='PROVIDED_VALUE'" in content
 
-    def test_set_key_value(self, tmp_path):
-        """Test setting a key-value pair (legacy test for compatibility)."""
-        config_file = tmp_path / ".env"
-
-        with patch("leanimum.run.utilities.config.global_config_file", config_file):
-            set("MSWEA_MODEL_NAME", "anthropic/claude-sonnet-4-5-20250929")
-
-            assert config_file.exists()
-            content = config_file.read_text()
-            assert "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'" in content
-
     def test_set_api_key(self, tmp_path):
         """Test setting an API key."""
         config_file = tmp_path / ".env"
@@ -207,25 +196,25 @@ class TestConfigSet:
         config_file = tmp_path / ".env"
 
         with patch("leanimum.run.utilities.config.global_config_file", config_file):
-            set("MSWEA_MODEL_NAME", "gpt-4")
+            set("LEANA_MODEL_NAME", "gpt-4")
             set("OPENAI_API_KEY", "sk-openai-test")
-            set("MSWEA_GLOBAL_COST_LIMIT", "10.00")
+            set("LEANA_GLOBAL_COST_LIMIT", "10.00")
 
             content = config_file.read_text()
-            assert "MSWEA_MODEL_NAME='gpt-4'" in content
+            assert "LEANA_MODEL_NAME='gpt-4'" in content
             assert "OPENAI_API_KEY='sk-openai-test'" in content
-            assert "MSWEA_GLOBAL_COST_LIMIT='10.00'" in content
+            assert "LEANA_GLOBAL_COST_LIMIT='10.00'" in content
 
     def test_set_overwrites_existing_key(self, tmp_path):
         """Test that setting a key overwrites existing value."""
         config_file = tmp_path / ".env"
-        config_file.write_text("MSWEA_MODEL_NAME=old-model\nOTHER_KEY=other-value\n")
+        config_file.write_text("LEANA_MODEL_NAME=old-model\nOTHER_KEY=other-value\n")
 
         with patch("leanimum.run.utilities.config.global_config_file", config_file):
-            set("MSWEA_MODEL_NAME", "new-model")
+            set("LEANA_MODEL_NAME", "new-model")
 
             content = config_file.read_text()
-            assert "MSWEA_MODEL_NAME='new-model'" in content
+            assert "LEANA_MODEL_NAME='new-model'" in content
             assert "old-model" not in content
             # Other keys should remain unchanged
             assert "OTHER_KEY=other-value" in content
@@ -252,13 +241,13 @@ class TestConfigUnset:
     def test_unset_with_argument_provided(self, tmp_path):
         """Test unset command when key is provided as argument."""
         config_file = tmp_path / ".env"
-        config_file.write_text("MSWEA_MODEL_NAME='gpt-4'\nOPENAI_API_KEY='sk-test123'\n")
+        config_file.write_text("LEANA_MODEL_NAME='gpt-4'\nOPENAI_API_KEY='sk-test123'\n")
 
         with patch("leanimum.run.utilities.config.global_config_file", config_file):
-            unset("MSWEA_MODEL_NAME")
+            unset("LEANA_MODEL_NAME")
 
             content = config_file.read_text()
-            assert "MSWEA_MODEL_NAME" not in content
+            assert "LEANA_MODEL_NAME" not in content
             # Other keys should remain
             assert "OPENAI_API_KEY='sk-test123'" in content
 
@@ -281,23 +270,10 @@ class TestConfigUnset:
             assert "TEST_KEY" not in content
             assert "OTHER_KEY='other_value'" in content
 
-    def test_unset_existing_key(self, tmp_path):
-        """Test unsetting an existing key (legacy test for compatibility)."""
-        config_file = tmp_path / ".env"
-        config_file.write_text("MSWEA_MODEL_NAME='gpt-4'\nOPENAI_API_KEY='sk-test123'\n")
-
-        with patch("leanimum.run.utilities.config.global_config_file", config_file):
-            unset("MSWEA_MODEL_NAME")
-
-            content = config_file.read_text()
-            assert "MSWEA_MODEL_NAME" not in content
-            # Other keys should remain
-            assert "OPENAI_API_KEY='sk-test123'" in content
-
     def test_unset_nonexistent_key(self, tmp_path):
         """Test unsetting a key that doesn't exist (should not error)."""
         config_file = tmp_path / ".env"
-        config_file.write_text("MSWEA_MODEL_NAME='gpt-4'\n")
+        config_file.write_text("LEANA_MODEL_NAME='gpt-4'\n")
 
         with patch("leanimum.run.utilities.config.global_config_file", config_file):
             # Should not raise an exception
@@ -305,7 +281,7 @@ class TestConfigUnset:
 
             content = config_file.read_text()
             # Original content should remain unchanged
-            assert "MSWEA_MODEL_NAME='gpt-4'" in content
+            assert "LEANA_MODEL_NAME='gpt-4'" in content
 
     def test_unset_from_empty_file(self, tmp_path):
         """Test unsetting from an empty file."""
@@ -324,10 +300,10 @@ class TestConfigUnset:
         """Test unsetting one key from a file with multiple keys."""
         config_file = tmp_path / ".env"
         config_file.write_text(
-            "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'\n"
+            "LEANA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'\n"
             "ANTHROPIC_API_KEY='sk-anthropic-key'\n"
             "OPENAI_API_KEY='sk-openai-key'\n"
-            "MSWEA_CONFIGURED='true'\n"
+            "LEANA_CONFIGURED='true'\n"
         )
 
         with patch("leanimum.run.utilities.config.global_config_file", config_file):
@@ -337,14 +313,14 @@ class TestConfigUnset:
             # Target key should be removed
             assert "ANTHROPIC_API_KEY" not in content
             # Other keys should remain
-            assert "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'" in content
+            assert "LEANA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'" in content
             assert "OPENAI_API_KEY='sk-openai-key'" in content
-            assert "MSWEA_CONFIGURED='true'" in content
+            assert "LEANA_CONFIGURED='true'" in content
 
     def test_unset_api_key_scenario(self, tmp_path):
         """Test unsetting an API key specifically."""
         config_file = tmp_path / ".env"
-        config_file.write_text("MSWEA_MODEL_NAME='gpt-4'\nOPENAI_API_KEY='sk-old-key'\nMSWEA_CONFIGURED='true'\n")
+        config_file.write_text("LEANA_MODEL_NAME='gpt-4'\nOPENAI_API_KEY='sk-old-key'\nLEANA_CONFIGURED='true'\n")
 
         with patch("leanimum.run.utilities.config.global_config_file", config_file):
             unset("OPENAI_API_KEY")
@@ -354,22 +330,22 @@ class TestConfigUnset:
             assert "OPENAI_API_KEY" not in content
             assert "sk-old-key" not in content
             # Other config should remain
-            assert "MSWEA_MODEL_NAME='gpt-4'" in content
-            assert "MSWEA_CONFIGURED='true'" in content
+            assert "LEANA_MODEL_NAME='gpt-4'" in content
+            assert "LEANA_CONFIGURED='true'" in content
 
     def test_unset_configured_flag(self, tmp_path):
         """Test unsetting the configured flag."""
         config_file = tmp_path / ".env"
-        config_file.write_text("MSWEA_MODEL_NAME='gpt-4'\nMSWEA_CONFIGURED='true'\n")
+        config_file.write_text("LEANA_MODEL_NAME='gpt-4'\nLEANA_CONFIGURED='true'\n")
 
         with patch("leanimum.run.utilities.config.global_config_file", config_file):
-            unset("MSWEA_CONFIGURED")
+            unset("LEANA_CONFIGURED")
 
             content = config_file.read_text()
             # Configured flag should be removed
-            assert "MSWEA_CONFIGURED" not in content
+            assert "LEANA_CONFIGURED" not in content
             # Model should remain
-            assert "MSWEA_MODEL_NAME='gpt-4'" in content
+            assert "LEANA_MODEL_NAME='gpt-4'" in content
 
 
 class TestConfigEdit:
@@ -378,7 +354,7 @@ class TestConfigEdit:
     def test_edit_with_default_editor(self, tmp_path):
         """Test edit function with default editor (nano)."""
         config_file = tmp_path / ".env"
-        config_file.write_text("MSWEA_MODEL_NAME=test")
+        config_file.write_text("LEANA_MODEL_NAME=test")
 
         with (
             patch("leanimum.run.utilities.config.global_config_file", config_file),
@@ -392,7 +368,7 @@ class TestConfigEdit:
     def test_edit_with_custom_editor(self, tmp_path):
         """Test edit function with custom editor."""
         config_file = tmp_path / ".env"
-        config_file.write_text("MSWEA_MODEL_NAME=test")
+        config_file.write_text("LEANA_MODEL_NAME=test")
 
         with (
             patch("leanimum.run.utilities.config.global_config_file", config_file),
@@ -408,14 +384,14 @@ class TestConfigureIfFirstTime:
     """Test the configure_if_first_time function."""
 
     def test_configure_when_not_configured(self, tmp_path):
-        """Test that setup is called when MSWEA_CONFIGURED is not set."""
+        """Test that setup is called when LEANA_CONFIGURED is not set."""
         config_file = tmp_path / ".env"
 
         with (
             patch("leanimum.run.utilities.config.global_config_file", config_file),
             patch("leanimum.run.utilities.config.setup") as mock_setup,
             patch("leanimum.run.utilities.config.console.print") as mock_print,
-            patch.dict(os.environ, {}, clear=True),  # Clear MSWEA_CONFIGURED
+            patch.dict(os.environ, {}, clear=True),  # Clear LEANA_CONFIGURED
         ):
             configure_if_first_time()
 
@@ -423,10 +399,10 @@ class TestConfigureIfFirstTime:
             mock_print.assert_called()
 
     def test_skip_configure_when_already_configured(self, tmp_path):
-        """Test that setup is not called when MSWEA_CONFIGURED is set."""
+        """Test that setup is not called when LEANA_CONFIGURED is set."""
         with (
             patch("leanimum.run.utilities.config.setup") as mock_setup,
-            patch.dict(os.environ, {"MSWEA_CONFIGURED": "true"}),
+            patch.dict(os.environ, {"LEANA_CONFIGURED": "true"}),
         ):
             configure_if_first_time()
 
@@ -458,7 +434,7 @@ class TestTyperAppIntegration:
     def test_unset_command_via_typer(self, tmp_path):
         """Test the unset command through the Typer app."""
         config_file = tmp_path / ".env"
-        config_file.write_text("OPENAI_API_KEY='sk-test-key'\nMSWEA_MODEL_NAME='gpt-4'\n")
+        config_file.write_text("OPENAI_API_KEY='sk-test-key'\nLEANA_MODEL_NAME='gpt-4'\n")
 
         with patch("leanimum.run.utilities.config.global_config_file", config_file):
             # Call the unset function directly (as the app would)
@@ -466,7 +442,7 @@ class TestTyperAppIntegration:
 
             content = config_file.read_text()
             assert "OPENAI_API_KEY" not in content
-            assert "MSWEA_MODEL_NAME='gpt-4'" in content
+            assert "LEANA_MODEL_NAME='gpt-4'" in content
 
     def test_app_help_contains_config_file_path(self):
         """Test that the app help string includes the config file path."""

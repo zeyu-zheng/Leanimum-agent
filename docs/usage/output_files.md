@@ -1,37 +1,85 @@
 # Output files
 
-## Agent trajectories
+!!! abstract "Overview"
 
-The `.traj.json` schema retains `trajectory_format: mini-swe-agent-1.1` for
-compatibility with the inspector. It stores messages, configuration, cost and
-termination status. `Submitted` means the agent requested completion, not that a
-proof has been independently accepted.
+    Leanimum-agent saves trajectories as JSON. The ReuF2F runner also saves
+    patch predictions, logs and batch termination statuses.
+
+## Trajectory files (`.traj.json`)
+
+A trajectory records messages, configuration, model costs and termination status.
+Its format identifier is `leanimum-agent-1.1`.
+
+!!! tip "Viewing trajectories"
+
+    Browse a file or directory with the [inspector](inspector.md):
+
+    ```bash
+    leani-extra inspect /path/to/INSTANCE_ID.traj.json
+    ```
+
+### Structure
+
+| Field | Contents |
+| --- | --- |
+| `info.model_stats` | `instance_cost` and `api_calls` for the run |
+| `info.config` | Agent/model/environment configuration and class names |
+| `info.mini_version` | Installed agent package version |
+| `info.exit_status` | Termination status, such as `Submitted` or `LimitsExceeded` |
+| `info.submission` | Submitted text, or an empty value if none was produced |
+| `messages` | Full conversation, including command observations |
+| `trajectory_format` | Format identifier |
+
+The ReuF2F runner adds `instance_id`, `source_revision` and `base_commit` at the top
+level. `base_commit` identifies the release baseline, not the solver container's
+Git history. Exceptions may add `exception_str` and `traceback` under `info`.
+
+Messages contain model-specific fields and an `extra` dictionary for parsed
+actions, costs and execution results. Tool-call observations use the provider's
+tool message format; text-based models use rendered user messages. The terminal
+message has `role: "exit"`.
+
+!!! note "Submitted is not a proof verdict"
+
+    `Submitted` means the agent requested completion. ReuF2F evaluates the patch
+    independently to decide whether a proof or refutation is accepted.
 
 ## ReuF2F batch outputs
 
-- `preds.json`: an ID-keyed mapping of exactly `instance_id`, `model_name_or_path`,
-  and `model_patch`. The runner stores the agent's `submission` as patch text,
-  following upstream mini-SWE-agent. Errors or budget exits without a patch have
-  an empty prediction; workspaces are not automatically collected.
-  Existing IDs are skipped unless `--redo-existing` is set.
-- `leanimum.log`: runner log, including pre-agent setup errors.
-- `exit_statuses_TIMESTAMP.yaml`: batch progress termination report.
-- `INSTANCE_ID/INSTANCE_ID.traj.json`: messages, config, costs and termination;
-  release `source_revision` and `base_commit` are also recorded as data provenance,
-  not the container's initial commit or final HEAD. Saved whenever
-  an agent was constructed, including model errors and budget exits.
+| Path | Contents |
+| --- | --- |
+| `preds.json` | ID-keyed patch predictions |
+| `leanimum.log` | Runner messages and failures |
+| `exit_statuses_TIMESTAMP.yaml` | Batch termination statuses |
+| `INSTANCE_ID/INSTANCE_ID.traj.json` | Agent trajectory and release provenance |
+| `INSTANCE_ID/workspace-*` | Retained attempts in explicit local mode |
 
-With explicitly selected local execution, `INSTANCE_ID/workspace-*` also retains
-each attempt's source and build files. These are diagnostic output, not grading
-authority; submission is still solely the patch in `preds.json`.
+### `preds.json` format
 
-No separate `task.json`, `result.json`, submission archive, or agent-side score is
-produced. `Submitted` only identifies the upstream termination protocol; even an
-arbitrary success string is stored as untrusted patch text, not a proof verdict.
-ReuF2F's independent evaluator consumes predictions and the original trusted release.
+Each record has three fields:
 
-See [ReuF2F](reuf2f.md) for preparation, container preflight and independent grading.
-
-```bash
-leani-extra inspect /path/to/INSTANCE_ID.traj.json
+```json
+{
+  "berger-modified-egz": {
+    "instance_id": "berger-modified-egz",
+    "model_name_or_path": "my-model",
+    "model_patch": "diff --git a/berger2019modified.lean b/berger2019modified.lean\n..."
+  }
+}
 ```
+
+`model_patch` contains diff text, not a filename or verdict. Pass predictions and
+the original release to the [evaluator](reuf2f.md#predictions-and-evaluation).
+
+## Failures and resume
+
+- Model initialization errors write no prediction or trajectory and can be retried
+  by resuming the run.
+- Later setup/agent failures can write an empty prediction. Trajectories are saved
+  when an agent was constructed.
+- Existing IDs in `preds.json`, including empty predictions, are skipped unless
+  `--redo-existing` is set. Deleting a trajectory alone does not rerun an ID.
+- Unsubmitted edits are not recovered. Retained local workspaces are diagnostics,
+  not evaluator inputs.
+
+{% include-markdown "../_footer.md" %}

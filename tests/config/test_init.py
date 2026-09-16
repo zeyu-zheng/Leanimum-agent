@@ -120,7 +120,7 @@ class TestGetConfigFromSpec:
             "LANG": "C",
             "PYTHONUTF8": "0",
             "PYTHONCOERCECLOCALE": "0",
-            "MSWEA_SILENT_STARTUP": "1",
+            "LEANA_SILENT_STARTUP": "1",
         }
         code = (
             "from leanimum.config import get_config_from_spec; "

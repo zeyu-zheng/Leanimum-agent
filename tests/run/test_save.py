@@ -1,70 +1,63 @@
+"""Trajectory serialization and JSON persistence."""
+
 import json
-import tempfile
-from pathlib import Path
 
+import pytest
+
+from leanimum import __version__
 from leanimum.agents.default import DefaultAgent
+from leanimum.config import get_config_from_spec
 from leanimum.environments.local import LocalEnvironment
-from leanimum.models.test_models import DeterministicModel, make_output
+from leanimum.models.test_models import DeterministicModel
 
 
-def test_agent_save_includes_class_names():
-    """Test that agent.save includes the full class names with import paths."""
-    import yaml
-
-    config_path = Path("src/leanimum/config/default.yaml")
-    with open(config_path) as f:
-        default_config = yaml.safe_load(f)["agent"]
-
-    model = DeterministicModel(outputs=[make_output("echo 'test'", [])])
-    env = LocalEnvironment()
-    agent = DefaultAgent(model, env, **default_config)
-
-    agent.add_messages({"role": "system", "content": "test system message"})
-    agent.add_messages({"role": "user", "content": "test user message"})
-
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_path = Path(temp_dir) / "test_trajectory.json"
-
-        agent.save(temp_path, {"info": {"exit_status": "Submitted", "submission": "test result"}})
-
-        with temp_path.open() as f:
-            saved_data = json.load(f)
-
-        assert "info" in saved_data
-        assert "config" in saved_data["info"]
-
-        config = saved_data["info"]["config"]
-
-        assert "agent_type" in config
-        assert "model_type" in config
-        assert "environment_type" in config
-
-        assert config["agent_type"] == "leanimum.agents.default.DefaultAgent"
-        assert config["model_type"] == "leanimum.models.test_models.DeterministicModel"
-        assert config["environment_type"] == "leanimum.environments.local.LocalEnvironment"
-
-        assert saved_data["info"]["exit_status"] == "Submitted"
-        assert saved_data["info"]["submission"] == "test result"
-        assert saved_data["trajectory_format"] == "mini-swe-agent-1.1"
+@pytest.fixture
+def agent(tmp_path):
+    agent = DefaultAgent(
+        DeterministicModel(outputs=[]),
+        LocalEnvironment(cwd=str(tmp_path)),
+        **get_config_from_spec("default")["agent"],
+    )
+    agent.add_messages(
+        {"role": "system", "content": "test system message"},
+        {"role": "user", "content": "test user message"},
+    )
+    return agent
 
 
-def test_agent_serialize():
-    """Test that agent.serialize returns the correct structure."""
-    import yaml
-
-    config_path = Path("src/leanimum/config/default.yaml")
-    with open(config_path) as f:
-        default_config = yaml.safe_load(f)["agent"]
-
-    model = DeterministicModel(outputs=[make_output("echo 'test'", [])])
-    env = LocalEnvironment()
-    agent = DefaultAgent(model, env, **default_config)
-
-    agent.add_messages({"role": "system", "content": "test system message"})
-    agent.add_messages({"role": "user", "content": "test user message"})
-
+def test_agent_serialize(agent):
+    agent.cost, agent.n_calls = 0.25, 2
     data = agent.serialize()
+    assert data == {
+        "info": {
+            "model_stats": {"instance_cost": 0.25, "api_calls": 2},
+            "config": {
+                "agent": agent.config.model_dump(mode="json"),
+                "agent_type": "leanimum.agents.default.DefaultAgent",
+                "model": agent.model.config.model_dump(mode="json"),
+                "model_type": "leanimum.models.test_models.DeterministicModel",
+                "environment": agent.env.config.model_dump(mode="json"),
+                "environment_type": "leanimum.environments.local.LocalEnvironment",
+            },
+            "mini_version": __version__,
+            "exit_status": "",
+            "submission": "",
+        },
+        "messages": agent.messages,
+        "trajectory_format": "leanimum-agent-1.1",
+    }
+    assert json.loads(json.dumps(data)) == data
 
-    assert "info" in data
-    assert "config" in data["info"]
-    assert "messages" in data
+
+def test_agent_save_round_trips_and_merges_metadata(agent, tmp_path):
+    path = tmp_path / "nested/run.traj.json"
+    extra = {"info": {"exit_status": "Submitted", "submission": "test result"}}
+    saved = agent.save(path, extra, {"instance_id": "one"})
+    assert json.loads(path.read_text()) == saved
+    assert saved == agent.serialize(extra, {"instance_id": "one"})
+    assert saved["info"]["exit_status"] == "Submitted"
+    assert saved["info"]["submission"] == "test result"
+    assert saved["info"]["config"]["agent_type"] == "leanimum.agents.default.DefaultAgent"
+    assert saved["messages"] == agent.messages
+    assert saved["instance_id"] == "one"
+    assert agent.serialize()["info"]["exit_status"] == ""

@@ -1,32 +1,63 @@
-# Leanimum-agent overview
+# Leanimum-agent
 
-- Leanimum-agent is derived from mini-SWE-agent and provides bash-only Lean proof and programming workflows.
-- ReuF2F is the only built-in benchmark. Do not edit its trusted source while preparing or running agent submissions.
-- Consume a prepared ReuF2F task release via `--subset`; do not recreate mathematical targets or grading here. Each task injects one dual-target Lean file retaining its original filename/theorem name, with an appended `_neg` theorem into the shared `zeyuzhenghub/lean4:v4.33.0` image on `linux/amd64`. Read `source_file` from the prepared release and build that module; do not hard-code `Main` or reimplement negation generation. Check initial file contents, then create a normal local Git commit; do not transfer release commit objects or require matching commit IDs. Use upstream's ordinary `git diff -- PATHS` and `Do NOT commit your changes.` prompt, then store `submission` as `model_patch`. Do not add a fixed-commit prompt parameter, post-run source collector or separate task/result JSON files.
-- Keep the image lakefile.toml and change only Project's Main root to source_file's module. Retain the image toolchain/lockfile; check them instead of uploading replacements. Local mode needs the same prepared TOML/lockfile. Agents may add local Lean libraries under chosen names and edit TOML library layout; submit those changes with the source diff. Do not restrict helpers to a predefined Helpers directory or generate ReuF2FAnswers. Legacy lakefile.lean releases must be regenerated.
-- Keep the model tool interface bash-only. Comparator is an external CLI; no LSP or custom verification tool is required.
-- Model initialization follows the pinned upstream runner: call get_model before the per-instance try/finally. An initialization exception reaches batch error handling without writing a prediction or trajectory, so the next run retries that ID. Do not synthesize an empty prediction/model-name fallback for this case. Later environment/agent failures retain upstream empty-submission handling.
-- Candidate generation and independent grading are separate. Never treat Submitted or a self-reported success as a verified proof.
-- ReuF2F uses a 1200-second per-command timeout, no agent wall-clock limit, and the existing 3-hour container lifetime. Keep generic agent configurations unchanged.
-- The ReuF2F batch runner exposes upstream's `--environment-class` / `environment.environment_class` with exactly `docker` (default, including Podman) and explicitly selected `local`. Local uses a prepared Lean project at `environment.cwd`, creates a fresh per-attempt workspace and reuses that project's locked `.lake/packages`; it has no task isolation and never replaces a failed Docker launch. Do not restore other ReuF2F backends or any evaluator bypass. Shared image build/push belongs to ReuF2F. Independent grading uses fresh Docker
-  containers owned by ReuF2F, not host execution or the solver container; no
-  model API keys/host paths/sockets cross that boundary. Solver and grader use the
-  same versioned Lean image (including generic verifier tools), not the same
-  container. Generic agent/model/environment implementations stay unchanged.
-- The idea of this project is to write the simplest, smallest, most readable agent.
+Keep Leanimum-agent small, bash-only and readable. Third-party notices belong in
+`LICENSE.md`, not repeated adaptation comments.
 
-The project is structured as
+## Repository layout
 
-```bash
-leanimum/__init__  # Protocols/interfaces for all base classes
-leanimum/agents  # Agent control flow & loop
-leanimum/environments  # Executing agent actions
-leanimum/models  # LM interfaces
-leanimum/run  # Run scripts that serve as an entry point
+```text
+src/leanimum/
+  agents/        Agent control flow and interactive mode
+  models/        Model adapters and action/response formatting
+  environments/  Shell execution backends
+  config/        Prompts and configuration
+  run/           CLI, utilities and benchmark runner
 ```
 
-- The project embraces polymorphism: Every individual class should be simple, but we offer alternatives
-- Every use case should start with a run script, that picks one agent, environment, and model class to run
+Each run script selects the model, agent and environment. Preserve active
+execution paths; remove only demonstrably unused private helpers, not
+configurable backends or public interfaces.
+
+## ReuF2F boundary
+
+- ReuF2F is the only built-in benchmark. Consume its prepared release with
+  `--subset`; do not edit trusted benchmark sources, export targets or grade here.
+- Read `source_file` and `problem_statement` from the release. Inject its original
+  filename/theorem plus the prepared `_neg` target; do not regenerate negation,
+  hard-code `Main`, or introduce a fixed namespace.
+- Use the shared `zeyuzhenghub/lean4:v4.33.0` image on `linux/amd64`. Keep the image
+  TOML/toolchain/lockfile, change only Project's Main root to the task module, and
+  check dependency and initial-file consistency. Create a normal local Git commit;
+  do not transfer release commit objects or require identical commit IDs.
+- Agents may add local Lean libraries and submit TOML layout changes. Do not impose
+  a Helpers directory or generate a separate answer library. Regenerate incompatible
+  releases rather than supporting parallel preparation paths.
+- Retain `git diff -- PATHS`, `Do NOT commit your changes.`, completion
+  marker and `submission` -> `model_patch` flow. No post-run source collector,
+  fixed-commit prompt parameter, archive or extra task/result JSON schema.
+- Initialize the model before per-instance try/finally. Initialization
+  errors write no prediction/trajectory and remain retryable; later setup/agent
+  errors retain empty-submission handling.
+- The ReuF2F runner enables `docker` (including Podman) and explicit `local` only.
+  Local uses a prepared project at `environment.cwd`, separate attempt directories
+  and linked dependencies; it has no task isolation. Never fall back to local after
+  a Docker failure. Generic CLI backends remain available.
+- Benchmark defaults: command timeout 1200 seconds, no agent wall-clock limit,
+  3-hour container lifetime, 250 steps and $3 cost limit. Do not change generic
+  configurations as a side effect of benchmark work.
+- Image build/push and independent Comparator grading belong to ReuF2F. Solver and
+  grader use the same image, not the same container. Do not forward host paths,
+  Docker sockets or provider credentials by default. `Submitted` is not acceptance.
+- Comparator is an external CLI. Keep the model tool interface bash-only; do not
+  add LSP or a custom verifier tool.
+
+## Documentation
+
+Use English, short task-oriented sections and executable command examples. Keep
+README as an entry point, runner details in `docs/usage/reuf2f.md`, output schemas
+in `docs/usage/output_files.md`, and third-party notices in `LICENSE.md`. Use existing
+MkDocs admonitions and source/API references rather than duplicating implementation
+code or migration histories. Validate links, option names and defaults.
 
 # Style guide
 

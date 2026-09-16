@@ -2,7 +2,7 @@
 
 !!! note "ConTree Environment class"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/environments/extra/contree.py)
+    - [Read on GitHub](https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/environments/extra/contree.py)
     - Requires [ConTree](https://contree.dev) token
 
     ??? note "Full source code"
@@ -36,8 +36,8 @@ Use this backend through the general Lean CLI with a prepared environment config
 leani -c mini.yaml -c /path/to/environment.yaml -t "Complete and check the Lean task."
 ```
 
-Set `environment.environment_class` to `contree` and provide the backend's
-required image, workspace, and credentials. The dedicated ReuF2F runner currently
-integrates task preparation only for Docker/Podman and explicit local execution; it does not provision this backend automatically.
+Set `environment.environment_class` to `contree` and configure the image,
+workspace and credentials. See the [ReuF2F runner](../../usage/reuf2f.md#environment)
+for its supported environments.
 
 {% include-markdown "../../_footer.md" %}

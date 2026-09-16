@@ -1,6 +1,8 @@
 # Quick start
 
-Install this checkout with Python 3.10 or newer:
+## Installation
+
+Install from source with Python 3.10 or newer:
 
 ```bash
 git clone https://github.com/zeyu-zheng/Leanimum-agent.git
@@ -11,29 +13,47 @@ python -m pip install -e .
 leani-extra config setup
 ```
 
-Run in a prepared Lean project:
+See [model setup](models/quickstart.md) for provider configuration and
+[development setup](contributing.md#development-setup) for tests and documentation.
+
+## Run a Lean task
+
+Use a project with its toolchain and dependencies already installed:
 
 ```bash
-leani -c mini.yaml -c environment.cwd=/absolute/path/to/project \
+leani -c mini.yaml -c environment.cwd=/absolute/path/to/lean-project \
   -t "Complete the proof of Example.target in Example.lean and check it."
 ```
 
-`mini.yaml` uses bash tool calls; `mini_textbased.yaml` uses one
-`mswea_bash_command` code block. Both contain Lean and native Comparator guidance.
-If you pass `-c`, include a full configuration before your overrides.
+!!! note "Configuration"
 
-The main CLI confirms commands by default. `--yolo` disables confirmation, not
-filesystem restrictions. Local execution has no sandbox. Read the chosen backend's
-requirements before allowing an agent to install tools or execute unfamiliar code.
+    `mini.yaml` uses native bash tool calls. Use `mini_textbased.yaml` for command
+    code blocks. If you pass `-c`, include a full configuration before overrides.
 
-To work on the only built-in benchmark:
+!!! warning "Local execution"
+
+    The CLI confirms commands by default. `--yolo` disables confirmation, not
+    filesystem access. Local execution is not sandboxed; use a suitable
+    [backend](advanced/environments.md) for untrusted code.
+
+## Run ReuF2F
+
+First export a task release using ReuF2F's `prepare-tasks` command, then run:
 
 ```bash
 leani-extra reuf2f --subset /tmp/reuf2f-tasks --slice 0:1 \
   -m YOUR_MODEL -o /tmp/reuf2f-run
 ```
 
-Export the release with ReuF2F's `prepare-tasks` first. The runner uses the shared
-`zeyuzhenghub/lean4:v4.33.1` image on `linux/amd64` by default. See
-[ReuF2F](usage/reuf2f.md) for the default Docker batch flow and independent Comparator scoring.
-The commands above install from source; no published distribution is assumed.
+The default image is `zeyuzhenghub/lean4:v4.33.0` on `linux/amd64`. Image build and
+independent evaluation belong to ReuF2F. Follow the [benchmark guide](usage/reuf2f.md)
+to prepare the image, generate predictions and score them.
+
+## Next steps
+
+- [CLI usage](usage/mini.md)
+- [Configuration](advanced/yaml_configuration.md)
+- [Trajectories and outputs](usage/output_files.md)
+- [Python bindings](usage/python_bindings.md)
+
+{% include-markdown "_footer.md" %}

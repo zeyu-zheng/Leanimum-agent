@@ -1,4 +1,4 @@
-# Model trouble shooting
+# Model troubleshooting
 
 This section has examples of common error messages and how to fix them.
 
@@ -8,7 +8,7 @@ This section has examples of common error messages and how to fix them.
 
 ### Invalid API key
 
-```json
+```text
 AuthenticationError: litellm.AuthenticationError: geminiException - {
   "error": {
     "code": 400,
@@ -31,11 +31,11 @@ AuthenticationError: litellm.AuthenticationError: geminiException - {
     ]
   }
 }
- You can permanently set your API key with `mini-extra config set KEY VALUE`.
+ You can permanently set your API key with `leani-extra config set KEY VALUE`.
 ```
 
 Double check your API key and make sure it is correct.
-You can take a look at all your API keys with `mini-extra config edit`.
+You can take a look at all your API keys with `leani-extra config edit`.
 
 ### "Weird" authentication error
 
@@ -76,7 +76,7 @@ Some models (like `o1`, `o3`, `GPT-5` etc.) do not support temperature. The defa
 We use `litellm` to calculate costs for Portkey models because Portkey doesn't seem to provide per-request cost information without
 very inconvenient APIs.
 
-This can lead to errors likethis:
+This can produce errors such as:
 
 ```
   File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/leanimum/models/portkey_model.py", line 85, in query
@@ -108,7 +108,6 @@ model:
   model_name: "grok-code-fast-1"  # the portkey model name
   model_class: "portkey"  # make sure to use the portkey model class
   litellm_model_name_override: "xai/grok-code-fast-1"  # the litellm model name for cost information
-  ...
 ```
 
---8<-- "docs/_footer.md"
+{% include-markdown "../_footer.md" %}

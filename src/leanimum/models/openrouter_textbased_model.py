@@ -16,7 +16,7 @@ logger = logging.getLogger("openrouter_textbased_model")
 
 
 class OpenRouterTextbasedModelConfig(OpenRouterModelConfig):
-    action_regex: str = r"```mswea_bash_command\s*\n(.*?)\n```"
+    action_regex: str = r"```leana_bash_command\s*\n(.*?)\n```"
     """Regex to extract the action from the LM's output."""
     format_error_template: str = (
         "Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions."

@@ -1,15 +1,14 @@
 # Configs
 
 * `mini.yaml` - Default Lean workflow for `leani`, using bash tool calls.
-* `mini_textbased.yaml` - The same Lean workflow with one `mswea_bash_command` block per response.
+* `mini_textbased.yaml` - The same Lean workflow with one `leana_bash_command` block per response.
 * `default.yaml` - Text-based Lean config for the minimal Python example.
 
-Prompts follow the upstream mini-SWE-agent structure, wording, and command
-examples, with only task-specific substitutions for Lean and ReuF2F. Comparator
-setup details stay in the linked documentation. No additional model tools are
-registered; submission and proof acceptance remain separate.
+See the [configuration guide](../../../docs/advanced/yaml_configuration.md) for
+file selection, overrides and template variables.
 
 ## Benchmarks
 
-* `benchmarks/reuf2f.yaml` - The only benchmark config, for `leani-extra reuf2f`.
-  Uses the trusted ReuF2F catalog and starts a Linux Docker environment per instance.
+* `benchmarks/reuf2f.yaml` - Config for `leani-extra reuf2f`. Uses a prepared ReuF2F
+  release and starts a Docker container per instance by default. See the
+  [runner guide](../../../docs/usage/reuf2f.md) for setup and outputs.

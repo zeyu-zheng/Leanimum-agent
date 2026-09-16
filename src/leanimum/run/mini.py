@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """Run Leanimum-agent in your local environment. This is the default executable `leani`."""
-# Read this first: https://mini-swe-agent.com/latest/usage/mini/  (usage)
+# Read this first: https://github.com/zeyu-zheng/Leanimum-agent/blob/main/docs/usage/mini.md  (usage)
 
 import os
 from pathlib import Path
@@ -19,7 +19,7 @@ from leanimum.models import get_model
 from leanimum.run.utilities.config import configure_if_first_time
 from leanimum.utils.serialize import UNSET, recursive_merge
 
-DEFAULT_CONFIG_FILE = Path(os.getenv("MSWEA_MINI_CONFIG_PATH", builtin_config_dir / "mini.yaml"))
+DEFAULT_CONFIG_FILE = Path(os.getenv("LEANA_MINI_CONFIG_PATH", builtin_config_dir / "mini.yaml"))
 DEFAULT_OUTPUT_FILE = global_config_dir / "last_mini_run.traj.json"
 
 

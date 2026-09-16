@@ -47,7 +47,7 @@ Here's a few popular models and the required API keys:
 
 [bold yellow]You can leave any setting blank to skip it.[/bold yellow]
 
-More information at https://mini-swe-agent.com/latest/quickstart/
+More information at https://github.com/zeyu-zheng/Leanimum-agent/blob/main/docs/quickstart.md
 Choose a model appropriate for your Lean task and evaluation budget.
 """
 
@@ -60,7 +60,7 @@ def prompt(*args, **kwargs):
 
 
 def configure_if_first_time():
-    if not os.getenv("MSWEA_CONFIGURED"):
+    if not os.getenv("LEANA_CONFIGURED"):
         console.print(Rule())
         setup()
         console.print(Rule())
@@ -72,10 +72,10 @@ def setup():
     console.print(_SETUP_HELP.format(global_config_file=global_config_file))
     default_model = prompt(
         "Enter your default model (e.g., anthropic/claude-opus-4-6-20260205): ",
-        default=os.getenv("MSWEA_MODEL_NAME", ""),
+        default=os.getenv("LEANA_MODEL_NAME", ""),
     ).strip()
     if default_model:
-        set_key(global_config_file, "MSWEA_MODEL_NAME", default_model)
+        set_key(global_config_file, "LEANA_MODEL_NAME", default_model)
     console.print(
         "[bold yellow]If you already have your API keys set as environment variables, you can ignore the next question.[/bold yellow]"
     )
@@ -89,7 +89,7 @@ def setup():
         console.print(
             "[bold red]API key setup not completed.[/bold red] Totally fine if you have your keys as environment variables."
         )
-    set_key(global_config_file, "MSWEA_CONFIGURED", "true")
+    set_key(global_config_file, "LEANA_CONFIGURED", "true")
     _reload_config()
     console.print(
         "\n[bold yellow]Config finished.[/bold yellow] If you want to revisit it, run [bold green]leani-extra config setup[/bold green]."

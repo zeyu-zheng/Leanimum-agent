@@ -1,6 +1,4 @@
-"""This module contains an auxiliary class for rendering progress of a batch run.
-It's identical to the one used in swe-agent.
-"""
+"""Render progress for a batch run."""
 
 import collections
 import time

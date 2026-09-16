@@ -190,4 +190,4 @@ def test_portkey_model_cost_validation_error():
                     model.query(messages)
 
                 assert "Error calculating cost" in str(exc_info.value)
-                assert "MSWEA_COST_TRACKING='ignore_errors'" in str(exc_info.value)
+                assert "LEANA_COST_TRACKING='ignore_errors'" in str(exc_info.value)

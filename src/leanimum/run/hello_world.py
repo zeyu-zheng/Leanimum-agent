@@ -21,10 +21,10 @@ app = typer.Typer()
 def main(
     task: str = typer.Option(..., "-t", "--task", help="Task/problem statement", show_default=False, prompt=True),
     model_name: str = typer.Option(
-        os.getenv("MSWEA_MODEL_NAME"),
+        os.getenv("LEANA_MODEL_NAME"),
         "-m",
         "--model",
-        help="Model name (defaults to MSWEA_MODEL_NAME env var)",
+        help="Model name (defaults to LEANA_MODEL_NAME env var)",
         prompt="What model do you want to use?",
     ),
 ) -> DefaultAgent:

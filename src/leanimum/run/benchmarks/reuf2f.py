@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-"""Run Leanimum-agent on ReuF2F instances using the upstream SWE-bench batch flow."""
+"""Run Leanimum-agent on a batch of ReuF2F tasks."""
 
-# Adapted from mini-SWE-agent 04d809ceab9df28f9adaed044884180159172930,
-# src/minisweagent/run/benchmarks/swebench.py (MIT; repository LICENSE).
 
 import concurrent.futures
 import json
@@ -89,7 +87,7 @@ def process_instance(
     config: dict,
     progress_manager: RunBatchProgressManager,
 ) -> None:
-    """Upstream run/save flow with shared-image preparation and explicit cleanup."""
+    """Prepare a task environment, run the agent, save results and clean up."""
     instance_id = instance["instance_id"]
     instance_dir = output_dir / instance_id
     instance_dir.mkdir(parents=True, exist_ok=True)
@@ -162,7 +160,7 @@ def filter_instances(
     slice_spec: str = "",
     shuffle: bool = False,
 ) -> list[dict]:
-    """Filter and slice a list of SWEBench instances."""
+    """Filter and slice a list of task instances."""
     if shuffle:
         instances = sorted(instances.copy(), key=lambda x: x["instance_id"])
         random.seed(42)

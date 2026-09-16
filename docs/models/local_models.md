@@ -1,3 +1,5 @@
+# Local models
+
 !!! abstract "Local models"
 
     * This guide shows how to set up local models.
@@ -5,11 +7,6 @@
     * You should also quickly skim the [global configuration guide](../advanced/global_configuration.md) to understand
       the global configuration and [yaml configuration files guide](../advanced/yaml_configuration.md).
 
-
-!!! tip "Examples"
-
-    * [Issue #303](https://github.com/SWE-agent/mini-swe-agent/issues/303) has several examples of how to use local models.
-    * We also welcome concrete examples of how to use local models per pull request into this guide.
 
 ## Using litellm
 
@@ -43,7 +40,8 @@ You can set `model_kwargs` in an agent config file like the following one:
     --8<-- "src/leanimum/config/mini.yaml"
     ```
 
-In the last section, you can add
+Add these model settings to a YAML overlay and load it after a base config,
+for example `leani -c mini.yaml -c /path/to/local-model.yaml`:
 
 ```yaml
 model:
@@ -51,13 +49,11 @@ model:
   model_kwargs:
     custom_llm_provider: "openai"
     api_base: "https://..."
-    ...
-  ...
 ```
 
-!!! tip "Updating the default `mini` configuration file"
+!!! tip "Updating the default `leani` configuration file"
 
-    You can set the `MSWEA_MINI_CONFIG_PATH` setting to set path to the default `mini` configuration file.
+    You can set the `LEANA_MINI_CONFIG_PATH` setting to set path to the default `leani` configuration file.
     This will allow you to override the default configuration file with your own.
     See the [global configuration guide](../advanced/global_configuration.md) for more details.
 
@@ -65,7 +61,7 @@ If this is not enough, our model class should be simple to modify:
 
 ??? note "Complete model class"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/models/litellm_model.py)
+    - [Read on GitHub](https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/models/litellm_model.py)
     - [API reference](../reference/models/litellm.md)
 
     ```python
@@ -87,19 +83,16 @@ If you do not need cost tracking, you can ignore these errors, ideally by editin
 ```yaml
 model:
   cost_tracking: "ignore_errors"
-  ...
-...
 ```
 
 Alternatively, you can set the global setting:
 
 ```bash
-export MSWEA_COST_TRACKING="ignore_errors"
+export LEANA_COST_TRACKING="ignore_errors"
 ```
 
-However, note that this is a global setting, and will affect all models!
-
-However, the best way to handle the cost issue is to add a model registry to litellm to include your local model.
+This affects all adapters that read the global cost-tracking setting. To track
+costs instead, register the model with its actual token prices.
 
 LiteLLM gets its cost and model metadata from [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.
 
@@ -124,6 +117,11 @@ The model registry JSON file should follow LiteLLM's format:
 }
 ```
 
+!!! note "Zero-cost models"
+
+    Keep `cost_tracking: "ignore_errors"` for zero-cost models even when they are
+    registered: the default cost check requires a positive cost.
+
 !!! warning "Model names"
 
     Model names are case sensitive. Please make sure you have an exact match.
@@ -135,14 +133,12 @@ The model registry JSON file should follow LiteLLM's format:
 
 There are two ways of setting the path to the model registry:
 
-1. Set `LITELLM_MODEL_REGISTRY_PATH` (e.g., `mini-extra config set LITELLM_MODEL_REGISTRY_PATH /path/to/model_registry.json`)
+1. Set `LITELLM_MODEL_REGISTRY_PATH` (e.g., `leani-extra config set LITELLM_MODEL_REGISTRY_PATH /path/to/model_registry.json`)
 2. Set `litellm_model_registry` in the agent config file
 
 ```yaml
 model:
   litellm_model_registry: "/path/to/model_registry.json"
-  ...
-...
 ```
 
 ## Concrete examples
@@ -161,4 +157,4 @@ Use a tool-call-capable model for the default benchmark prompt. For ordinary Lea
 tasks with a text-only model, use `leani -c mini_textbased.yaml` with your model
 settings. See [ReuF2F](../usage/reuf2f.md) for preparation and independent grading.
 
---8<-- "docs/_footer.md"
+{% include-markdown "../_footer.md" %}

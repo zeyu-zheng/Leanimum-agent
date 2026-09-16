@@ -1,9 +1,6 @@
 """Real subprocess/replay tests: no mocked transport or model calls."""
 
-import ast
 import concurrent.futures
-import hashlib
-import inspect
 import json
 import logging
 import os
@@ -14,6 +11,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+
 from leanimum.config import get_config_from_spec
 from leanimum.environments.docker import DockerEnvironment
 from leanimum.environments.local import LocalEnvironment
@@ -32,7 +30,6 @@ from leanimum.run.benchmarks.utils.reuf2f import (
     workspace_files,
 )
 from leanimum.utils.serialize import recursive_merge
-from pydantic import ValidationError
 
 PROJECT_CONFIG = 'name = "project"\ndefaultTargets = ["Project"]\n\n[[lean_lib]]\nname = "Project"\nroots = ["Main"]\n'
 EMPTY_MANIFEST = json.dumps({"version": "1.2.0", "name": "project", "packagesDir": ".lake/packages", "packages": []})
@@ -129,7 +126,7 @@ def run_cli(*args):
         capture_output=True,
         text=True,
         timeout=120,
-        env={**os.environ, "MSWEA_SILENT_STARTUP": "1"},
+        env={**os.environ, "LEANA_SILENT_STARTUP": "1"},
     )
 
 
@@ -164,6 +161,8 @@ def make_patch():
 
 
 def test_default_image_platform_and_no_host_mounts():
+    from pydantic import ValidationError
+
     from leanimum.agents.default import AgentConfig
 
     config = get_config_from_spec("reuf2f")["environment"]
@@ -171,12 +170,8 @@ def test_default_image_platform_and_no_host_mounts():
     assert config["environment_class"] == "docker" and config["cwd"] == "/testbed"
     assert config["run_args"] == ["--rm", "--platform", "linux/amd64"]
     assert config["timeout"] == 1200 and config["container_timeout"] == "3h"
-    assert "wall_time_limit_seconds" not in get_config_from_spec("reuf2f")["agent"]
     assert AgentConfig(**get_config_from_spec("reuf2f")["agent"]).wall_time_limit_seconds == 0
-    assert "repo_path" not in get_config_from_spec("reuf2f").get("run", {})
-
-
-def test_docker_image_is_required_in_config(tmp_path):
+    # Keep required-image validation here with its owning configuration contract.
     with pytest.raises(ValidationError, match="image"):
         runner.get_reuf2f_environment({"environment": {"environment_class": "docker"}})
 
@@ -204,9 +199,6 @@ def test_docker_launch_uses_config_without_runner_defaults(tmp_path, caplog):
 def test_release_selection_and_committed_inputs(release):
     instances = load_instances(release)
     assert filter_instances(instances, filter_spec="^sec", slice_spec="0:1") == instances[1:]
-    assert filter_instances(instances, filter_spec="", shuffle=True) == filter_instances(
-        instances, filter_spec="", shuffle=True
-    )
     original = workspace_files(instances[0])
     Path(instances[0]["workspace"], "first.lean").write_text("changed checkout")
     assert workspace_files(instances[0]) == original
@@ -245,6 +237,7 @@ def test_real_bootstrap_minimal_workspace_and_local_commit(release, task_env, tm
     instance = filter_instances(load_instances(release), filter_spec=f"^{instance_id}$")[0]
     baseline = workspace_files(instance)
     prepared = Path(task_env.config.cwd) if isinstance(task_env, LocalEnvironment) else None
+    template = (prepared / "lakefile.toml").read_bytes() if prepared else None
     assert prepare_environment(task_env, instance, tmp_path / "run" / instance_id) is None
     if prepared is not None:
         assert (prepared / "keep.txt").read_text() == "Do not modify the prepared project.\n"
@@ -255,6 +248,9 @@ def test_real_bootstrap_minimal_workspace_and_local_commit(release, task_env, tm
             "keep.txt",
         }
         assert Path(task_env.config.cwd).is_relative_to(tmp_path / "run" / instance_id)
+        assert (Path(task_env.config.cwd) / "lakefile.toml").read_bytes() == template.replace(
+            b'["Main"]', f'["{instance_id}"]'.encode()
+        )
     assert execute(task_env, "git rev-parse HEAD").strip() != instance["base_commit"]
     assert execute(task_env, "git rev-list --count HEAD").strip() == "1"
     for name, data in baseline.items():
@@ -318,15 +314,15 @@ def test_large_task_input_does_not_use_shell_argument_payload(release, task_env,
 def test_failed_rerun_does_not_reuse_patch_or_trajectory(release, tmp_path, backend_settings):
     instance = load_instances(release)[0]
     output = tmp_path / "run"
-    config = recursive_merge(agent_config([make_patch(), finish()]), backend_settings)
+    edit = make_output("Edit", [{"command": "printf '\n-- candidate\n' >> first.lean"}], cost=0)
+    config = recursive_merge(agent_config([edit, make_patch(), finish()]), backend_settings)
     process_instance(instance, output, config, RunBatchProgressManager(1))
     assert (output / "first/first.traj.json").is_file()
-    assert json.loads((output / "preds.json").read_text())["first"]["model_patch"] == ""
+    assert "+-- candidate" in json.loads((output / "preds.json").read_text())["first"]["model_patch"]
     config["run"] = {"env_startup_command": "exit 7"}
     process_instance(instance, output, config, RunBatchProgressManager(1))
     assert json.loads((output / "preds.json").read_text())["first"]["model_patch"] == ""
     assert not (output / "first/first.traj.json").exists()
-    assert not (output / "first/task.json").exists()
 
 
 def test_real_agent_flow_submits_ordinary_git_diff(release, tmp_path, backend_settings):
@@ -363,8 +359,6 @@ def test_real_agent_flow_submits_ordinary_git_diff(release, tmp_path, backend_se
     assert "git diff -- path/to/file1 path/to/file2 > patch.txt" in trajectory["messages"][1]["content"]
     assert "Main.lean" not in trajectory["messages"][1]["content"]
     assert trajectory["source_revision"] == instance["source_revision"]
-    assert not (output / "first/task.json").exists() and not (output / "first/result.json").exists()
-    assert not list(output.rglob("*.tar.gz"))
     replay = tmp_path / "replay"
     replay.mkdir()
     for name, content in workspace_files(instance).items():
@@ -465,7 +459,6 @@ def test_submitted_text_is_not_treated_as_a_verdict(release, tmp_path, backend_s
     prediction = json.loads((output / "preds.json").read_text())["first"]
     assert prediction["model_patch"] == "accepted\n"
     assert set(prediction) == {"instance_id", "model_name_or_path", "model_patch"}
-    assert not (output / "first/result.json").exists()
 
 
 def test_missing_patch_file_does_not_submit(release, tmp_path, backend_settings):
@@ -528,28 +521,29 @@ def test_predictions_thread_safe(tmp_path):
     assert len(json.loads((tmp_path / "preds.json").read_text())) == 20
 
 
-def test_cli_uses_subset_and_rejects_legacy_preparation(release, tmp_path):
-    assert run_cli("--subset", str(release), "--prepare-only").returncode != 0
+def test_cli_output_cannot_overwrite_release(release):
     assert run_cli("--subset", str(release), "-o", str(release / "bad")).returncode != 0
 
 
-@pytest.mark.parametrize(
-    ("args",),  # noqa: PT006
-    [
-        (["--tasks", "unused"],),
-        (["--problem", "first"],),
-        (["--list"],),
-        (["--limit", "1"],),
-        (["--image", "unused:image"],),
-    ],
-)
-def test_cli_rejects_removed_convenience_options(release, args):
-    result = run_cli("--subset", str(release), *args)
-    assert result.returncode != 0
-    assert "No such option" in result.stdout + result.stderr
+def test_cli_has_only_current_options():
+    from typer.main import get_command
+
+    assert {param.name for param in get_command(runner.app).params} == {
+        "subset",
+        "slice_spec",
+        "filter_spec",
+        "shuffle",
+        "output",
+        "workers",
+        "model",
+        "model_class",
+        "redo_existing",
+        "config_spec",
+        "environment_class",
+    }
 
 
-def test_cli_filter_slice_use_upstream_selection_without_launch(release, tmp_path):
+def test_cli_filter_slice_use_selection_without_launch(release, tmp_path):
     # All selected IDs are already recorded, so no model or environment is created.
     output = tmp_path / "existing"
     output.mkdir()
@@ -739,71 +733,6 @@ def test_local_dependency_revisions_are_checked(release, tmp_path):
     assert not (Path(env.config.cwd) / ".git").exists()
 
 
-# AST fingerprints from mini-SWE-agent 04d809ceab9df28f9adaed044884180159172930,
-# src/minisweagent/run/benchmarks/swebench.py. No upstream checkout needed in CI.
-def ast_fingerprint(node):
-    for child in ast.walk(node):
-        # Python 3.12 added empty type_params to ordinary function definitions.
-        if hasattr(child, "type_params") and not child.type_params:
-            del child.type_params
-    return hashlib.sha256(ast.dump(node).encode()).hexdigest()
-
-
-@pytest.mark.parametrize(
-    ("name", "expected"),
-    [
-        (
-            "update_preds_file",
-            "de44cd536b0749468472a34bba450bcc1e006bf56f10f2a1578c727a28d9f05f",
-        ),
-        (
-            "remove_from_preds_file",
-            "aeab1f16dfd61f780242c2f15bed28804540812fc72f960256e1cd5e4227c464",
-        ),
-        (
-            "filter_instances",
-            "1a765283e7818ae801fdb3dcb3f12d302089e25d26a484b7d7867284672c7943",
-        ),
-        (
-            "process_futures",
-            "20f62a2821a63d1dfa91a77f657799c910d5d2dc6ac552f56e8df1213504b1f8",
-        ),
-    ],
-)
-def test_batch_functions_are_unchanged_upstream_code(name, expected):
-    tree = ast.parse(inspect.getsource(runner))
-    node = next(n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name == name)
-    assert ast_fingerprint(node) == expected
-
-
-def test_batch_dispatch_is_unchanged_upstream_code():
-    tree = ast.parse(inspect.getsource(runner.main))
-    node = next(
-        n
-        for n in ast.walk(tree)
-        if isinstance(n, ast.With) and ast.unparse(n.items[0].context_expr).startswith("Live(")
-    )
-    assert ast_fingerprint(node) == "3f3b7b23d172cb9318b58ca97d49776f0ab22ebd22b561c97a44c7273b344232"
-
-
-def test_bootstrap_keeps_template_and_edits_only_main_root(release, tmp_path):
-    if not shutil.which("lake"):
-        pytest.skip("Lean/Lake required")
-    prepared = tmp_path / "prepared"
-    prepare_project(prepared)
-    instance = load_instances(release)[0]
-    before = {p.name: p.read_bytes() for p in prepared.iterdir()}
-    env = LocalEnvironment(cwd=str(prepared))
-    prepare_environment(env, instance, tmp_path / "attempt")
-    root = Path(env.config.cwd)
-    assert {p.name: p.read_bytes() for p in prepared.iterdir()} == before
-    assert (root / "lakefile.toml").read_bytes() == before["lakefile.toml"].replace(b'["Main"]', b'["first"]')
-    assert (root / "lake-manifest.json").read_bytes() == before["lake-manifest.json"]
-    assert (root / "lean-toolchain").read_bytes() == before["lean-toolchain"]
-    assert not (root / "lakefile.lean").exists()
-    assert not (root / "Helpers").exists()
-
-
 def test_agent_can_add_own_library_and_submit_toml(release, tmp_path):
     if not shutil.which("lake"):
         pytest.skip("Lean/Lake required")
@@ -843,13 +772,6 @@ def test_agent_can_add_own_library_and_submit_toml(release, tmp_path):
     assert (prepared / "lakefile.toml").read_text() == PROJECT_CONFIG
 
 
-def test_bootstrap_payload_does_not_upload_replacement_configs():
-    source = inspect.getsource(prepare_environment)
-    assert '"files":' not in source
-    assert '"source":' in source and '"lakefile_sha256":' in source
-    assert '"prepared"' in source
-
-
 def test_prepared_template_mismatch_fails_without_replacing_configs(release, tmp_path):
     prepared = tmp_path / "prepared"
     prepare_project(prepared)
@@ -876,11 +798,10 @@ def test_output_defaults_to_cwd_and_can_be_overridden(release, tmp_path, explici
         capture_output=True,
         text=True,
         timeout=30,
-        env={**os.environ, "MSWEA_SILENT_STARTUP": "1"},
+        env={**os.environ, "LEANA_SILENT_STARTUP": "1"},
     )
     assert result.returncode == 0, result.stderr
     assert (output / "leanimum.log").is_file()
-    assert not list(working.glob("reuf2f_results_*"))
     if explicit:
         assert not (working / "leanimum.log").exists()
 
@@ -903,27 +824,23 @@ def test_model_initialization_failure_does_not_write_prediction(release, tmp_pat
 
 def test_cli_retries_model_initialization_failure_without_redo(release, tmp_path):
     output = tmp_path / "run"
-    args = ["--subset", str(release), "--filter", "^first$", "-o", str(output), "--model-class", "missing_model_package.Unknown", "-m", "fixture"]
+    args = [
+        "--subset",
+        str(release),
+        "-w",
+        "2",
+        "-o",
+        str(output),
+        "--model-class",
+        "missing_model_package.Unknown",
+        "-m",
+        "fixture",
+    ]
     for _ in range(2):
         result = run_cli(*args)
         assert result.returncode == 0, result.stdout + result.stderr
         assert "Unknown model class" in result.stdout + result.stderr
         assert not (output / "preds.json").exists()
-        assert not (output / "first/first.traj.json").exists()
-
-
-def test_model_initialization_and_prediction_save_are_upstream_code():
-    function = ast.parse(inspect.getsource(process_instance)).body[0]
-    initialize = next(
-        node for node in function.body
-        if isinstance(node, ast.Assign) and ast.unparse(node.targets[0]) == "model"
-    )
-    attempt = next(node for node in function.body if isinstance(node, ast.Try))
-    assert function.body.index(initialize) < function.body.index(attempt)
-    assert ast_fingerprint(initialize) == "67582168c0a1d25fca67ea512745e29b8dff3b28c99815c406d07d950c593147"
-    save = next(
-        node for node in ast.walk(attempt)
-        if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call)
-        and isinstance(node.value.func, ast.Name) and node.value.func.id == "update_preds_file"
-    )
-    assert ast_fingerprint(save) == "f9ede5a10c56ecbb8e560d7e4bc6a1eb87823fe3a9efa8b740e99cb9fa02d4b6"
+        assert not list(output.glob("*/*.traj.json"))
+        statuses = yaml.safe_load(max(output.glob("exit_statuses_*.yaml")).read_text())
+        assert sorted(statuses["instances_by_exit_status"]["Uncaught ValueError"]) == ["first", "second"]

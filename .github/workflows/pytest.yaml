@@ -66,7 +66,7 @@ jobs:
             uv pip install --python ${Python_ROOT_DIR} -e '.[full]'
       - name: Configure Leanimum-agent
         run: |
-          leani-extra config set MSWEA_CONFIGURED 'true'
+          leani-extra config set LEANA_CONFIGURED 'true'
           leani-extra config set OPENAI_API_KEY '${{ secrets.OPENAI_API_KEY }}'
           leani-extra config set OPENROUTER_API_KEY '${{ secrets.OPENROUTER_API_KEY }}'
           # leani-extra config set PORTKEY_API_KEY '${{ secrets.PORTKEY_API_KEY }}'

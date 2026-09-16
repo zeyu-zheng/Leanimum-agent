@@ -2,7 +2,7 @@
 
 !!! note "LiteLLM Response API Model class"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/models/litellm_response_model.py)
+    - [Read on GitHub](https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/models/litellm_response_model.py)
 
     ??? note "Full source code"
 
@@ -14,7 +14,6 @@
 
     * Use this model class when you want to use OpenAI's [Responses API](https://platform.openai.com/docs/api-reference/responses) with native tool calling.
     * This is particularly useful for models like GPT-5 that benefit from the extended thinking/reasoning capabilities provided by the Responses API.
-    * This model maintains conversation state across turns using `previous_response_id`.
 
 ## Usage
 
@@ -33,7 +32,7 @@ model:
 Or via command line:
 
 ```bash
-mini -m "openai/gpt-5.2" --model-class litellm_response
+leani -m "openai/gpt-5.2" --model-class litellm_response
 ```
 
 ::: leanimum.models.litellm_response_model
