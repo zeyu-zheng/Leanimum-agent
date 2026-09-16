@@ -147,7 +147,7 @@ The evaluator starts a fresh container from the same image, replays the patch
 and runs both Comparator checks. Either accepted direction resolves the task.
 A `Submitted` status or successful `lake build` with `sorry` warnings is not
 independent proof acceptance. See the
-[evaluation guide](https://github.com/zeyu-zheng/ReuF2F/blob/main/docs/COMPARATOR_PILOT.md)
+[evaluation guide](https://github.com/zeyu-zheng/ReuF2F/blob/main/docs/guides/evaluation.md)
 for scoring and reports.
 
 ## FAQ
