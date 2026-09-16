@@ -1076,8 +1076,6 @@
       
         
       
-        
-      
     
     
     
@@ -1220,34 +1218,6 @@
     
   
     Environments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../advanced/v2_migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
   
 
     
@@ -2501,8 +2471,8 @@
 <div class="admonition tip">
 <p class="admonition-title">Setup</p>
 <ul>
-<li>In most cases, you can simply run <code>mini-extra config setup</code> to set up your default model and API keys.
-  This should be run the first time you run <code>mini</code>.</li>
+<li>In most cases, you can simply run <code>leani-extra config setup</code> to set up your default model and API keys.
+  This should be run the first time you run <code>leani</code>.</li>
 <li>By default we support all models using <a href="https://github.com/BerriAI/litellm"><code>litellm</code></a>.</li>
 <li>We also offer support for models via <a href="https://openrouter.ai/">Openrouter</a> and <a href="https://portkey.ai/">Portkey</a>.</li>
 </ul>
@@ -2510,10 +2480,9 @@
 <h2 id="setting-api-keys">Setting API keys</h2>
 <p>There are several ways to set your API keys:</p>
 <ul>
-<li><strong>Recommended</strong>: Run our setup script: <code>mini-extra config setup</code>. This should also run automatically the first time you run <code>mini</code>.</li>
-<li>Use <code>mini-extra config set ANTHROPIC_API_KEY &lt;your-api-key&gt;</code> to put the key in the <code>mini</code> <a href="../../advanced/global_configuration/">config file</a>.</li>
+<li><strong>Recommended</strong>: Run our setup script: <code>leani-extra config setup</code>. This should also run automatically the first time you run <code>leani</code>.</li>
+<li>Use <code>leani-extra config set ANTHROPIC_API_KEY &lt;your-api-key&gt;</code> to put the key in the <code>leani</code> <a href="../../advanced/global_configuration/">config file</a>.</li>
 <li>Export your key as an environment variable: <code>export ANTHROPIC_API_KEY=&lt;your-api-key&gt;</code> (this is not persistent if you restart your shell, unless you add it to your shell config, like <code>~/.bashrc</code> or <code>~/.zshrc</code>).</li>
-<li>If you run several agents in parallel, see our note about rotating anthropic keys <a href="../../advanced/global_configuration/">here</a>.</li>
 </ul>
 <details class="note">
 <summary>All the API key names</summary>
@@ -2578,9 +2547,9 @@ You can find a list of their supported models <a href="https://docs.litellm.ai/d
 Please always include the provider in the model name, e.g., <code>anthropic/claude-...</code>.</p>
 </div>
 <ul>
-<li><strong>Recommended</strong>: <code>mini-extra config setup</code> (should be run the first time you run <code>mini</code>) can set the default model for you</li>
+<li><strong>Recommended</strong>: <code>leani-extra config setup</code> (should be run the first time you run <code>leani</code>) can set the default model for you</li>
 <li>All command line interfaces allow you to set the model name with <code>-m</code> or <code>--model</code>.</li>
-<li>In addition, you can set the default model with <code>mini-extra config set MSWEA_MODEL_NAME &lt;model-name&gt;</code>, by editing the global <a href="../../advanced/global_configuration/">config file</a> (shortcut: <code>mini-extra config edit</code>), or by setting the <code>MSWEA_MODEL_NAME</code> environment variable.</li>
+<li>In addition, you can set the default model with <code>leani-extra config set LEANA_MODEL_NAME &lt;model-name&gt;</code>, by editing the global <a href="../../advanced/global_configuration/">config file</a> (shortcut: <code>leani-extra config edit</code>), or by setting the <code>LEANA_MODEL_NAME</code> environment variable.</li>
 <li>You can also set your model in a config file (key <code>model_name</code> under <code>model</code>).</li>
 <li>If you want to use local models, please check this <a href="../local_models/">guide</a>.</li>
 </ul>
@@ -4048,17 +4017,18 @@ xai/grok-vision-beta
 </div>
 <p>To find the corresponding API key, check the previous section.</p>
 <h2 id="extra-model-settings">Extra model settings</h2>
-<p>To configure reasoning efforts or similar settings, you need to edit the <a href="../../advanced/yaml_configuration/">agent config file</a>.
-In newer versions, the location of the config file is printed when you run <code>mini</code> ("agent config" in the output).</p>
-<p>Here's a few general examples:</p>
+<p>Add model settings in a <a href="../../advanced/yaml_configuration/">YAML configuration</a>.
+The snippets below are overlays, not complete agent configs. Load a base first,
+for example <code>leani -c mini.yaml -c /path/to/model.yaml</code>.</p>
+<p>Examples:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><input id="__tabbed_1_3" name="__tabbed_1" type="radio"><input id="__tabbed_1_4" name="__tabbed_1" type="radio"><input id="__tabbed_1_5" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Temperature</label><label for="__tabbed_1_2">GPT-5 reasoning effort (Chat Completions API)</label><label for="__tabbed_1_3">GPT-5 with Responses API</label><label for="__tabbed_1_4">OpenRouter</label><label for="__tabbed_1_5">Local models</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><code>litellm</code> allows to set model-specific settings with the <code>model_kwargs</code> key:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"anthropic/claude-sonnet-4-5-20250929"</span>
-<span class="w">    </span><span class="nt">model_kwargs</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </code></pre></div>
 <p>Note that temperature isn't supported by all models.</p>
 </div>
@@ -4074,9 +4044,9 @@ In newer versions, the location of the config file is printed when you run <code
 <p>Here, <code>drop_params</code> is used to drop any parameters that are not supported by the model.</p>
 </div>
 <div class="tabbed-block">
-<p>For OpenAI models that support the Responses API, you can use the <code>litellm_response_toolcall</code> model class:</p>
+<p>For OpenAI models that support the Responses API, you can use the <code>litellm_response</code> model class:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="s">"litellm_response_toolcall"</span>
+<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="s">"litellm_response"</span>
 <span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"openai/gpt-5-mini"</span>
 <span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -4106,7 +4076,6 @@ in getting low latency and good prices).</p>
 <span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">custom_llm_provider</span><span class="p">:</span><span class="w"> </span><span class="s">"openai"</span>
 <span class="w">    </span><span class="nt">api_base</span><span class="p">:</span><span class="w"> </span><span class="s">"https://..."</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </code></pre></div>
 <p>See <a href="../local_models/">this guide</a> for more details on local models.
 In particular, you need to configure token costs for local models.</p>
@@ -4164,16 +4133,14 @@ In particular, you need to configure token costs for local models.</p>
 </div>
 </div>
 <h2 id="model-classes">Model classes</h2>
-<p>We support the various models through different backends.
-By default (if you only specify the model name), we pick the best backend for you.
-This will almost always default to <code>litellm</code> (with Anthropic models being a special case as they need to have explicit cache breakpoint handling).</p>
-<p>However, there are a few other backends that you can use and specify with the <code>--model-class</code> flag or the
-<code>model.model_class</code> key in the agent config file (see previous section).</p>
+<p>The default model class is <code>litellm</code>. Select another adapter with <code>--model-class</code>
+or <code>model.model_class</code> in YAML. Anthropic cache-control defaults are applied
+separately from adapter selection.</p>
 <p>For example:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio"><input id="__tabbed_3_2" name="__tabbed_3" type="radio"><div class="tabbed-labels"><label for="__tabbed_3_1">Openrouter model</label><label for="__tabbed_3_2">Portkey model</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"moonshotai/kimi-k2-0905"</span><span class="w"> </span>--model-class<span class="w"> </span>openrouter
+<div class="highlight"><pre><span></span><code>leani<span class="w"> </span>-m<span class="w"> </span><span class="s2">"moonshotai/kimi-k2-0905"</span><span class="w"> </span>--model-class<span class="w"> </span>openrouter
 </code></pre></div>
 <p><strong>Alternatively:</strong> In the agent config file:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
@@ -4182,7 +4149,7 @@ This will almost always default to <code>litellm</code> (with Anthropic models b
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"claude-sonnet-4-5-20250929"</span><span class="w"> </span>--model-class<span class="w"> </span>portkey
+<div class="highlight"><pre><span></span><code>leani<span class="w"> </span>-m<span class="w"> </span><span class="s2">"claude-sonnet-4-5-20250929"</span><span class="w"> </span>--model-class<span class="w"> </span>portkey
 </code></pre></div>
 <p><strong>Alternatively:</strong> In the agent config file:
 </p><div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
@@ -4197,7 +4164,7 @@ This will almost always default to <code>litellm</code> (with Anthropic models b
 <p><strong><code>litellm</code></strong> (<a href="../../reference/models/litellm/"><code>LitellmModel</code></a>) - <strong>Default and recommended</strong>. Supports most models through <a href="https://github.com/BerriAI/litellm">litellm</a>. Works with OpenAI, Anthropic, Google, and many other providers. Anthropic models automatically get cache control settings when the model name contains "anthropic", "claude", "sonnet", or "opus".</p>
 </li>
 <li>
-<p><strong><code>litellm_response</code></strong> (<a href="../../reference/models/litellm_response_toolcall/"><code>LitellmResponseModel</code></a>) - Specialized version of <code>LitellmModel</code> that uses OpenAI's Responses API with native tool calling. Useful for models like GPT-5 and required for models like GPT-5-codex. Maintains conversation state across turns.</p>
+<p><strong><code>litellm_response</code></strong> (<a href="../../reference/models/litellm_response_toolcall/"><code>LitellmResponseModel</code></a>) - Uses the Responses API with native tool calling. Each request includes the conversation history.</p>
 </li>
 <li>
 <p><strong><code>openrouter</code></strong> (<a href="../../reference/models/openrouter/"><code>OpenRouterModel</code></a>) - Direct integration with <a href="https://openrouter.ai/">OpenRouter</a> API for accessing various models through a single endpoint.</p>
@@ -4209,27 +4176,17 @@ This will almost always default to <code>litellm</code> (with Anthropic models b
 <p>On top, there's a few more exotic model classes that you can use:</p>
 <ul>
 <li><strong><code>deterministic</code></strong> (<a href="../../reference/models/test_models/"><code>DeterministicModel</code></a>) - Returns predefined responses for testing and development purposes.</li>
-<li><strong><code>leanimum.models.extra.roulette.RouletteModel</code> and <code>leanimum.models.extra.roulette.InterleavingModel</code></strong> (<a href="../../reference/models/extra/"><code>RouletteModel</code></a> and <a href="../../reference/models/extra/"><code>InterleavingModel</code></a>) - Randomly selects or interleaves multiple configured models for each query. See <a href="https://www.swebench.com/SWE-bench/blog/2025/08/19/mini-roulette/">this blog post</a> for more details.</li>
+<li><strong><code>leanimum.models.extra.roulette.RouletteModel</code> and <code>leanimum.models.extra.roulette.InterleavingModel</code></strong> (<a href="../../reference/models/extra/"><code>RouletteModel</code></a> and <a href="../../reference/models/extra/"><code>InterleavingModel</code></a>) - Randomly selects or interleaves multiple configured models for each query.</li>
 </ul>
-<p>As with the last two, you can also specify any import path to your own custom model class (even if it is not yet part of the mini-SWE-agent package).</p>
+<p>As with the last two, you can also specify any import path to your own custom model class (even if it is not yet part of the Leanimum-agent package).</p>
 <div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+  <a href="https://github.com/zeyu-zheng/Leanimum-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">bug_report</span>
         <span class="nav-card-title">Something broken/unclear?</span>
       </div>
       <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
     </div>
   </a>
 </div>

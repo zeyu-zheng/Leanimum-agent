@@ -978,8 +978,6 @@
       
         
       
-        
-      
     
     
     
@@ -1122,34 +1120,6 @@
     
   
     Environments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../advanced/v2_migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
   
 
     
@@ -2623,7 +2593,7 @@
 <div class="admonition note">
 <p class="admonition-title">Global Config Manager</p>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/run/utilities/config.py">Read on GitHub</a></li>
+<li><a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/run/utilities/config.py">Read on GitHub</a></li>
 </ul>
 <details class="note">
 <summary>Full source code</summary>
@@ -2676,7 +2646,7 @@
 
 <span class="s2">[bold yellow]You can leave any setting blank to skip it.[/bold yellow]</span>
 
-<span class="s2">More information at https://mini-swe-agent.com/latest/quickstart/</span>
+<span class="s2">More information at https://github.com/zeyu-zheng/Leanimum-agent/blob/main/docs/quickstart.md</span>
 <span class="s2">Choose a model appropriate for your Lean task and evaluation budget.</span>
 <span class="s2">"""</span>
 
@@ -2689,7 +2659,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">configure_if_first_time</span><span class="p">():</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_CONFIGURED"</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LEANA_CONFIGURED"</span><span class="p">):</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Rule</span><span class="p">())</span>
         <span class="n">setup</span><span class="p">()</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Rule</span><span class="p">())</span>
@@ -2701,10 +2671,10 @@
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">_SETUP_HELP</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">global_config_file</span><span class="o">=</span><span class="n">global_config_file</span><span class="p">))</span>
     <span class="n">default_model</span> <span class="o">=</span> <span class="n">prompt</span><span class="p">(</span>
         <span class="s2">"Enter your default model (e.g., anthropic/claude-opus-4-6-20260205): "</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_MODEL_NAME"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LEANA_MODEL_NAME"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span>
     <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">default_model</span><span class="p">:</span>
-        <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">"MSWEA_MODEL_NAME"</span><span class="p">,</span> <span class="n">default_model</span><span class="p">)</span>
+        <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">"LEANA_MODEL_NAME"</span><span class="p">,</span> <span class="n">default_model</span><span class="p">)</span>
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
         <span class="s2">"[bold yellow]If you already have your API keys set as environment variables, you can ignore the next question.[/bold yellow]"</span>
     <span class="p">)</span>
@@ -2718,7 +2688,7 @@
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
             <span class="s2">"[bold red]API key setup not completed.[/bold red] Totally fine if you have your keys as environment variables."</span>
         <span class="p">)</span>
-    <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">"MSWEA_CONFIGURED"</span><span class="p">,</span> <span class="s2">"true"</span><span class="p">)</span>
+    <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">"LEANA_CONFIGURED"</span><span class="p">,</span> <span class="s2">"true"</span><span class="p">)</span>
     <span class="n">_reload_config</span><span class="p">()</span>
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
         <span class="s2">"</span><span class="se">\n</span><span class="s2">[bold yellow]Config finished.[/bold yellow] If you want to revisit it, run [bold green]leani-extra config setup[/bold green]."</span>
@@ -2761,7 +2731,7 @@
 </code></pre></div>
 </details>
 </div>
-<p>Utility to manage the global config file via <code>mini-extra config</code>.</p>
+<p>Utility to manage the global config file via <code>leani-extra config</code>.</p>
 
 
 <div class="doc doc-object doc-module">
@@ -2903,7 +2873,7 @@
 <span class="normal">64</span>
 <span class="normal">65</span>
 <span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_if_first_time</span><span class="p">():</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_CONFIGURED"</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LEANA_CONFIGURED"</span><span class="p">):</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Rule</span><span class="p">())</span>
         <span class="n">setup</span><span class="p">()</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Rule</span><span class="p">())</span>
@@ -2964,10 +2934,10 @@
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">_SETUP_HELP</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">global_config_file</span><span class="o">=</span><span class="n">global_config_file</span><span class="p">))</span>
     <span class="n">default_model</span> <span class="o">=</span> <span class="n">prompt</span><span class="p">(</span>
         <span class="s2">"Enter your default model (e.g., anthropic/claude-opus-4-6-20260205): "</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_MODEL_NAME"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LEANA_MODEL_NAME"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span>
     <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">default_model</span><span class="p">:</span>
-        <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">"MSWEA_MODEL_NAME"</span><span class="p">,</span> <span class="n">default_model</span><span class="p">)</span>
+        <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">"LEANA_MODEL_NAME"</span><span class="p">,</span> <span class="n">default_model</span><span class="p">)</span>
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
         <span class="s2">"[bold yellow]If you already have your API keys set as environment variables, you can ignore the next question.[/bold yellow]"</span>
     <span class="p">)</span>
@@ -2981,7 +2951,7 @@
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
             <span class="s2">"[bold red]API key setup not completed.[/bold red] Totally fine if you have your keys as environment variables."</span>
         <span class="p">)</span>
-    <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">"MSWEA_CONFIGURED"</span><span class="p">,</span> <span class="s2">"true"</span><span class="p">)</span>
+    <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">"LEANA_CONFIGURED"</span><span class="p">,</span> <span class="s2">"true"</span><span class="p">)</span>
     <span class="n">_reload_config</span><span class="p">()</span>
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
         <span class="s2">"</span><span class="se">\n</span><span class="s2">[bold yellow]Config finished.[/bold yellow] If you want to revisit it, run [bold green]leani-extra config setup[/bold green]."</span>
@@ -3127,23 +3097,13 @@
     </div>
 
 </div><div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+  <a href="https://github.com/zeyu-zheng/Leanimum-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">bug_report</span>
         <span class="nav-card-title">Something broken/unclear?</span>
       </div>
       <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
     </div>
   </a>
 </div>

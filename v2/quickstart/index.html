@@ -474,6 +474,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -490,6 +508,69 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-a-lean-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a Lean task
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-reuf2f" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run ReuF2F
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -993,8 +1074,6 @@
       
         
       
-        
-      
     
     
     
@@ -1137,34 +1216,6 @@
     
   
     Environments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../advanced/v2_migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
   
 
     
@@ -2339,6 +2390,58 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-a-lean-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a Lean task
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-reuf2f" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run ReuF2F
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2363,7 +2466,8 @@
 
 
 <h1 id="quick-start">Quick start</h1>
-<p>Install this checkout with Python 3.10 or newer:</p>
+<h2 id="installation">Installation</h2>
+<p>Install from source with Python 3.10 or newer:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/zeyu-zheng/Leanimum-agent.git
 <span class="nb">cd</span><span class="w"> </span>Leanimum-agent
 python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
@@ -2371,24 +2475,50 @@ python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </s
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 leani-extra<span class="w"> </span>config<span class="w"> </span>setup
 </code></pre></div>
-<p>Run in a prepared Lean project:</p>
-<div class="highlight"><pre><span></span><code>leani<span class="w"> </span>-c<span class="w"> </span>mini.yaml<span class="w"> </span>-c<span class="w"> </span>environment.cwd<span class="o">=</span>/absolute/path/to/project<span class="w"> </span><span class="se">\</span>
+<p>See <a href="../models/quickstart/">model setup</a> for provider configuration and
+<a href="../contributing/#development-setup">development setup</a> for tests and documentation.</p>
+<h2 id="run-a-lean-task">Run a Lean task</h2>
+<p>Use a project with its toolchain and dependencies already installed:</p>
+<div class="highlight"><pre><span></span><code>leani<span class="w"> </span>-c<span class="w"> </span>mini.yaml<span class="w"> </span>-c<span class="w"> </span>environment.cwd<span class="o">=</span>/absolute/path/to/lean-project<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-t<span class="w"> </span><span class="s2">"Complete the proof of Example.target in Example.lean and check it."</span>
 </code></pre></div>
-<p><code>mini.yaml</code> uses bash tool calls; <code>mini_textbased.yaml</code> uses one
-<code>mswea_bash_command</code> code block. Both contain Lean and native Comparator guidance.
-If you pass <code>-c</code>, include a full configuration before your overrides.</p>
-<p>The main CLI confirms commands by default. <code>--yolo</code> disables confirmation, not
-filesystem restrictions. Local execution has no sandbox. Read the chosen backend's
-requirements before allowing an agent to install tools or execute unfamiliar code.</p>
-<p>To work on the only built-in benchmark:</p>
+<div class="admonition note">
+<p class="admonition-title">Configuration</p>
+<p><code>mini.yaml</code> uses native bash tool calls. Use <code>mini_textbased.yaml</code> for command
+code blocks. If you pass <code>-c</code>, include a full configuration before overrides.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Local execution</p>
+<p>The CLI confirms commands by default. <code>--yolo</code> disables confirmation, not
+filesystem access. Local execution is not sandboxed; use a suitable
+<a href="../advanced/environments/">backend</a> for untrusted code.</p>
+</div>
+<h2 id="run-reuf2f">Run ReuF2F</h2>
+<p>First export a task release using ReuF2F's <code>prepare-tasks</code> command, then run:</p>
 <div class="highlight"><pre><span></span><code>leani-extra<span class="w"> </span>reuf2f<span class="w"> </span>--subset<span class="w"> </span>/tmp/reuf2f-tasks<span class="w"> </span>--slice<span class="w"> </span><span class="m">0</span>:1<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-m<span class="w"> </span>YOUR_MODEL<span class="w"> </span>-o<span class="w"> </span>/tmp/reuf2f-run
 </code></pre></div>
-<p>Export the release with ReuF2F's <code>prepare-tasks</code> first. The runner uses the shared
-<code>zeyuzhenghub/lean4:v4.33.1</code> image on <code>linux/amd64</code> by default. See
-<a href="../usage/reuf2f/">ReuF2F</a> for the default Docker batch flow and independent Comparator scoring.
-The commands above install from source; no published distribution is assumed.</p>
+<p>The default image is <code>zeyuzhenghub/lean4:v4.33.0</code> on <code>linux/amd64</code>. Image build and
+independent evaluation belong to ReuF2F. Follow the <a href="../usage/reuf2f/">benchmark guide</a>
+to prepare the image, generate predictions and score them.</p>
+<h2 id="next-steps">Next steps</h2>
+<ul>
+<li><a href="../usage/mini/">CLI usage</a></li>
+<li><a href="../advanced/yaml_configuration/">Configuration</a></li>
+<li><a href="../usage/output_files/">Trajectories and outputs</a></li>
+<li><a href="../usage/python_bindings/">Python bindings</a></li>
+</ul>
+<div class="grid cards">
+  <a href="https://github.com/zeyu-zheng/Leanimum-agent/issues/new" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">bug_report</span>
+        <span class="nav-card-title">Something broken/unclear?</span>
+      </div>
+      <p class="nav-card-description">Open an issue on GitHub!</p>
+    </div>
+  </a>
+</div>
 
 
 

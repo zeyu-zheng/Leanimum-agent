@@ -113,7 +113,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#local" class="md-skip">
+        <a href="#interactive-cli" class="md-skip">
           Skip to content
         </a>
       
@@ -978,8 +978,6 @@
       
         
       
-        
-      
     
     
     
@@ -1122,34 +1120,6 @@
     
   
     Environments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../advanced/v2_migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
   
 
     
@@ -2553,18 +2523,18 @@
   
 
 
-<h1 id="local">Local</h1>
+<h1 id="interactive-cli">Interactive CLI</h1>
 <div class="admonition note">
-<p class="admonition-title">Mini run script</p>
+<p class="admonition-title">leani run script</p>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/run/mini.py">Read on GitHub</a></li>
+<li><a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/run/mini.py">Read on GitHub</a></li>
 </ul>
 <details class="note">
 <summary>Full source code</summary>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">"""Run Leanimum-agent in your local environment. This is the default executable `leani`."""</span>
-<span class="c1"># Read this first: https://mini-swe-agent.com/latest/usage/mini/  (usage)</span>
+<span class="c1"># Read this first: https://github.com/zeyu-zheng/Leanimum-agent/blob/main/docs/usage/mini.md  (usage)</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -2582,7 +2552,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.run.utilities.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_if_first_time</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.utils.serialize</span><span class="w"> </span><span class="kn">import</span> <span class="n">UNSET</span><span class="p">,</span> <span class="n">recursive_merge</span>
 
-<span class="n">DEFAULT_CONFIG_FILE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_MINI_CONFIG_PATH"</span><span class="p">,</span> <span class="n">builtin_config_dir</span> <span class="o">/</span> <span class="s2">"mini.yaml"</span><span class="p">))</span>
+<span class="n">DEFAULT_CONFIG_FILE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LEANA_MINI_CONFIG_PATH"</span><span class="p">,</span> <span class="n">builtin_config_dir</span> <span class="o">/</span> <span class="s2">"mini.yaml"</span><span class="p">))</span>
 <span class="n">DEFAULT_OUTPUT_FILE</span> <span class="o">=</span> <span class="n">global_config_dir</span> <span class="o">/</span> <span class="s2">"last_mini_run.traj.json"</span>
 
 
@@ -2721,7 +2691,7 @@
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">DEFAULT_CONFIG_FILE</span> <span class="o">=</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">(</span>
     <span class="n"><span title="os">os</span></span><span class="o">.</span><span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
-        <span class="s2">"MSWEA_MINI_CONFIG_PATH"</span><span class="p">,</span>
+        <span class="s2">"LEANA_MINI_CONFIG_PATH"</span><span class="p">,</span>
         <span class="n"><span title="leanimum.config.builtin_config_dir">builtin_config_dir</span></span> <span class="o">/</span> <span class="s2">"mini.yaml"</span><span class="p">,</span>
     <span class="p">)</span>
 <span class="p">)</span>
@@ -3005,23 +2975,13 @@
     </div>
 
 </div><div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+  <a href="https://github.com/zeyu-zheng/Leanimum-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">bug_report</span>
         <span class="nav-card-title">Something broken/unclear?</span>
       </div>
       <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
     </div>
   </a>
 </div>

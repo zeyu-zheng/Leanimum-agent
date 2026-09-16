@@ -113,7 +113,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#mini-extra-config" class="md-skip">
+        <a href="#leani-extra-config" class="md-skip">
           Skip to content
         </a>
       
@@ -1115,8 +1115,6 @@
       
         
       
-        
-      
     
     
     
@@ -1259,34 +1257,6 @@
     
   
     Environments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../advanced/v2_migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
   
 
     
@@ -2575,18 +2545,18 @@
   
 
 
-<h1 id="mini-extra-config"><code>mini-extra config</code></h1>
+<h1 id="leani-extra-config"><code>leani-extra config</code></h1>
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
 <ul>
-<li><code>mini-extra config</code> is a utility to manage the global configuration file.</li>
-<li>Quickly start the it with <code>mini-extra config</code> or <code>mini-e config</code>.</li>
+<li>Manage the global <code>.env</code> file with <code>leani-extra config</code>.</li>
+<li>Run <code>leani-extra config --help</code> to list commands and show the file location.</li>
 </ul>
 </div>
 <h2 id="commands">Commands</h2>
 <h3 id="setup"><code>setup</code></h3>
-<p>Interactive setup wizard that helps you configure your default model and API keys.</p>
-<div class="highlight"><pre><span></span><code>mini-extra<span class="w"> </span>config<span class="w"> </span>setup
+<p>Configure the default model and a provider API key interactively.</p>
+<div class="highlight"><pre><span></span><code>leani-extra<span class="w"> </span>config<span class="w"> </span>setup
 </code></pre></div>
 <p>This will prompt you for:</p>
 <ol>
@@ -2595,18 +2565,18 @@
 </ol>
 <h3 id="set"><code>set</code></h3>
 <p>Set a specific key in the global config file.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># example: set default model</span>
-mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>MSWEA_MODEL_NAME<span class="w"> </span>anthropic/claude-sonnet-4-5-20250929
-<span class="c1"># or interactively</span>
-mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span>
+<div class="highlight"><pre><span></span><code>leani-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>LEANA_MODEL_NAME<span class="w"> </span>YOUR_MODEL
+
+<span class="c1"># Prompt for the key and value</span>
+leani-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span>
 </code></pre></div>
 <h3 id="unset"><code>unset</code></h3>
 <p>Remove a key from the global config file.</p>
-<div class="highlight"><pre><span></span><code>mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>MSWEA_MODEL_NAME
+<div class="highlight"><pre><span></span><code>leani-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>LEANA_MODEL_NAME
 </code></pre></div>
 <h3 id="edit"><code>edit</code></h3>
 <p>Open the global config file in your default editor (uses <code>$EDITOR</code> or <code>nano</code>).</p>
-<div class="highlight"><pre><span></span><code>mini-extra<span class="w"> </span>config<span class="w"> </span>edit
+<div class="highlight"><pre><span></span><code>leani-extra<span class="w"> </span>config<span class="w"> </span>edit
 </code></pre></div>
 <h2 id="configuration-keys">Configuration keys</h2>
 <p>For more configuration options, see <a href="../../advanced/global_configuration/">global configuration</a>.</p>
@@ -2614,7 +2584,7 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
 <details class="note">
 <summary>Run script</summary>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/run/utilities/config.py">Read on GitHub</a></li>
+<li><a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/run/utilities/config.py">Read on GitHub</a></li>
 <li><a href="../../reference/run/config/">API reference</a></li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
@@ -2666,7 +2636,7 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
 
 <span class="s2">[bold yellow]You can leave any setting blank to skip it.[/bold yellow]</span>
 
-<span class="s2">More information at https://mini-swe-agent.com/latest/quickstart/</span>
+<span class="s2">More information at https://github.com/zeyu-zheng/Leanimum-agent/blob/main/docs/quickstart.md</span>
 <span class="s2">Choose a model appropriate for your Lean task and evaluation budget.</span>
 <span class="s2">"""</span>
 
@@ -2679,7 +2649,7 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">configure_if_first_time</span><span class="p">():</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_CONFIGURED"</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LEANA_CONFIGURED"</span><span class="p">):</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Rule</span><span class="p">())</span>
         <span class="n">setup</span><span class="p">()</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Rule</span><span class="p">())</span>
@@ -2691,10 +2661,10 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">_SETUP_HELP</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">global_config_file</span><span class="o">=</span><span class="n">global_config_file</span><span class="p">))</span>
     <span class="n">default_model</span> <span class="o">=</span> <span class="n">prompt</span><span class="p">(</span>
         <span class="s2">"Enter your default model (e.g., anthropic/claude-opus-4-6-20260205): "</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_MODEL_NAME"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LEANA_MODEL_NAME"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span>
     <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">default_model</span><span class="p">:</span>
-        <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">"MSWEA_MODEL_NAME"</span><span class="p">,</span> <span class="n">default_model</span><span class="p">)</span>
+        <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">"LEANA_MODEL_NAME"</span><span class="p">,</span> <span class="n">default_model</span><span class="p">)</span>
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
         <span class="s2">"[bold yellow]If you already have your API keys set as environment variables, you can ignore the next question.[/bold yellow]"</span>
     <span class="p">)</span>
@@ -2708,7 +2678,7 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
             <span class="s2">"[bold red]API key setup not completed.[/bold red] Totally fine if you have your keys as environment variables."</span>
         <span class="p">)</span>
-    <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">"MSWEA_CONFIGURED"</span><span class="p">,</span> <span class="s2">"true"</span><span class="p">)</span>
+    <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">"LEANA_CONFIGURED"</span><span class="p">,</span> <span class="s2">"true"</span><span class="p">)</span>
     <span class="n">_reload_config</span><span class="p">()</span>
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
         <span class="s2">"</span><span class="se">\n</span><span class="s2">[bold yellow]Config finished.[/bold yellow] If you want to revisit it, run [bold green]leani-extra config setup[/bold green]."</span>
@@ -2751,23 +2721,13 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
 </code></pre></div>
 </details>
 <div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+  <a href="https://github.com/zeyu-zheng/Leanimum-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">bug_report</span>
         <span class="nav-card-title">Something broken/unclear?</span>
       </div>
       <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
     </div>
   </a>
 </div>

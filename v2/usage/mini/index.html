@@ -113,7 +113,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#mini" class="md-skip">
+        <a href="#leani" class="md-skip">
           Skip to content
         </a>
       
@@ -617,6 +617,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#command-line-options" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -632,17 +643,6 @@
     <span class="md-ellipsis">
       
         Modes of operation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#miscellaneous-tips" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Miscellaneous tips
       
     </span>
   </a>
@@ -1076,8 +1076,6 @@
       
         
       
-        
-      
     
     
     
@@ -1220,34 +1218,6 @@
     
   
     Environments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../advanced/v2_migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
   
 
     
@@ -2429,6 +2399,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#command-line-options" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2444,17 +2425,6 @@
     <span class="md-ellipsis">
       
         Modes of operation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#miscellaneous-tips" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Miscellaneous tips
       
     </span>
   </a>
@@ -2497,49 +2467,60 @@
   
 
 
-<h1 id="mini"><code>mini</code></h1>
+<h1 id="leani"><code>leani</code></h1>
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
 <ul>
-<li><code>mini</code> is a REPL-style interactive command line interface for using mini-SWE-agent in the local environment (as opposed to workflows that require sandboxing or large scale batch processing).</li>
+<li><code>leani</code> is the interactive Leanimum-agent CLI.</li>
+<li>It runs locally by default. Select another backend for untrusted code or
+  use the <a href="../reuf2f/">ReuF2F runner</a> for batch tasks.</li>
 </ul>
 </div>
-<figure>
-<br>
-<div class="gif-container gif-container-styled" data-glightbox-disabled="data-glightbox-disabled">
-    <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/mini.png?raw=true" data-desc-position="bottom"><img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/mini.png?raw=true" data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini.gif?raw=true" alt="mini" data-glightbox="false" width="600"></a>
-  </div>
-</figure>
+<h2 id="usage">Usage</h2>
+<p>Run in a Lean project with its toolchain and dependencies installed:</p>
+<div class="highlight"><pre><span></span><code>leani<span class="w"> </span>-c<span class="w"> </span>mini.yaml<span class="w"> </span>-c<span class="w"> </span>environment.cwd<span class="o">=</span>/absolute/path/to/lean-project<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-t<span class="w"> </span><span class="s2">"Complete the proof of Example.target in Example.lean and check it."</span>
+</code></pre></div>
 <h2 id="command-line-options">Command line options</h2>
 <p>Useful switches:</p>
 <ul>
-<li><code>-h</code>/<code>--help</code>: Show help</li>
-<li><code>-t</code>/<code>--task</code>: Specify a task to run (else you will be prompted)</li>
-<li><code>-c</code>/<code>--config</code>: Specify a config file to use, else we will use <a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/config/mini.yaml"><code>mini.yaml</code></a> or the config <code>MSWEA_MINI_CONFIG_PATH</code> environment variable (see <a href="../../advanced/global_configuration/">global configuration</a>).
-  It's enough to specify the name of the config file, e.g., <code>-c mini.yaml</code> (see <a href="../../advanced/global_configuration/">global configuration</a> for how it is resolved).</li>
-<li><code>-m</code>/<code>--model</code>: Specify a model to use, else we will use the model <code>MSWEA_MODEL_NAME</code> environment variable (see <a href="../../advanced/global_configuration/">global configuration</a>)</li>
-<li><code>-y</code>/<code>--yolo</code>: Start in <code>yolo</code> mode (see below)</li>
+<li><code>--help</code> - Show help and all options.</li>
+<li><code>-t</code>, <code>--task</code> - Task to run; prompts when omitted.</li>
+<li><code>-m</code>, <code>--model</code> - Model name; otherwise uses configuration or <code>LEANA_MODEL_NAME</code>.</li>
+<li><code>-c</code>, <code>--config</code> - Config file or key-value override. The default is <code>mini.yaml</code>,
+  or the file selected by <code>LEANA_MINI_CONFIG_PATH</code>.</li>
+<li><code>-o</code>, <code>--output</code> - Trajectory file; defaults to <code>last_mini_run.traj.json</code> in the
+  global config directory.</li>
+<li><code>-y</code>, <code>--yolo</code> - Execute commands without confirmation.</li>
+<li><code>-l</code>, <code>--cost-limit</code> - Cost limit; <code>0</code> disables it.</li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Configuration overrides</p>
+<p>If you pass <code>-c</code>, include a base config before overrides, for example
+<code>-c mini.yaml -c agent.step_limit=100</code>. See the
+<a href="../../advanced/yaml_configuration/">configuration guide</a>.</p>
+</div>
 <h2 id="modes-of-operation">Modes of operation</h2>
-<p><code>mini</code> provides three different modes of operation</p>
 <ul>
-<li><code>confirm</code> (<code>/c</code>): The LM proposes an action and the user is prompted to confirm (press Enter) or reject (enter a rejection message)</li>
-<li><code>yolo</code> (<code>/y</code>): The action from the LM is executed immediately without confirmation</li>
-<li><code>human</code> (<code>/u</code>): The user takes over to type and execute commands</li>
+<li><code>confirm</code> (<code>/c</code>) - Confirm or reject each proposed command.</li>
+<li><code>yolo</code> (<code>/y</code>) - Execute proposed commands immediately.</li>
+<li><code>human</code> (<code>/u</code>) - Type and execute commands yourself.</li>
 </ul>
-<p>You can switch between the modes with the <code>/c</code>, <code>/y</code>, and <code>/u</code> commands that you can enter any time the agent is waiting for input.
-You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allowing you to switch between modes.</p>
-<p><code>mini</code> starts in <code>confirm</code> mode by default. To start in <code>yolo</code> mode, you can add <code>-y</code>/<code>--yolo</code> to the command line.</p>
-<h2 id="miscellaneous-tips">Miscellaneous tips</h2>
-<ul>
-<li><code>mini</code> saves the full history of your last run to your global config directory.
-  The path to the directory is printed when you start <code>mini</code>.</li>
-</ul>
+<p>The default is <code>confirm</code>; use <code>-y</code> to start in <code>yolo</code>. Enter <code>/c</code>, <code>/y</code> or <code>/u</code>
+when the agent is waiting for input to switch modes. <code>Ctrl+C</code> interrupts the
+agent and returns control to you.</p>
+<div class="admonition warning">
+<p class="admonition-title">Local execution</p>
+<p>Confirmation is not a filesystem sandbox. Use a suitable
+<a href="../../advanced/environments/">environment</a> for untrusted commands.</p>
+</div>
+<p>See <a href="../output_files/">output files</a> to inspect the saved trajectory. The global
+config directory is printed at startup.</p>
 <h2 id="implementation">Implementation</h2>
 <details class="note">
 <summary>Default config</summary>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/config/mini.yaml">Read on GitHub</a></li>
+<li><a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/config/mini.yaml">Read on GitHub</a></li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">system_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
@@ -2698,13 +2679,13 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 <details class="note">
 <summary>Run script</summary>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/run/mini.py">Read on GitHub</a></li>
+<li><a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/run/mini.py">Read on GitHub</a></li>
 <li><a href="../../reference/run/mini/">API reference</a></li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">"""Run Leanimum-agent in your local environment. This is the default executable `leani`."""</span>
-<span class="c1"># Read this first: https://mini-swe-agent.com/latest/usage/mini/  (usage)</span>
+<span class="c1"># Read this first: https://github.com/zeyu-zheng/Leanimum-agent/blob/main/docs/usage/mini.md  (usage)</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -2722,7 +2703,7 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.run.utilities.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_if_first_time</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.utils.serialize</span><span class="w"> </span><span class="kn">import</span> <span class="n">UNSET</span><span class="p">,</span> <span class="n">recursive_merge</span>
 
-<span class="n">DEFAULT_CONFIG_FILE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_MINI_CONFIG_PATH"</span><span class="p">,</span> <span class="n">builtin_config_dir</span> <span class="o">/</span> <span class="s2">"mini.yaml"</span><span class="p">))</span>
+<span class="n">DEFAULT_CONFIG_FILE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LEANA_MINI_CONFIG_PATH"</span><span class="p">,</span> <span class="n">builtin_config_dir</span> <span class="o">/</span> <span class="s2">"mini.yaml"</span><span class="p">))</span>
 <span class="n">DEFAULT_OUTPUT_FILE</span> <span class="o">=</span> <span class="n">global_config_dir</span> <span class="o">/</span> <span class="s2">"last_mini_run.traj.json"</span>
 
 
@@ -2815,7 +2796,7 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 <details class="note">
 <summary>Agent class</summary>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/agents/interactive.py">Read on GitHub</a></li>
+<li><a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/agents/interactive.py">Read on GitHub</a></li>
 <li><a href="../../reference/agents/interactive/">API reference</a></li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="sd">"""A small generalization of the default agent that puts the user in the loop.</span>
@@ -2958,9 +2939,6 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_add_observation_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">outputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_messages</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">format_observation_messages</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_template_vars</span><span class="p">()))</span>
-
     <span class="k">def</span><span class="w"> </span><span class="nf">_check_for_new_task_or_submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Submitted</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Check if user wants to add a new task or submit."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">confirm_exit</span><span class="p">:</span>
@@ -3030,23 +3008,13 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 </code></pre></div>
 </details>
 <div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+  <a href="https://github.com/zeyu-zheng/Leanimum-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">bug_report</span>
         <span class="nav-card-title">Something broken/unclear?</span>
       </div>
       <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
     </div>
   </a>
 </div>

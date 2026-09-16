@@ -113,7 +113,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#yaml-config-files" class="md-skip">
+        <a href="#yaml-configuration" class="md-skip">
           Skip to content
         </a>
       
@@ -999,6 +999,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
+  <a href="#load-and-override-a-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load and override a configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#overall-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1010,18 +1021,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#agent-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Agent configuration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Agent configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#prompt-templates" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1031,39 +1030,12 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#using-tool-calls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using tool calls
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-action-parsing-from-text" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom Action Parsing from Text
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
       
         <li class="md-nav__item">
-  <a href="#model-configuration" class="md-nav__link">
+  <a href="#tool-calls-or-text-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Model configuration
+        Tool calls or text commands
       
     </span>
   </a>
@@ -1071,21 +1043,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#environment-configuration" class="md-nav__link">
+  <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Environment configuration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#run-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run configuration
+        Next steps
       
     </span>
   </a>
@@ -1117,8 +1078,6 @@
   
     
     
-      
-        
       
         
       
@@ -1270,34 +1229,6 @@
     
   
     Environments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../v2_migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
   
 
     
@@ -2479,6 +2410,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
+  <a href="#load-and-override-a-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load and override a configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#overall-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2490,18 +2432,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#agent-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Agent configuration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Agent configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#prompt-templates" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2511,39 +2441,12 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#using-tool-calls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using tool calls
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-action-parsing-from-text" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom Action Parsing from Text
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
       
         <li class="md-nav__item">
-  <a href="#model-configuration" class="md-nav__link">
+  <a href="#tool-calls-or-text-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Model configuration
+        Tool calls or text commands
       
     </span>
   </a>
@@ -2551,21 +2454,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#environment-configuration" class="md-nav__link">
+  <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Environment configuration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#run-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run configuration
+        Next steps
       
     </span>
   </a>
@@ -2597,20 +2489,37 @@
   
 
 
-<h1 id="yaml-config-files">Yaml config files</h1>
+<h1 id="yaml-configuration">YAML configuration</h1>
 <div class="admonition abstract">
-<p class="admonition-title">Agent configuration files</p>
+<p class="admonition-title">Overview</p>
 <ul>
-<li>You can configure the agent's behavior using YAML configuration files. This guide shows how to do that.</li>
-<li>You should already be familiar with the <a href="../../quickstart/">quickstart guide</a>.</li>
-<li>For global environment settings (API keys, default model, etc., basically anything that can be set as environment variables), see <a href="../global_configuration/">global configuration</a>.</li>
-<li>Want more? See <a href="../cookbook/">python bindings</a> for subclassing &amp; developing your own agent.</li>
+<li>YAML files configure the agent, model and execution environment.</li>
+<li>Start with the <a href="../../quickstart/">quick start</a>, then add overrides.</li>
+<li>Provider credentials and global defaults are covered in
+  <a href="../global_configuration/">global configuration</a>.</li>
 </ul>
 </div>
+<h2 id="load-and-override-a-configuration">Load and override a configuration</h2>
+<div class="highlight"><pre><span></span><code>leani<span class="w"> </span>-c<span class="w"> </span>mini.yaml<span class="w"> </span>-c<span class="w"> </span>agent.step_limit<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-c<span class="w"> </span>environment.cwd<span class="o">=</span>/absolute/path/to/lean-project
+</code></pre></div>
+<p>You can pass several files and key-value overrides. They are merged recursively
+in order; later values replace earlier values.</p>
+<div class="admonition warning">
+<p class="admonition-title">Include a base configuration</p>
+<p>If you pass <code>-c</code>, the default config is not selected automatically. Use
+<code>-c mini.yaml</code> for the generic CLI or <code>-c reuf2f.yaml</code> for the benchmark,
+followed by your overrides.</p>
+</div>
 <h2 id="overall-structure">Overall structure</h2>
-<p>Configuration files look like this:</p>
+<ul>
+<li><code>agent</code> - Prompt templates, step/cost limits and agent options.</li>
+<li><code>model</code> - Model class/name, API options, action parsing and observations.</li>
+<li><code>environment</code> - Backend, working directory, command timeout and environment variables.</li>
+<li><code>run</code> - Entry-point options; supported keys depend on the runner.</li>
+</ul>
 <details class="note">
-<summary>Configuration file</summary>
+<summary>Built-in tool-call configuration</summary>
 <div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">system_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">You are a helpful assistant that can interact with a computer.</span>
@@ -2765,108 +2674,49 @@
 <span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 </details>
-<p>We use the following top-level keys:</p>
-<ul>
-<li><code>agent</code>: Agent configuration (prompt templates, cost limits etc.)</li>
-<li><code>environment</code>: Environment configuration (if you want to run in a docker container, etc.)</li>
-<li><code>model</code>: Model configuration (model name, reasoning strength, etc.)</li>
-<li><code>run</code>: Run configuration (output file, etc.)</li>
-</ul>
-<h2 id="agent-configuration">Agent configuration</h2>
-<p>Different agent classes might have slightly different configuration options.
-You can find the full list of options in the <a href="../../reference/agents/default/">API reference</a>.</p>
-<p>To use a different agent class, you can set the <code>agent_class</code> key to the name of the agent class you want to use
-or even to an import path (to use your own custom agent class even if it is not yet part of the mini-SWE-agent package).</p>
-<h3 id="prompt-templates">Prompt templates</h3>
-<p>We use <a href="https://jinja.palletsprojects.com/">Jinja2</a> to render templates (e.g., the instance template).</p>
-<p>TL;DR: You include variables with double (!) curly braces, e.g. <code>{{task}}</code> to include the task that was given to the agent.</p>
-<p>However, you can also do fairly complicated logic like this directly from your template:</p>
-<details class="note">
-<summary>Example: Dealing with long observations</summary>
-<p>The following snippets shortens long observations and displays a warning if the output is too long.</p>
-<div class="highlight"><pre><span></span><code><span class="x">&lt;returncode&gt;</span><span class="cp">{{</span><span class="nv">output.returncode</span><span class="cp">}}</span><span class="x">&lt;/returncode&gt;</span>
-<span class="cp">{%</span> <span class="k">if</span> <span class="nv">output.output</span> <span class="o">|</span> <span class="nf">length</span> <span class="o">&lt;</span> <span class="m">10000</span> -<span class="cp">%}</span>
-<span class="x">    &lt;output&gt;</span>
-<span class="x">        </span><span class="cp">{{</span> <span class="nv">output.output</span> -<span class="cp">}}</span>
-<span class="x">    &lt;/output&gt;</span>
-<span class="cp">{%</span>- <span class="k">else</span> -<span class="cp">%}</span>
-<span class="x">    &lt;warning&gt;</span>
-<span class="x">        The output of your last command was too long.</span>
-<span class="x">        Please try a different command that produces less output.</span>
-<span class="x">        If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.</span>
-<span class="x">        If you're using grep or find and it produced too much output, you can use a more selective search pattern.</span>
-<span class="x">        If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.</span>
-<span class="x">    &lt;/warning&gt;</span>
-
-<span class="x">    </span><span class="cp">{%</span>- <span class="k">set</span> <span class="nv">elided_chars</span> <span class="o">=</span> <span class="nv">output.output</span> <span class="o">|</span> <span class="nf">length</span> <span class="o">-</span> <span class="m">10000</span> -<span class="cp">%}</span>
-
-<span class="x">    &lt;output_head&gt;</span>
-<span class="x">        </span><span class="cp">{{</span> <span class="nv">output.output</span><span class="o">[:</span><span class="m">5000</span><span class="o">]</span> <span class="cp">}}</span>
-<span class="x">    &lt;/output_head&gt;</span>
-
-<span class="x">    &lt;elided_chars&gt;</span>
-<span class="x">        </span><span class="cp">{{</span> <span class="nv">elided_chars</span> <span class="cp">}}</span><span class="x"> characters elided</span>
-<span class="x">    &lt;/elided_chars&gt;</span>
-
-<span class="x">    &lt;output_tail&gt;</span>
-<span class="x">        </span><span class="cp">{{</span> <span class="nv">output.output</span><span class="o">[-</span><span class="m">5000</span><span class="o">:]</span> <span class="cp">}}</span>
-<span class="x">    &lt;/output_tail&gt;</span>
-<span class="cp">{%</span>- <span class="k">endif</span> -<span class="cp">%}</span>
-</code></pre></div>
-</details>
-<p>In all builtin agents, you can use the following variables:</p>
-<ul>
-<li>Environment variables (<code>LocalEnvironment</code> only, see discussion <a href="https://github.com/SWE-agent/mini-swe-agent/pull/425">here</a>)</li>
-<li>Agent config variables (i.e., anything that was set in the <code>agent</code> section of the config file, e.g., <code>step_limit</code>, <code>cost_limit</code>, etc.)</li>
-<li>Environment config variables (i.e., anything that was set in the <code>environment</code> section of the config file, e.g., <code>cwd</code>, <code>timeout</code>, etc.)</li>
-<li>Variables passed to the <code>run</code> method of the agent (by default that's only <code>task</code>, but you can pass other variables if you want to)</li>
-<li>Output of the last action execution (i.e., <code>output</code> from the <code>execute_action</code> method)</li>
-</ul>
-<h3 id="using-tool-calls">Using tool calls</h3>
-<p>Make sure to use the appropriate model class and matching configuration.</p>
-<h3 id="custom-action-parsing-from-text">Custom Action Parsing from Text</h3>
-<p>mini-SWE-agent can parse actions from markdown code blocks (<code>```mswea_bash_command ... ```</code>) or from tool calls.
-You can customize this behavior by setting the <code>action_regex</code> field to support different formats like XML.</p>
-<div class="admonition warning">
-<p class="admonition-title">Important</p>
-<p>If you set a custom action_regex (e.g. <code>&lt;action&gt;(.*?)&lt;/action&gt;</code>), you must use the same output format across all prompt templates (system_template, instance_template, format_error_template, etc.), ensuring the LLM wraps commands accordingly. See the example below for a complete configuration.</p>
-</div>
-<p>The built-in text-mode Lean configuration is <code>mini_textbased.yaml</code>:</p>
+<p>For the generic CLI, <code>agent.agent_class</code> and <code>environment.environment_class</code> may
+name a built-in class or Python import path. The ReuF2F runner uses its fixed
+progress-tracking agent and supports Docker/Podman or explicit local execution.
+See <a href="../../reference/agents/default/">agent APIs</a>,
+<a href="../../models/quickstart/">models</a>, and <a href="../environments/">environments</a>.</p>
+<h2 id="prompt-templates">Prompt templates</h2>
+<p>Templates use <a href="https://jinja.palletsprojects.com/">Jinja2</a>. For example,
+<code>{{task}}</code> inserts the task passed to <code>agent.run</code>.</p>
+<p>Agent templates receive agent/model/environment configuration, platform details,
+run-time template variables, and counters such as <code>n_model_calls</code> and <code>model_cost</code>.
+Local environments also expose environment variables. Observation templates
+receive each command result as <code>output</code>; it is not an agent-global shell session.</p>
+<p>Keep observations bounded. The built-in model configuration renders short output
+in full and longer output as a head/tail excerpt. Reuse that template rather than
+copying it into a second prompt.</p>
+<h2 id="tool-calls-or-text-commands">Tool calls or text commands</h2>
+<p>Use <code>mini.yaml</code> with a native tool-call model. For text command blocks:</p>
 <div class="highlight"><pre><span></span><code>leani<span class="w"> </span>-c<span class="w"> </span>mini_textbased.yaml<span class="w"> </span>-t<span class="w"> </span><span class="s2">"Complete the specified Lean proof."</span>
 </code></pre></div>
-<p>It selects <code>litellm_textbased</code> and a matching <code>mswea_bash_command</code> parser.
-Custom regex formats are still supported by text-based model adapters, but there
-is no separate XML benchmark configuration. Tool-call models use <code>mini.yaml</code>.</p>
+<p>This config selects <code>litellm_textbased</code> and the <code>leana_bash_command</code> parser.
+To use a custom regex, set <code>model.action_regex</code> and update the prompt to emit the
+same format.</p>
 <div class="admonition warning">
-<p class="admonition-title">Linebreaks &amp; escaping</p>
-<p>When specifying <code>action_regex</code> from the <code>yaml</code> config file, make sure you understand how escaping in yaml files works.
-For example, when you use the <code>|</code> primitive, your regex might have a linbreak at the end which is probably not what you want.
-The best way is to keep your regex on a single line and NOT use any quotation marks around it. You do NOT need to escape any characters in the regex. Example: <code>action_regex: &lt;bash_code&gt;(.*?)&lt;/bash_code&gt;</code></p>
+<p class="admonition-title">Regex escaping</p>
+<p>YAML block scalars can include a trailing newline in a regex. A single-quoted
+scalar preserves backslashes without YAML escape processing, for example
+<code>action_regex: '&lt;action&gt;(.*?)&lt;/action&gt;'</code>.</p>
 </div>
-<h2 id="model-configuration">Model configuration</h2>
-<p>See <a href="../../models/quickstart/">this guide</a> for more details on model configuration.</p>
-<h2 id="environment-configuration">Environment configuration</h2>
-<p>See <a href="../environments/">this guide</a> for more details on environment configuration.</p>
-<h2 id="run-configuration">Run configuration</h2>
-<p>See the information in "Usage".</p>
+<h2 id="next-steps">Next steps</h2>
+<ul>
+<li><a href="../../usage/reuf2f/">ReuF2F configuration and budgets</a></li>
+<li><a href="../global_configuration/">Global configuration</a></li>
+<li><a href="../../usage/python_bindings/">Python bindings</a></li>
+<li><a href="../cookbook/">Subclassing</a></li>
+</ul>
 <div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+  <a href="https://github.com/zeyu-zheng/Leanimum-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">bug_report</span>
         <span class="nav-card-title">Something broken/unclear?</span>
       </div>
       <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
     </div>
   </a>
 </div>

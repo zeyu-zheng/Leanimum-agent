@@ -978,8 +978,6 @@
       
         
       
-        
-      
     
     
     
@@ -1122,34 +1120,6 @@
     
   
     Environments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../advanced/v2_migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
   
 
     
@@ -2591,7 +2561,7 @@
 <div class="admonition note">
 <p class="admonition-title">LiteLLM Response API Model class</p>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/models/litellm_response_model.py">Read on GitHub</a></li>
+<li><a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/models/litellm_response_model.py">Read on GitHub</a></li>
 </ul>
 <details class="note">
 <summary>Full source code</summary>
@@ -2701,7 +2671,6 @@
 <ul>
 <li>Use this model class when you want to use OpenAI's <a href="https://platform.openai.com/docs/api-reference/responses">Responses API</a> with native tool calling.</li>
 <li>This is particularly useful for models like GPT-5 that benefit from the extended thinking/reasoning capabilities provided by the Responses API.</li>
-<li>This model maintains conversation state across turns using <code>previous_response_id</code>.</li>
 </ul>
 </div>
 <h2 id="usage">Usage</h2>
@@ -2715,7 +2684,7 @@
 <span class="w">      </span><span class="nt">effort</span><span class="p">:</span><span class="w"> </span><span class="s">"high"</span>
 </code></pre></div>
 <p>Or via command line:</p>
-<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"openai/gpt-5.2"</span><span class="w"> </span>--model-class<span class="w"> </span>litellm_response
+<div class="highlight"><pre><span></span><code>leani<span class="w"> </span>-m<span class="w"> </span><span class="s2">"openai/gpt-5.2"</span><span class="w"> </span>--model-class<span class="w"> </span>litellm_response
 </code></pre></div>
 
 
@@ -3010,23 +2979,13 @@
     </div>
 
 </div><div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+  <a href="https://github.com/zeyu-zheng/Leanimum-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">bug_report</span>
         <span class="nav-card-title">Something broken/unclear?</span>
       </div>
       <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
     </div>
   </a>
 </div>

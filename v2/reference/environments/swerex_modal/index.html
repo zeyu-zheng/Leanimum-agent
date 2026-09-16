@@ -978,8 +978,6 @@
       
         
       
-        
-      
     
     
     
@@ -1122,34 +1120,6 @@
     
   
     Environments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../advanced/v2_migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
   
 
     
@@ -2457,7 +2427,7 @@
 <div class="admonition note">
 <p class="admonition-title">SWE-ReX Modal Environment class</p>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/environments/extra/swerex_modal.py">Read on GitHub</a></li>
+<li><a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/environments/extra/swerex_modal.py">Read on GitHub</a></li>
 <li>Requires <a href="https://modal.com">Modal</a> account and authentication</li>
 </ul>
 </div>
@@ -2479,27 +2449,17 @@
 <p>Use this backend through the general Lean CLI with a prepared environment config:</p>
 <div class="highlight"><pre><span></span><code>leani<span class="w"> </span>-c<span class="w"> </span>mini.yaml<span class="w"> </span>-c<span class="w"> </span>/path/to/environment.yaml<span class="w"> </span>-t<span class="w"> </span><span class="s2">"Complete and check the Lean task."</span>
 </code></pre></div>
-<p>Set <code>environment.environment_class</code> to <code>swerex_modal</code> and provide the backend's
-required image, workspace, and credentials. The dedicated ReuF2F runner currently
-integrates task preparation only for Docker/Podman and explicit local execution; it does not provision this backend automatically.</p>
+<p>Set <code>environment.environment_class</code> to <code>swerex_modal</code> and configure the image,
+workspace and credentials. See the <a href="../../../usage/reuf2f/#environment">ReuF2F runner</a>
+for its supported environments.</p>
 <div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+  <a href="https://github.com/zeyu-zheng/Leanimum-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">bug_report</span>
         <span class="nav-card-title">Something broken/unclear?</span>
       </div>
       <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
     </div>
   </a>
 </div>

@@ -981,8 +981,6 @@
       
         
       
-        
-      
     
     
     
@@ -1125,34 +1123,6 @@
     
   
     Environments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="advanced/v2_migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
   
 
     
@@ -2351,24 +2321,17 @@
 
 
 <h1 id="leanimum-agent">Leanimum-agent</h1>
-<p>Leanimum-agent is a minimal bash-only assistant for Lean proofs and programs,
-derived from mini-SWE-agent. It searches libraries, edits files, and iterates on
-compiler output through one model-facing <code>bash</code> tool.</p>
+<p>Leanimum-agent is a minimal bash-only assistant for Lean proofs and programs.
+It searches libraries, edits files and runs compiler checks through a shell tool.</p>
 <ul>
-<li><a href="quickstart/">Quick start</a>: install from source and run a Lean task.</li>
-<li><a href="usage/reuf2f/">ReuF2F</a>: the only built-in benchmark, using a separate local checkout.</li>
-<li><a href="advanced/yaml_configuration/">Configuration</a>: tool-call and text-based Lean prompts.</li>
-<li><a href="advanced/environments/">Execution environments</a>: retained local and remote backends.</li>
-<li><a href="usage/output_files/">Trajectories and outputs</a>: inspect runs without confusing submission with acceptance.</li>
+<li><a href="quickstart/">Quick start</a>: install and run a Lean task.</li>
+<li><a href="usage/reuf2f/">ReuF2F</a>: generate patches for the built-in benchmark.</li>
+<li><a href="advanced/yaml_configuration/">Configuration</a>: select models, prompts and budgets.</li>
+<li><a href="advanced/environments/">Execution environments</a>: local and container backends.</li>
+<li><a href="usage/output_files/">Output files</a>: predictions, trajectories and inspection.</li>
+<li><a href="usage/python_bindings/">Python bindings</a>: use or extend the agent in code.</li>
 </ul>
-<p>Comparator remains an external CLI. Prompts describe how to reuse or prepare
-compatible tools and invoke them through bash. A trusted final verdict requires
-independent verification, not an agent's self-report.</p>
-<p>The ReuF2F runner defaults to one Linux Docker container per instance, following
-the upstream batch runner. Use the benchmark's documented verifier in a separate
-trusted environment for final scoring. No Leanimum-agent benchmark score is claimed here.</p>
-<p>The <a href="https://github.com/SWE-agent/mini-swe-agent">upstream project</a> provides the
-underlying agent architecture. Upstream performance claims are not Lean results.</p>
+<p>ReuF2F performs independent grading; agent completion is not a proof verdict.</p>
 
 
 

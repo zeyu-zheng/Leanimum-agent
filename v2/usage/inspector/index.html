@@ -113,7 +113,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#inspector-browse-agent-trajectories" class="md-skip">
+        <a href="#inspector" class="md-skip">
           Skip to content
         </a>
       
@@ -720,10 +720,9 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Key bindings">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#faq" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -731,11 +730,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1082,8 +1076,6 @@
       
         
       
-        
-      
     
     
     
@@ -1226,34 +1218,6 @@
     
   
     Environments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../advanced/v2_migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
   
 
     
@@ -2454,10 +2418,9 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Key bindings">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#faq" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2465,11 +2428,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2509,32 +2467,26 @@
   
 
 
-<h1 id="inspector-browse-agent-trajectories">Inspector: Browse agent trajectories</h1>
+<h1 id="inspector">Inspector</h1>
 <div class="admonition abstract">
 <p class="admonition-title">Overview</p>
 <ul>
-<li>The <code>inspector</code> is a tool that allows you to browse <code>.traj.json</code> files that show the history of a mini-SWE-agent run.</li>
-<li>Quickly start it with <code>mini-e i</code> or <code>mini-extra inspector</code>.</li>
-<li>See <a href="../output_files/">output files</a> for the trajectory file format.</li>
-<li>Alternative: <a href="https://jless.io/">jless</a> is a great command-line JSON viewer for browsing trajectories.</li>
+<li>Browse <code>.traj.json</code> files with <code>leani-extra inspector</code> or <code>leani-e i</code>.</li>
+<li>See <a href="../output_files/">output files</a> for the trajectory format.</li>
+<li>Use <a href="https://jless.io/">jless</a> to inspect raw JSON.</li>
 </ul>
 </div>
-<figure>
-<br>
-<div class="gif-container gif-container-styled" data-glightbox-disabled="data-glightbox-disabled">
-    <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/inspector.png?raw=true" data-desc-position="bottom"><img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/inspector.png?raw=true" data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/inspector.gif?raw=true" alt="inspector" data-glightbox="false" width="600"></a>
-  </div>
-</figure>
 <h2 id="usage">Usage</h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Find all .traj.json files recursively from current directory</span>
-mini-extra<span class="w"> </span>inspector
-<span class="c1"># or shorter</span>
-mini-e<span class="w"> </span>i
-<span class="c1"># Open the inspector for a specific file</span>
-mini-e<span class="w"> </span>i<span class="w"> </span>&lt;path_to_traj.json&gt;
-<span class="c1"># Search for trajectory files in a specific directory</span>
-mini-e<span class="w"> </span>i<span class="w"> </span>&lt;path_to_directory&gt;
+<div class="highlight"><pre><span></span><code><span class="c1"># Search the current directory recursively</span>
+leani-extra<span class="w"> </span>inspector
+
+<span class="c1"># Open one trajectory</span>
+leani-extra<span class="w"> </span>inspector<span class="w"> </span>/path/to/task.traj.json
+
+<span class="c1"># Search another directory</span>
+leani-extra<span class="w"> </span>inspector<span class="w"> </span>/path/to/results
 </code></pre></div>
+<p>Use <code>--no-reasoning</code> to hide reasoning initially.</p>
 <h2 id="key-bindings">Key bindings</h2>
 <ul>
 <li><code>q</code>: Quit the inspector</li>
@@ -2544,9 +2496,11 @@ mini-e<span class="w"> </span>i<span class="w"> </span>&lt;path_to_directory&gt;
 <li><code>k</code>/<code>UP</code>: Scroll up</li>
 <li><code>H</code>: Previous trajectory</li>
 <li><code>L</code>: Next trajectory</li>
-<li><code>e</code>: Open current step in <a href="https://jless.io/">jless</a></li>
+<li><code>e</code> / <code>E</code>: Open the current step / full trajectory in jless</li>
+<li><code>r</code>: Toggle reasoning</li>
+<li><code>R</code>: Reload the trajectory from disk</li>
 </ul>
-<h3 id="faq">FAQ</h3>
+<h2 id="faq">FAQ</h2>
 <blockquote>
 <p>How can I select/copy text on the screen?</p>
 </blockquote>
@@ -2556,7 +2510,7 @@ mini-e<span class="w"> </span>i<span class="w"> </span>&lt;path_to_directory&gt;
 <details class="note">
 <summary>Implementation</summary>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/run/utilities/inspector.py">Read on GitHub</a></li>
+<li><a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/run/utilities/inspector.py">Read on GitHub</a></li>
 </ul>
 <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">  1</span>
 <span class="normal">  2</span>
@@ -2877,7 +2831,7 @@ mini-e<span class="w"> </span>i<span class="w"> </span>&lt;path_to_directory&gt;
 <span class="sd">"""</span>
 <span class="sd">Simple trajectory inspector for browsing agent conversation trajectories.</span>
 
-<span class="sd">More information about the usage: [bold green] https://mini-swe-agent.com/latest/usage/inspector/ [/bold green].</span>
+<span class="sd">More information about the usage: [bold green] https://github.com/zeyu-zheng/Leanimum-agent/blob/main/docs/usage/inspector.md [/bold green].</span>
 <span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
@@ -2971,7 +2925,7 @@ mini-e<span class="w"> </span>i<span class="w"> </span>&lt;path_to_directory&gt;
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectory_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span> <span class="n">show_reasoning</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="n">css_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="s2">"MSWEA_INSPECTOR_STYLE_PATH"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"config"</span> <span class="o">/</span> <span class="s2">"inspector.tcss"</span><span class="p">)</span>
+            <span class="s2">"LEANA_INSPECTOR_STYLE_PATH"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"config"</span> <span class="o">/</span> <span class="s2">"inspector.tcss"</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">CSS</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">css_path</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
 
@@ -3192,23 +3146,13 @@ mini-e<span class="w"> </span>i<span class="w"> </span>&lt;path_to_directory&gt;
 </code></pre></div></td></tr></tbody></table></div>
 </details>
 <div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+  <a href="https://github.com/zeyu-zheng/Leanimum-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">bug_report</span>
         <span class="nav-card-title">Something broken/unclear?</span>
       </div>
       <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
     </div>
   </a>
 </div>

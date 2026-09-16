@@ -113,7 +113,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#using-litellm" class="md-skip">
+        <a href="#local-models" class="md-skip">
           Skip to content
         </a>
       
@@ -797,6 +797,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -838,6 +840,8 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
+  
+    
   
   
     <label class="md-nav__title" for="__toc">
@@ -1095,8 +1099,6 @@
       
         
       
-        
-      
     
     
     
@@ -1239,34 +1241,6 @@
     
   
     Environments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../advanced/v2_migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
   
 
     
@@ -2438,6 +2412,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -2537,8 +2513,7 @@
   
 
 
-  <h1>Local models</h1>
-
+<h1 id="local-models">Local models</h1>
 <div class="admonition abstract">
 <p class="admonition-title">Local models</p>
 <ul>
@@ -2546,13 +2521,6 @@
 <li>You should already be familiar with the <a href="../../quickstart/">quickstart guide</a>.</li>
 <li>You should also quickly skim the <a href="../../advanced/global_configuration/">global configuration guide</a> to understand
   the global configuration and <a href="../../advanced/yaml_configuration/">yaml configuration files guide</a>.</li>
-</ul>
-</div>
-<div class="admonition tip">
-<p class="admonition-title">Examples</p>
-<ul>
-<li><a href="https://github.com/SWE-agent/mini-swe-agent/issues/303">Issue #303</a> has several examples of how to use local models.</li>
-<li>We also welcome concrete examples of how to use local models per pull request into this guide.</li>
 </ul>
 </div>
 <h2 id="using-litellm">Using litellm</h2>
@@ -2729,18 +2697,17 @@ This is done with the <code>model_kwargs</code> dictionary which is directly pas
 <span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 </details>
-<p>In the last section, you can add</p>
+<p>Add these model settings to a YAML overlay and load it after a base config,
+for example <code>leani -c mini.yaml -c /path/to/local-model.yaml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"my-local-model"</span>
 <span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">custom_llm_provider</span><span class="p">:</span><span class="w"> </span><span class="s">"openai"</span>
 <span class="w">    </span><span class="nt">api_base</span><span class="p">:</span><span class="w"> </span><span class="s">"https://..."</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </code></pre></div>
 <div class="admonition tip">
-<p class="admonition-title">Updating the default <code>mini</code> configuration file</p>
-<p>You can set the <code>MSWEA_MINI_CONFIG_PATH</code> setting to set path to the default <code>mini</code> configuration file.
+<p class="admonition-title">Updating the default <code>leani</code> configuration file</p>
+<p>You can set the <code>LEANA_MINI_CONFIG_PATH</code> setting to set path to the default <code>leani</code> configuration file.
 This will allow you to override the default configuration file with your own.
 See the <a href="../../advanced/global_configuration/">global configuration guide</a> for more details.</p>
 </div>
@@ -2748,7 +2715,7 @@ See the <a href="../../advanced/global_configuration/">global configuration guid
 <details class="note">
 <summary>Complete model class</summary>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/models/litellm_model.py">Read on GitHub</a></li>
+<li><a href="https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/models/litellm_model.py">Read on GitHub</a></li>
 <li><a href="../../reference/models/litellm/">API reference</a></li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
@@ -2783,10 +2750,10 @@ See the <a href="../../advanced/global_configuration/">global configuration guid
     <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="w">    </span><span class="sd">"""Additional arguments passed to the API."""</span>
     <span class="n">litellm_model_registry</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LITELLM_MODEL_REGISTRY_PATH"</span><span class="p">)</span>
-<span class="w">    </span><span class="sd">"""Model registry for cost tracking and model metadata. See the local model guide (https://mini-swe-agent.com/latest/models/local_models/) for more details."""</span>
+<span class="w">    </span><span class="sd">"""Model registry for cost tracking and model metadata. See the local model guide (https://github.com/zeyu-zheng/Leanimum-agent/blob/main/docs/models/local_models.md) for more details."""</span>
     <span class="n">set_cache_control</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"default_end"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">"""Set explicit cache control markers, for example for Anthropic models"""</span>
-    <span class="n">cost_tracking</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"default"</span><span class="p">,</span> <span class="s2">"ignore_errors"</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_COST_TRACKING"</span><span class="p">,</span> <span class="s2">"default"</span><span class="p">)</span>
+    <span class="n">cost_tracking</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"default"</span><span class="p">,</span> <span class="s2">"ignore_errors"</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LEANA_COST_TRACKING"</span><span class="p">,</span> <span class="s2">"default"</span><span class="p">)</span>
 <span class="w">    </span><span class="sd">"""Cost tracking mode for this model. Can be "default" or "ignore_errors" (ignore errors/missing cost info)"""</span>
     <span class="n">format_error_template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"{{ error }}"</span>
 <span class="w">    </span><span class="sd">"""Template used when the LM's output is not in the expected format."""</span>
@@ -2869,10 +2836,10 @@ See the <a href="../../advanced/global_configuration/">global configuration guid
                 <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="sa">f</span><span class="s2">"Error calculating cost for model </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, perhaps it's not registered? "</span>
                     <span class="s2">"You can ignore this issue from your config file with cost_tracking: 'ignore_errors' or "</span>
-                    <span class="s2">"globally with export MSWEA_COST_TRACKING='ignore_errors'. "</span>
+                    <span class="s2">"globally with export LEANA_COST_TRACKING='ignore_errors'. "</span>
                     <span class="s2">"Alternatively check the 'Cost tracking' section in the documentation at "</span>
-                    <span class="s2">"https://klieret.short.gy/mini-local-models. "</span>
-                    <span class="s2">" Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"</span>
+                    <span class="s2">"https://github.com/zeyu-zheng/Leanimum-agent/blob/main/docs/models/local_models.md. "</span>
+                    <span class="s2">" Still stuck? Please open a github issue at https://github.com/zeyu-zheng/Leanimum-agent/issues/new!"</span>
                 <span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
@@ -2928,14 +2895,12 @@ There are two ways to do this with <code>litellm</code>:</p>
 <p>If you do not need cost tracking, you can ignore these errors, ideally by editing your agent config file to add:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">cost_tracking</span><span class="p">:</span><span class="w"> </span><span class="s">"ignore_errors"</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="nn">...</span>
 </code></pre></div>
 <p>Alternatively, you can set the global setting:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">MSWEA_COST_TRACKING</span><span class="o">=</span><span class="s2">"ignore_errors"</span>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">LEANA_COST_TRACKING</span><span class="o">=</span><span class="s2">"ignore_errors"</span>
 </code></pre></div>
-<p>However, note that this is a global setting, and will affect all models!</p>
-<p>However, the best way to handle the cost issue is to add a model registry to litellm to include your local model.</p>
+<p>This affects all adapters that read the global cost-tracking setting. To track
+costs instead, register the model with its actual token prices.</p>
 <p>LiteLLM gets its cost and model metadata from <a href="https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json">this file</a>. You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.</p>
 <p>The model registry JSON file should follow LiteLLM's format:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -2955,6 +2920,11 @@ There are two ways to do this with <code>litellm</code>:</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Zero-cost models</p>
+<p>Keep <code>cost_tracking: "ignore_errors"</code> for zero-cost models even when they are
+registered: the default cost check requires a positive cost.</p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">Model names</p>
 <p>Model names are case sensitive. Please make sure you have an exact match.</p>
@@ -2966,13 +2936,11 @@ then this must also match <code>litellm_provider</code> in the config!</p>
 </div>
 <p>There are two ways of setting the path to the model registry:</p>
 <ol>
-<li>Set <code>LITELLM_MODEL_REGISTRY_PATH</code> (e.g., <code>mini-extra config set LITELLM_MODEL_REGISTRY_PATH /path/to/model_registry.json</code>)</li>
+<li>Set <code>LITELLM_MODEL_REGISTRY_PATH</code> (e.g., <code>leani-extra config set LITELLM_MODEL_REGISTRY_PATH /path/to/model_registry.json</code>)</li>
 <li>Set <code>litellm_model_registry</code> in the agent config file</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">litellm_model_registry</span><span class="p">:</span><span class="w"> </span><span class="s">"/path/to/model_registry.json"</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="nn">...</span>
 </code></pre></div>
 <h2 id="concrete-examples">Concrete examples</h2>
 <h3 id="generating-reuf2f-trajectories-with-a-local-model">Generating ReuF2F trajectories with a local model</h3>
@@ -2985,23 +2953,13 @@ an overlay configuration and merge that with <code>reuf2f.yaml</code>:</p>
 tasks with a text-only model, use <code>leani -c mini_textbased.yaml</code> with your model
 settings. See <a href="../../usage/reuf2f/">ReuF2F</a> for preparation and independent grading.</p>
 <div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+  <a href="https://github.com/zeyu-zheng/Leanimum-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">bug_report</span>
         <span class="nav-card-title">Something broken/unclear?</span>
       </div>
       <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
     </div>
   </a>
 </div>

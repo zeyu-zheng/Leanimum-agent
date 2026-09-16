@@ -729,13 +729,30 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
-  <a href="#agent-trajectories" class="md-nav__link">
+  <a href="#trajectory-files-trajjson" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Agent trajectories
+        Trajectory files (.traj.json)
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Trajectory files (.traj.json)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -744,6 +761,34 @@
     <span class="md-ellipsis">
       
         ReuF2F batch outputs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ReuF2F batch outputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#predsjson-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        preds.json format
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failures-and-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failures and resume
       
     </span>
   </a>
@@ -1054,8 +1099,6 @@
       
         
       
-        
-      
     
     
     
@@ -1198,34 +1241,6 @@
     
   
     Environments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../advanced/v2_migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    v2 migration guide
   
 
     
@@ -2407,13 +2422,30 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
-  <a href="#agent-trajectories" class="md-nav__link">
+  <a href="#trajectory-files-trajjson" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Agent trajectories
+        Trajectory files (.traj.json)
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Trajectory files (.traj.json)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2422,6 +2454,34 @@
     <span class="md-ellipsis">
       
         ReuF2F batch outputs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ReuF2F batch outputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#predsjson-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        preds.json format
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failures-and-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failures and resume
       
     </span>
   </a>
@@ -2454,35 +2514,136 @@
 
 
 <h1 id="output-files">Output files</h1>
-<h2 id="agent-trajectories">Agent trajectories</h2>
-<p>The <code>.traj.json</code> schema retains <code>trajectory_format: mini-swe-agent-1.1</code> for
-compatibility with the inspector. It stores messages, configuration, cost and
-termination status. <code>Submitted</code> means the agent requested completion, not that a
-proof has been independently accepted.</p>
-<h2 id="reuf2f-batch-outputs">ReuF2F batch outputs</h2>
-<ul>
-<li><code>preds.json</code>: an ID-keyed mapping of exactly <code>instance_id</code>, <code>model_name_or_path</code>,
-  and <code>model_patch</code>. The runner stores the agent's <code>submission</code> as patch text,
-  following upstream mini-SWE-agent. Errors or budget exits without a patch have
-  an empty prediction; workspaces are not automatically collected.
-  Existing IDs are skipped unless <code>--redo-existing</code> is set.</li>
-<li><code>leanimum.log</code>: runner log, including pre-agent setup errors.</li>
-<li><code>exit_statuses_TIMESTAMP.yaml</code>: batch progress termination report.</li>
-<li><code>INSTANCE_ID/INSTANCE_ID.traj.json</code>: messages, config, costs and termination;
-  release <code>source_revision</code> and <code>base_commit</code> are also recorded as data provenance,
-  not the container's initial commit or final HEAD. Saved whenever
-  an agent was constructed, including model errors and budget exits.</li>
-</ul>
-<p>With explicitly selected local execution, <code>INSTANCE_ID/workspace-*</code> also retains
-each attempt's source and build files. These are diagnostic output, not grading
-authority; submission is still solely the patch in <code>preds.json</code>.</p>
-<p>No separate <code>task.json</code>, <code>result.json</code>, submission archive, or agent-side score is
-produced. <code>Submitted</code> only identifies the upstream termination protocol; even an
-arbitrary success string is stored as untrusted patch text, not a proof verdict.
-ReuF2F's independent evaluator consumes predictions and the original trusted release.</p>
-<p>See <a href="../reuf2f/">ReuF2F</a> for preparation, container preflight and independent grading.</p>
+<div class="admonition abstract">
+<p class="admonition-title">Overview</p>
+<p>Leanimum-agent saves trajectories as JSON. The ReuF2F runner also saves
+patch predictions, logs and batch termination statuses.</p>
+</div>
+<h2 id="trajectory-files-trajjson">Trajectory files (<code>.traj.json</code>)</h2>
+<p>A trajectory records messages, configuration, model costs and termination status.
+Its format identifier is <code>leanimum-agent-1.1</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Viewing trajectories</p>
+<p>Browse a file or directory with the <a href="../inspector/">inspector</a>:</p>
 <div class="highlight"><pre><span></span><code>leani-extra<span class="w"> </span>inspect<span class="w"> </span>/path/to/INSTANCE_ID.traj.json
 </code></pre></div>
+</div>
+<h3 id="structure">Structure</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>info.model_stats</code></td>
+<td><code>instance_cost</code> and <code>api_calls</code> for the run</td>
+</tr>
+<tr>
+<td><code>info.config</code></td>
+<td>Agent/model/environment configuration and class names</td>
+</tr>
+<tr>
+<td><code>info.mini_version</code></td>
+<td>Installed agent package version</td>
+</tr>
+<tr>
+<td><code>info.exit_status</code></td>
+<td>Termination status, such as <code>Submitted</code> or <code>LimitsExceeded</code></td>
+</tr>
+<tr>
+<td><code>info.submission</code></td>
+<td>Submitted text, or an empty value if none was produced</td>
+</tr>
+<tr>
+<td><code>messages</code></td>
+<td>Full conversation, including command observations</td>
+</tr>
+<tr>
+<td><code>trajectory_format</code></td>
+<td>Format identifier</td>
+</tr>
+</tbody>
+</table>
+<p>The ReuF2F runner adds <code>instance_id</code>, <code>source_revision</code> and <code>base_commit</code> at the top
+level. <code>base_commit</code> identifies the release baseline, not the solver container's
+Git history. Exceptions may add <code>exception_str</code> and <code>traceback</code> under <code>info</code>.</p>
+<p>Messages contain model-specific fields and an <code>extra</code> dictionary for parsed
+actions, costs and execution results. Tool-call observations use the provider's
+tool message format; text-based models use rendered user messages. The terminal
+message has <code>role: "exit"</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Submitted is not a proof verdict</p>
+<p><code>Submitted</code> means the agent requested completion. ReuF2F evaluates the patch
+independently to decide whether a proof or refutation is accepted.</p>
+</div>
+<h2 id="reuf2f-batch-outputs">ReuF2F batch outputs</h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>preds.json</code></td>
+<td>ID-keyed patch predictions</td>
+</tr>
+<tr>
+<td><code>leanimum.log</code></td>
+<td>Runner messages and failures</td>
+</tr>
+<tr>
+<td><code>exit_statuses_TIMESTAMP.yaml</code></td>
+<td>Batch termination statuses</td>
+</tr>
+<tr>
+<td><code>INSTANCE_ID/INSTANCE_ID.traj.json</code></td>
+<td>Agent trajectory and release provenance</td>
+</tr>
+<tr>
+<td><code>INSTANCE_ID/workspace-*</code></td>
+<td>Retained attempts in explicit local mode</td>
+</tr>
+</tbody>
+</table>
+<h3 id="predsjson-format"><code>preds.json</code> format</h3>
+<p>Each record has three fields:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"berger-modified-egz"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"instance_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"berger-modified-egz"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"model_name_or_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-model"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"model_patch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diff --git a/berger2019modified.lean b/berger2019modified.lean\n..."</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>model_patch</code> contains diff text, not a filename or verdict. Pass predictions and
+the original release to the <a href="../reuf2f/#predictions-and-evaluation">evaluator</a>.</p>
+<h2 id="failures-and-resume">Failures and resume</h2>
+<ul>
+<li>Model initialization errors write no prediction or trajectory and can be retried
+  by resuming the run.</li>
+<li>Later setup/agent failures can write an empty prediction. Trajectories are saved
+  when an agent was constructed.</li>
+<li>Existing IDs in <code>preds.json</code>, including empty predictions, are skipped unless
+  <code>--redo-existing</code> is set. Deleting a trajectory alone does not rerun an ID.</li>
+<li>Unsubmitted edits are not recovered. Retained local workspaces are diagnostics,
+  not evaluator inputs.</li>
+</ul>
+<div class="grid cards">
+  <a href="https://github.com/zeyu-zheng/Leanimum-agent/issues/new" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">bug_report</span>
+        <span class="nav-card-title">Something broken/unclear?</span>
+      </div>
+      <p class="nav-card-description">Open an issue on GitHub!</p>
+    </div>
+  </a>
+</div>
 
 
 
