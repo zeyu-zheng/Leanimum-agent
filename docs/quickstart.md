@@ -38,7 +38,7 @@ leani -c mini.yaml -c environment.cwd=/absolute/path/to/lean-project \
 
 ## Run ReuF2F
 
-First export a task release using ReuF2F's `prepare-tasks` command, then run:
+Start from a prepared ReuF2F task release, then run:
 
 ```bash
 leani-extra reuf2f --subset /tmp/reuf2f-tasks --slice 0:1 \

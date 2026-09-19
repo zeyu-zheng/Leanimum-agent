@@ -9,8 +9,7 @@
 
 ## Usage
 
-Export tasks with `reuf2f prepare-tasks /tmp/reuf2f-tasks` in the benchmark
-checkout. Pass the release directory, not the checkout, to the runner.
+Pass a prepared task release directory, not the benchmark checkout, to the runner.
 
 !!! tip "Quickstart"
 
