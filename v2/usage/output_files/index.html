@@ -2567,9 +2567,8 @@ Its format identifier is <code>leanimum-agent-1.1</code>.</p>
 </tr>
 </tbody>
 </table>
-<p>The ReuF2F runner adds <code>instance_id</code>, <code>source_revision</code> and <code>base_commit</code> at the top
-level. <code>base_commit</code> identifies the release baseline, not the solver container's
-Git history. Exceptions may add <code>exception_str</code> and <code>traceback</code> under <code>info</code>.</p>
+<p>The ReuF2F runner adds <code>instance_id</code> at the top level. Exceptions may add
+<code>exception_str</code> and <code>traceback</code> under <code>info</code>.</p>
 <p>Messages contain model-specific fields and an <code>extra</code> dictionary for parsed
 actions, costs and execution results. Tool-call observations use the provider's
 tool message format; text-based models use rendered user messages. The terminal
@@ -2602,26 +2601,22 @@ independently to decide whether a proof or refutation is accepted.</p>
 </tr>
 <tr>
 <td><code>INSTANCE_ID/INSTANCE_ID.traj.json</code></td>
-<td>Agent trajectory and release provenance</td>
-</tr>
-<tr>
-<td><code>INSTANCE_ID/workspace-*</code></td>
-<td>Retained attempts in explicit local mode</td>
+<td>Agent trajectory</td>
 </tr>
 </tbody>
 </table>
 <h3 id="predsjson-format"><code>preds.json</code> format</h3>
 <p>Each record has three fields:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"berger-modified-egz"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"instance_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"berger-modified-egz"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"gu2020hat"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"instance_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gu2020hat"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"model_name_or_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-model"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"model_patch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diff --git a/berger2019modified.lean b/berger2019modified.lean\n..."</span>
+<span class="w">    </span><span class="nt">"model_patch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"diff --git a/gu2020hat.lean b/gu2020hat.lean\n..."</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><code>model_patch</code> contains diff text, not a filename or verdict. Pass predictions and
-the original release to the <a href="../reuf2f/#predictions-and-evaluation">evaluator</a>.</p>
+the same dataset to the <a href="../reuf2f/#predictions-and-evaluation">evaluator</a>.</p>
 <h2 id="failures-and-resume">Failures and resume</h2>
 <ul>
 <li>Model initialization errors write no prediction or trajectory and can be retried
@@ -2630,8 +2625,7 @@ the original release to the <a href="../reuf2f/#predictions-and-evaluation">eval
   when an agent was constructed.</li>
 <li>Existing IDs in <code>preds.json</code>, including empty predictions, are skipped unless
   <code>--redo-existing</code> is set. Deleting a trajectory alone does not rerun an ID.</li>
-<li>Unsubmitted edits are not recovered. Retained local workspaces are diagnostics,
-  not evaluator inputs.</li>
+<li>Unsubmitted edits are not recovered.</li>
 </ul>
 <div class="grid cards">
   <a href="https://github.com/zeyu-zheng/Leanimum-agent/issues/new" class="nav-card-link">

@@ -2598,7 +2598,7 @@
 <summary>Full source code</summary>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
 
-<span class="sd">"""Run Leanimum-agent on a batch of ReuF2F tasks."""</span>
+<span class="sd">"""Run Leanimum-agent on ReuF2F instances in batch mode."""</span>
 
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">concurrent.futures</span>
@@ -2614,44 +2614,60 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">jinja2</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrictUndefined</span><span class="p">,</span> <span class="n">Template</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.live</span><span class="w"> </span><span class="kn">import</span> <span class="n">Live</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">leanimum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Environment</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">builtin_config_dir</span><span class="p">,</span> <span class="n">get_config_from_spec</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.environments</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_environment</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.environments.docker</span><span class="w"> </span><span class="kn">import</span> <span class="n">DockerEnvironment</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.environments.local</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalEnvironment</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.run.benchmarks.utils.batch_progress</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunBatchProgressManager</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.run.benchmarks.utils.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProgressTrackingAgent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.run.benchmarks.utils.reuf2f</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_instances</span><span class="p">,</span> <span class="n">prepare_environment</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.run.benchmarks.utils.reuf2f</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_environment</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.utils.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_file_handler</span><span class="p">,</span> <span class="n">logger</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">leanimum.utils.serialize</span><span class="w"> </span><span class="kn">import</span> <span class="n">UNSET</span><span class="p">,</span> <span class="n">recursive_merge</span>
 
-<span class="n">_HELP_TEXT</span> <span class="o">=</span> <span class="s2">"""Run Leanimum-agent on ReuF2F instances with Docker or explicit local execution.</span>
+<span class="n">_HELP_TEXT</span> <span class="o">=</span> <span class="s2">"""Run Leanimum-agent on ReuF2F instances.</span>
 
-<span class="s2">Supply a prepared task release with --subset. Docker uses the shared Lean image;</span>
-<span class="s2">local uses a prepared Lean project at environment.cwd and provides no isolation.</span>
+<span class="s2">Pass the dataset built by `reuf2f dataset build` (test.jsonl) with --subset.</span>
 <span class="s2">Candidate generation and independent Comparator grading are separate.</span>
 <span class="s2">"""</span>
 
 <span class="n">_CONFIG_SPEC_HELP_TEXT</span> <span class="o">=</span> <span class="s2">"""Path to config files, filenames, or key-value pairs.</span>
 
-<span class="s2">[bold red]IMPORTANT:[/bold red] If you set this option, include [bold green]-c reuf2f.yaml[/bold green].</span>
-<span class="s2">Multiple configs will be recursively merged, for example:</span>
-<span class="s2">[bold green]-c reuf2f.yaml -c agent.step_limit=100[/bold green]</span>
+<span class="s2">[bold red]IMPORTANT:[/bold red] [red]If you set this option, the default config file will not be used.[/red]</span>
+<span class="s2">So you need to explicitly set it e.g., with [bold green]-c reuf2f.yaml &lt;other options&gt;[/bold green]</span>
+
+<span class="s2">Multiple configs will be recursively merged.</span>
+
+<span class="s2">Examples:</span>
+
+<span class="s2">[bold red]-c model.model_kwargs.temperature=0[/bold red] [red]You forgot to add the default config file! See above.[/red]</span>
+
+<span class="s2">[bold green]-c reuf2f.yaml -c model.model_kwargs.temperature=0.5[/bold green]</span>
+
+<span class="s2">[bold green]-c reuf2f.yaml -c agent.step_limit=50[/bold green]</span>
 <span class="s2">"""</span>
 
 <span class="n">DEFAULT_CONFIG_FILE</span> <span class="o">=</span> <span class="n">builtin_config_dir</span> <span class="o">/</span> <span class="s2">"benchmarks"</span> <span class="o">/</span> <span class="s2">"reuf2f.yaml"</span>
+
 <span class="n">app</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Typer</span><span class="p">(</span><span class="n">rich_markup_mode</span><span class="o">=</span><span class="s2">"rich"</span><span class="p">,</span> <span class="n">add_completion</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
 <span class="n">_OUTPUT_FILE_LOCK</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">get_reuf2f_environment</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DockerEnvironment</span> <span class="o">|</span> <span class="n">LocalEnvironment</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_reuf2f_environment</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Environment</span><span class="p">:</span>
     <span class="n">env_config</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"environment"</span><span class="p">,</span> <span class="p">{})}</span>
     <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="o">=</span> <span class="n">env_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"environment_class"</span><span class="p">,</span> <span class="s2">"docker"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"docker"</span><span class="p">,</span> <span class="s2">"local"</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"ReuF2F tasks support only docker and local"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"local"</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Local execution has no task isolation; use a disposable no-secret environment"</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">env_config</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"docker"</span><span class="p">:</span>
+        <span class="n">env_config</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span>
+
+    <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">env_config</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">startup_command</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"env_startup_command"</span><span class="p">):</span>
+        <span class="n">startup_command</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">startup_command</span><span class="p">,</span> <span class="n">undefined</span><span class="o">=</span><span class="n">StrictUndefined</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">instance</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">execute</span><span class="p">({</span><span class="s2">"command"</span><span class="p">:</span> <span class="n">startup_command</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">out</span><span class="p">[</span><span class="s2">"returncode"</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error executing startup command: </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="c1"># The shared image has no task in it yet</span>
+    <span class="n">prepare_environment</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">env</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">update_preds_file</span><span class="p">(</span><span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
@@ -2685,10 +2701,10 @@
     <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">progress_manager</span><span class="p">:</span> <span class="n">RunBatchProgressManager</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Prepare a task environment, run the agent, save results and clean up."""</span>
+<span class="w">    </span><span class="sd">"""Process a single ReuF2F instance."""</span>
     <span class="n">instance_id</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">"instance_id"</span><span class="p">]</span>
     <span class="n">instance_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">instance_id</span>
-    <span class="n">instance_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># avoid inconsistent state if something here fails and there's leftover previous files</span>
     <span class="n">remove_from_preds_file</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">"preds.json"</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">)</span>
     <span class="p">(</span><span class="n">instance_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">instance_id</span><span class="si">}</span><span class="s2">.traj.json"</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model"</span><span class="p">,</span> <span class="p">{}))</span>
@@ -2697,20 +2713,13 @@
     <span class="n">progress_manager</span><span class="o">.</span><span class="n">on_instance_start</span><span class="p">(</span><span class="n">instance_id</span><span class="p">)</span>
     <span class="n">progress_manager</span><span class="o">.</span><span class="n">update_instance_status</span><span class="p">(</span><span class="n">instance_id</span><span class="p">,</span> <span class="s2">"Pulling/starting environment"</span><span class="p">)</span>
 
-    <span class="n">env</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">agent</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">exit_status</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">extra_info</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">env</span> <span class="o">=</span> <span class="n">get_reuf2f_environment</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">startup_command</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"env_startup_command"</span><span class="p">):</span>
-            <span class="n">startup_command</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">startup_command</span><span class="p">,</span> <span class="n">undefined</span><span class="o">=</span><span class="n">StrictUndefined</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">instance</span><span class="p">)</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">execute</span><span class="p">({</span><span class="s2">"command"</span><span class="p">:</span> <span class="n">startup_command</span><span class="p">})</span>
-            <span class="k">if</span> <span class="n">out</span><span class="p">[</span><span class="s2">"returncode"</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error executing startup command: </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="n">prepare_environment</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">instance_dir</span><span class="p">)</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">get_reuf2f_environment</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
         <span class="n">agent</span> <span class="o">=</span> <span class="n">ProgressTrackingAgent</span><span class="p">(</span>
             <span class="n">model</span><span class="p">,</span>
             <span class="n">env</span><span class="p">,</span>
@@ -2726,39 +2735,28 @@
         <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">""</span>
         <span class="n">extra_info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"traceback"</span><span class="p">:</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span> <span class="s2">"exception_str"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
     <span class="k">finally</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">agent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">traj_path</span> <span class="o">=</span> <span class="n">instance_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">instance_id</span><span class="si">}</span><span class="s2">.traj.json"</span>
-                <span class="n">agent</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
-                    <span class="n">traj_path</span><span class="p">,</span>
-                    <span class="p">{</span>
-                        <span class="s2">"info"</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="s2">"exit_status"</span><span class="p">:</span> <span class="n">exit_status</span><span class="p">,</span>
-                            <span class="s2">"submission"</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
-                            <span class="o">**</span><span class="n">extra_info</span><span class="p">,</span>
-                        <span class="p">},</span>
-                        <span class="s2">"instance_id"</span><span class="p">:</span> <span class="n">instance_id</span><span class="p">,</span>
-                        <span class="s2">"source_revision"</span><span class="p">:</span> <span class="n">instance</span><span class="p">[</span><span class="s2">"source_revision"</span><span class="p">],</span>
-                        <span class="s2">"base_commit"</span><span class="p">:</span> <span class="n">instance</span><span class="p">[</span><span class="s2">"base_commit"</span><span class="p">],</span>
+        <span class="k">if</span> <span class="n">agent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">traj_path</span> <span class="o">=</span> <span class="n">instance_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">instance_id</span><span class="si">}</span><span class="s2">.traj.json"</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
+                <span class="n">traj_path</span><span class="p">,</span>
+                <span class="p">{</span>
+                    <span class="s2">"info"</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">"exit_status"</span><span class="p">:</span> <span class="n">exit_status</span><span class="p">,</span>
+                        <span class="s2">"submission"</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">extra_info</span><span class="p">,</span>
                     <span class="p">},</span>
-                <span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saved trajectory to '</span><span class="si">{</span><span class="n">traj_path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
-            <span class="n">update_preds_file</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">"preds.json"</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
-            <span class="n">progress_manager</span><span class="o">.</span><span class="n">on_instance_end</span><span class="p">(</span><span class="n">instance_id</span><span class="p">,</span> <span class="n">exit_status</span><span class="p">)</span>
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">DockerEnvironment</span><span class="p">):</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">container_id</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="s2">"instance_id"</span><span class="p">:</span> <span class="n">instance_id</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saved trajectory to '</span><span class="si">{</span><span class="n">traj_path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+        <span class="n">update_preds_file</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">"preds.json"</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="n">progress_manager</span><span class="o">.</span><span class="n">on_instance_end</span><span class="p">(</span><span class="n">instance_id</span><span class="p">,</span> <span class="n">exit_status</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">filter_instances</span><span class="p">(</span>
-    <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">filter_spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">slice_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
-    <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">filter_spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">slice_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Filter and slice a list of task instances."""</span>
+<span class="w">    </span><span class="sd">"""Filter and slice a list of ReuF2F instances."""</span>
     <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
         <span class="n">instances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">"instance_id"</span><span class="p">])</span>
         <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -2778,28 +2776,28 @@
 <span class="c1"># fmt: off</span>
 <span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="n">_HELP_TEXT</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
-    <span class="n">subset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s2">"--subset"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Path to a prepared ReuF2F task release"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
-    <span class="n">slice_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"--slice"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Slice specification (e.g., '0:5')"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
+    <span class="n">subset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s2">"--subset"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Path to the ReuF2F dataset (test.jsonl)"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
+    <span class="n">slice_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"--slice"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Slice specification (e.g., '0:5' for first 5 instances)"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
     <span class="n">filter_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"--filter"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Filter instance IDs by regex"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
     <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">"--shuffle"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Shuffle instances"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
     <span class="n">output</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="s2">"--output"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Output directory"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
-    <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">"-w"</span><span class="p">,</span> <span class="s2">"--workers"</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Number of worker threads for parallel processing"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
+    <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">"-w"</span><span class="p">,</span> <span class="s2">"--workers"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Number of worker threads for parallel processing"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
     <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"-m"</span><span class="p">,</span> <span class="s2">"--model"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model to use"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
-    <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--model-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model class to use"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
-    <span class="n">redo_existing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">"--redo-existing"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Redo recorded instances"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
+    <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--model-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model class to use (e.g., 'anthropic' or 'leanimum.models.anthropic.AnthropicModel')"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
+    <span class="n">redo_existing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">"--redo-existing"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Redo existing instances"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
     <span class="n">config_spec</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">DEFAULT_CONFIG_FILE</span><span class="p">)],</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"--config"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">_CONFIG_SPEC_HELP_TEXT</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
-    <span class="n">environment_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--environment-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Execution backend: docker (default) or local"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
+    <span class="n">environment_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--environment-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Environment type to use"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># fmt: on</span>
-    <span class="n">tasks</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-    <span class="n">instances</span> <span class="o">=</span> <span class="n">load_instances</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span>
-    <span class="n">instances</span> <span class="o">=</span> <span class="n">filter_instances</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">filter_spec</span><span class="o">=</span><span class="n">filter_spec</span><span class="p">,</span> <span class="n">slice_spec</span><span class="o">=</span><span class="n">slice_spec</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">)</span>
-    <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">output_path</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span> <span class="ow">or</span> <span class="n">tasks</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">BadParameter</span><span class="p">(</span><span class="s2">"Keep output separate from the prepared task release"</span><span class="p">)</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
     <span class="n">output_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Results will be saved to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">add_file_handler</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">"leanimum.log"</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Loading dataset </span><span class="si">{</span><span class="n">subset</span><span class="si">}</span><span class="s2">..."</span><span class="p">)</span>
+    <span class="n">instances</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()]</span>
+
+    <span class="n">instances</span> <span class="o">=</span> <span class="n">filter_instances</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">filter_spec</span><span class="o">=</span><span class="n">filter_spec</span><span class="p">,</span> <span class="n">slice_spec</span><span class="o">=</span><span class="n">slice_spec</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">redo_existing</span> <span class="ow">and</span> <span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">"preds.json"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="n">existing_instances</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">((</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">"preds.json"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Skipping </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">existing_instances</span><span class="p">)</span><span class="si">}</span><span class="s2"> existing instances"</span><span class="p">)</span>
@@ -2813,6 +2811,7 @@
         <span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"model_name"</span><span class="p">:</span> <span class="n">model</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span> <span class="s2">"model_class"</span><span class="p">:</span> <span class="n">model_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">},</span>
     <span class="p">})</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">recursive_merge</span><span class="p">(</span><span class="o">*</span><span class="n">configs</span><span class="p">)</span>
+
     <span class="n">progress_manager</span> <span class="o">=</span> <span class="n">RunBatchProgressManager</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">),</span> <span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"exit_statuses_</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="si">}</span><span class="s2">.yaml"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">process_futures</span><span class="p">(</span><span class="n">futures</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
@@ -2829,7 +2828,9 @@
     <span class="k">with</span> <span class="n">Live</span><span class="p">(</span><span class="n">progress_manager</span><span class="o">.</span><span class="n">render_group</span><span class="p">,</span> <span class="n">refresh_per_second</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
         <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
             <span class="n">futures</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">process_instance</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">progress_manager</span><span class="p">):</span> <span class="n">instance</span><span class="p">[</span><span class="s2">"instance_id"</span><span class="p">]</span>
+                <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">process_instance</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">progress_manager</span><span class="p">):</span> <span class="n">instance</span><span class="p">[</span>
+                    <span class="s2">"instance_id"</span>
+                <span class="p">]</span>
                 <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">instances</span>
             <span class="p">}</span>
             <span class="k">try</span><span class="p">:</span>
@@ -2861,7 +2862,7 @@
 
     <div class="doc doc-contents first">
 
-        <p>Run Leanimum-agent on a batch of ReuF2F tasks.</p>
+        <p>Run Leanimum-agent on ReuF2F instances in batch mode.</p>
 
 
 
@@ -2940,8 +2941,8 @@
 
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_reuf2f_environment</span><span class="p">(</span>
-    <span class="n">config</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            DockerEnvironment (leanimum.environments.docker.DockerEnvironment)" href="../../environments/docker/#leanimum.environments.docker.DockerEnvironment">DockerEnvironment</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            LocalEnvironment (leanimum.environments.local.LocalEnvironment)" href="../../environments/local/#leanimum.environments.local.LocalEnvironment">LocalEnvironment</a></span>
+    <span class="n">config</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="leanimum.Environment">Environment</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2949,21 +2950,35 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/leanimum/run/benchmarks/reuf2f.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_reuf2f_environment</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DockerEnvironment</span> <span class="o">|</span> <span class="n">LocalEnvironment</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_reuf2f_environment</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Environment</span><span class="p">:</span>
     <span class="n">env_config</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"environment"</span><span class="p">,</span> <span class="p">{})}</span>
     <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="o">=</span> <span class="n">env_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"environment_class"</span><span class="p">,</span> <span class="s2">"docker"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"docker"</span><span class="p">,</span> <span class="s2">"local"</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"ReuF2F tasks support only docker and local"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"local"</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Local execution has no task isolation; use a disposable no-secret environment"</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">env_config</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"docker"</span><span class="p">:</span>
+        <span class="n">env_config</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span>
+
+    <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">env_config</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">startup_command</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"env_startup_command"</span><span class="p">):</span>
+        <span class="n">startup_command</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">startup_command</span><span class="p">,</span> <span class="n">undefined</span><span class="o">=</span><span class="n">StrictUndefined</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">instance</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">execute</span><span class="p">({</span><span class="s2">"command"</span><span class="p">:</span> <span class="n">startup_command</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">out</span><span class="p">[</span><span class="s2">"returncode"</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error executing startup command: </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="c1"># The shared image has no task in it yet</span>
+    <span class="n">prepare_environment</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">env</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>
@@ -2993,18 +3008,18 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/leanimum/run/benchmarks/reuf2f.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_preds_file</span><span class="p">(</span><span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_preds_file</span><span class="p">(</span><span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Update the output JSON file with results from a single instance."""</span>
     <span class="k">with</span> <span class="n">_OUTPUT_FILE_LOCK</span><span class="p">:</span>
         <span class="n">output_data</span> <span class="o">=</span> <span class="p">{}</span>
@@ -3040,15 +3055,15 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/leanimum/run/benchmarks/reuf2f.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_from_preds_file</span><span class="p">(</span><span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_from_preds_file</span><span class="p">(</span><span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Remove an instance from the predictions file."""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">output_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="k">return</span>
@@ -3081,28 +3096,12 @@
 
     <div class="doc doc-contents ">
 
-        <p>Prepare a task environment, run the agent, save results and clean up.</p>
+        <p>Process a single ReuF2F instance.</p>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/leanimum/run/benchmarks/reuf2f.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
 <span class="normal">101</span>
 <span class="normal">102</span>
 <span class="normal">103</span>
@@ -3155,16 +3154,18 @@
 <span class="normal">150</span>
 <span class="normal">151</span>
 <span class="normal">152</span>
-<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_instance</span><span class="p">(</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_instance</span><span class="p">(</span>
     <span class="n">instance</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">progress_manager</span><span class="p">:</span> <span class="n">RunBatchProgressManager</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Prepare a task environment, run the agent, save results and clean up."""</span>
+<span class="w">    </span><span class="sd">"""Process a single ReuF2F instance."""</span>
     <span class="n">instance_id</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">"instance_id"</span><span class="p">]</span>
     <span class="n">instance_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">instance_id</span>
-    <span class="n">instance_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># avoid inconsistent state if something here fails and there's leftover previous files</span>
     <span class="n">remove_from_preds_file</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">"preds.json"</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">)</span>
     <span class="p">(</span><span class="n">instance_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">instance_id</span><span class="si">}</span><span class="s2">.traj.json"</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model"</span><span class="p">,</span> <span class="p">{}))</span>
@@ -3173,20 +3174,13 @@
     <span class="n">progress_manager</span><span class="o">.</span><span class="n">on_instance_start</span><span class="p">(</span><span class="n">instance_id</span><span class="p">)</span>
     <span class="n">progress_manager</span><span class="o">.</span><span class="n">update_instance_status</span><span class="p">(</span><span class="n">instance_id</span><span class="p">,</span> <span class="s2">"Pulling/starting environment"</span><span class="p">)</span>
 
-    <span class="n">env</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">agent</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">exit_status</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">extra_info</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">env</span> <span class="o">=</span> <span class="n">get_reuf2f_environment</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">startup_command</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"env_startup_command"</span><span class="p">):</span>
-            <span class="n">startup_command</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">startup_command</span><span class="p">,</span> <span class="n">undefined</span><span class="o">=</span><span class="n">StrictUndefined</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">instance</span><span class="p">)</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">execute</span><span class="p">({</span><span class="s2">"command"</span><span class="p">:</span> <span class="n">startup_command</span><span class="p">})</span>
-            <span class="k">if</span> <span class="n">out</span><span class="p">[</span><span class="s2">"returncode"</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error executing startup command: </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="n">prepare_environment</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">instance_dir</span><span class="p">)</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">get_reuf2f_environment</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
         <span class="n">agent</span> <span class="o">=</span> <span class="n">ProgressTrackingAgent</span><span class="p">(</span>
             <span class="n">model</span><span class="p">,</span>
             <span class="n">env</span><span class="p">,</span>
@@ -3202,29 +3196,22 @@
         <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">""</span>
         <span class="n">extra_info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"traceback"</span><span class="p">:</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span> <span class="s2">"exception_str"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
     <span class="k">finally</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">agent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">traj_path</span> <span class="o">=</span> <span class="n">instance_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">instance_id</span><span class="si">}</span><span class="s2">.traj.json"</span>
-                <span class="n">agent</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
-                    <span class="n">traj_path</span><span class="p">,</span>
-                    <span class="p">{</span>
-                        <span class="s2">"info"</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="s2">"exit_status"</span><span class="p">:</span> <span class="n">exit_status</span><span class="p">,</span>
-                            <span class="s2">"submission"</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
-                            <span class="o">**</span><span class="n">extra_info</span><span class="p">,</span>
-                        <span class="p">},</span>
-                        <span class="s2">"instance_id"</span><span class="p">:</span> <span class="n">instance_id</span><span class="p">,</span>
-                        <span class="s2">"source_revision"</span><span class="p">:</span> <span class="n">instance</span><span class="p">[</span><span class="s2">"source_revision"</span><span class="p">],</span>
-                        <span class="s2">"base_commit"</span><span class="p">:</span> <span class="n">instance</span><span class="p">[</span><span class="s2">"base_commit"</span><span class="p">],</span>
+        <span class="k">if</span> <span class="n">agent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">traj_path</span> <span class="o">=</span> <span class="n">instance_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">instance_id</span><span class="si">}</span><span class="s2">.traj.json"</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
+                <span class="n">traj_path</span><span class="p">,</span>
+                <span class="p">{</span>
+                    <span class="s2">"info"</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">"exit_status"</span><span class="p">:</span> <span class="n">exit_status</span><span class="p">,</span>
+                        <span class="s2">"submission"</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">extra_info</span><span class="p">,</span>
                     <span class="p">},</span>
-                <span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saved trajectory to '</span><span class="si">{</span><span class="n">traj_path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
-            <span class="n">update_preds_file</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">"preds.json"</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
-            <span class="n">progress_manager</span><span class="o">.</span><span class="n">on_instance_end</span><span class="p">(</span><span class="n">instance_id</span><span class="p">,</span> <span class="n">exit_status</span><span class="p">)</span>
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">DockerEnvironment</span><span class="p">):</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">container_id</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="s2">"instance_id"</span><span class="p">:</span> <span class="n">instance_id</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saved trajectory to '</span><span class="si">{</span><span class="n">traj_path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+        <span class="n">update_preds_file</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">"preds.json"</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="n">progress_manager</span><span class="o">.</span><span class="n">on_instance_end</span><span class="p">(</span><span class="n">instance_id</span><span class="p">,</span> <span class="n">exit_status</span><span class="p">)</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>
@@ -3250,14 +3237,12 @@
 
     <div class="doc doc-contents ">
 
-        <p>Filter and slice a list of task instances.</p>
+        <p>Filter and slice a list of ReuF2F instances.</p>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/leanimum/run/benchmarks/reuf2f.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">158</span>
 <span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
@@ -3274,16 +3259,10 @@
 <span class="normal">172</span>
 <span class="normal">173</span>
 <span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">filter_instances</span><span class="p">(</span>
-    <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">filter_spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">slice_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
-    <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="normal">175</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">filter_instances</span><span class="p">(</span>
+    <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">filter_spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">slice_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Filter and slice a list of task instances."""</span>
+<span class="w">    </span><span class="sd">"""Filter and slice a list of ReuF2F instances."""</span>
     <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
         <span class="n">instances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">"instance_id"</span><span class="p">])</span>
         <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -3316,13 +3295,13 @@
     <span class="n">subset</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
         <span class="o">...</span><span class="p">,</span>
         <span class="s2">"--subset"</span><span class="p">,</span>
-        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Path to a prepared ReuF2F task release"</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Path to the ReuF2F dataset (test.jsonl)"</span><span class="p">,</span>
         <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">slice_spec</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
         <span class="s2">""</span><span class="p">,</span>
         <span class="s2">"--slice"</span><span class="p">,</span>
-        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Slice specification (e.g., '0:5')"</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Slice specification (e.g., '0:5' for first 5 instances)"</span><span class="p">,</span>
         <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">filter_spec</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
@@ -3348,7 +3327,6 @@
         <span class="mi">1</span><span class="p">,</span>
         <span class="s2">"-w"</span><span class="p">,</span>
         <span class="s2">"--workers"</span><span class="p">,</span>
-        <span class="n"><span title="typer.Option(min)">min</span></span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Number of worker threads for parallel processing"</span><span class="p">,</span>
         <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">,</span>
     <span class="p">),</span>
@@ -3362,13 +3340,13 @@
     <span class="n">model_class</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="s2">"--model-class"</span><span class="p">,</span>
-        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Model class to use"</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Model class to use (e.g., 'anthropic' or 'leanimum.models.anthropic.AnthropicModel')"</span><span class="p">,</span>
         <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">redo_existing</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
         <span class="kc">False</span><span class="p">,</span>
         <span class="s2">"--redo-existing"</span><span class="p">,</span>
-        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Redo recorded instances"</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Redo existing instances"</span><span class="p">,</span>
         <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">config_spec</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
@@ -3386,7 +3364,7 @@
     <span class="n">environment_class</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="s2">"--environment-class"</span><span class="p">,</span>
-        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Execution backend: docker (default) or local"</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Environment type to use"</span><span class="p">,</span>
         <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">,</span>
     <span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
@@ -3397,7 +3375,9 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/leanimum/run/benchmarks/reuf2f.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">181</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
 <span class="normal">182</span>
 <span class="normal">183</span>
 <span class="normal">184</span>
@@ -3460,30 +3440,31 @@
 <span class="normal">241</span>
 <span class="normal">242</span>
 <span class="normal">243</span>
-<span class="normal">244</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="n">_HELP_TEXT</span><span class="p">)</span>
+<span class="normal">244</span>
+<span class="normal">245</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="n">_HELP_TEXT</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
-    <span class="n">subset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s2">"--subset"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Path to a prepared ReuF2F task release"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
-    <span class="n">slice_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"--slice"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Slice specification (e.g., '0:5')"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
+    <span class="n">subset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s2">"--subset"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Path to the ReuF2F dataset (test.jsonl)"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
+    <span class="n">slice_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"--slice"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Slice specification (e.g., '0:5' for first 5 instances)"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
     <span class="n">filter_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"--filter"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Filter instance IDs by regex"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
     <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">"--shuffle"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Shuffle instances"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
     <span class="n">output</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="s2">"--output"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Output directory"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
-    <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">"-w"</span><span class="p">,</span> <span class="s2">"--workers"</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Number of worker threads for parallel processing"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
+    <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">"-w"</span><span class="p">,</span> <span class="s2">"--workers"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Number of worker threads for parallel processing"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
     <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"-m"</span><span class="p">,</span> <span class="s2">"--model"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model to use"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
-    <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--model-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model class to use"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
-    <span class="n">redo_existing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">"--redo-existing"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Redo recorded instances"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
+    <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--model-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model class to use (e.g., 'anthropic' or 'leanimum.models.anthropic.AnthropicModel')"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
+    <span class="n">redo_existing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">"--redo-existing"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Redo existing instances"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
     <span class="n">config_spec</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">DEFAULT_CONFIG_FILE</span><span class="p">)],</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"--config"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">_CONFIG_SPEC_HELP_TEXT</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
-    <span class="n">environment_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--environment-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Execution backend: docker (default) or local"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
+    <span class="n">environment_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--environment-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Environment type to use"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># fmt: on</span>
-    <span class="n">tasks</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-    <span class="n">instances</span> <span class="o">=</span> <span class="n">load_instances</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span>
-    <span class="n">instances</span> <span class="o">=</span> <span class="n">filter_instances</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">filter_spec</span><span class="o">=</span><span class="n">filter_spec</span><span class="p">,</span> <span class="n">slice_spec</span><span class="o">=</span><span class="n">slice_spec</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">)</span>
-    <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">output_path</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span> <span class="ow">or</span> <span class="n">tasks</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">BadParameter</span><span class="p">(</span><span class="s2">"Keep output separate from the prepared task release"</span><span class="p">)</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
     <span class="n">output_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Results will be saved to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">add_file_handler</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">"leanimum.log"</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Loading dataset </span><span class="si">{</span><span class="n">subset</span><span class="si">}</span><span class="s2">..."</span><span class="p">)</span>
+    <span class="n">instances</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()]</span>
+
+    <span class="n">instances</span> <span class="o">=</span> <span class="n">filter_instances</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">filter_spec</span><span class="o">=</span><span class="n">filter_spec</span><span class="p">,</span> <span class="n">slice_spec</span><span class="o">=</span><span class="n">slice_spec</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">redo_existing</span> <span class="ow">and</span> <span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">"preds.json"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="n">existing_instances</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">((</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">"preds.json"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Skipping </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">existing_instances</span><span class="p">)</span><span class="si">}</span><span class="s2"> existing instances"</span><span class="p">)</span>
@@ -3497,6 +3478,7 @@
         <span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"model_name"</span><span class="p">:</span> <span class="n">model</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span> <span class="s2">"model_class"</span><span class="p">:</span> <span class="n">model_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">},</span>
     <span class="p">})</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">recursive_merge</span><span class="p">(</span><span class="o">*</span><span class="n">configs</span><span class="p">)</span>
+
     <span class="n">progress_manager</span> <span class="o">=</span> <span class="n">RunBatchProgressManager</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">),</span> <span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"exit_statuses_</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="si">}</span><span class="s2">.yaml"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">process_futures</span><span class="p">(</span><span class="n">futures</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
@@ -3513,7 +3495,9 @@
     <span class="k">with</span> <span class="n">Live</span><span class="p">(</span><span class="n">progress_manager</span><span class="o">.</span><span class="n">render_group</span><span class="p">,</span> <span class="n">refresh_per_second</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
         <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
             <span class="n">futures</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">process_instance</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">progress_manager</span><span class="p">):</span> <span class="n">instance</span><span class="p">[</span><span class="s2">"instance_id"</span><span class="p">]</span>
+                <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">process_instance</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">progress_manager</span><span class="p">):</span> <span class="n">instance</span><span class="p">[</span>
+                    <span class="s2">"instance_id"</span>
+                <span class="p">]</span>
                 <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">instances</span>
             <span class="p">}</span>
             <span class="k">try</span><span class="p">:</span>
