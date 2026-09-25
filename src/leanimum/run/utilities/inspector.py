@@ -2,7 +2,7 @@
 """
 Simple trajectory inspector for browsing agent conversation trajectories.
 
-More information about the usage: [bold green] https://mini-swe-agent.com/latest/usage/inspector/ [/bold green].
+More information about the usage: [bold green] https://github.com/zeyu-zheng/Leanimum-agent/blob/main/docs/usage/inspector.md [/bold green].
 """
 
 import json
@@ -96,7 +96,7 @@ class TrajectoryInspector(App):
 
     def __init__(self, trajectory_files: list[Path], show_reasoning: bool = True):
         css_path = os.environ.get(
-            "MSWEA_INSPECTOR_STYLE_PATH", str(Path(__file__).parent.parent.parent / "config" / "inspector.tcss")
+            "LEANA_INSPECTOR_STYLE_PATH", str(Path(__file__).parent.parent.parent / "config" / "inspector.tcss")
         )
         self.__class__.CSS = Path(css_path).read_text()
 

@@ -1,52 +1,63 @@
-# `mini`
+# `leani`
 
 !!! abstract "Overview"
 
-    * `mini` is a REPL-style interactive command line interface for using mini-SWE-agent in the local environment (as opposed to workflows that require sandboxing or large scale batch processing).
+    * `leani` is the interactive Leanimum-agent CLI.
+    * It runs locally by default. Select another backend for untrusted code or
+      use the [ReuF2F runner](reuf2f.md) for batch tasks.
 
-<figure markdown="span">
-  <div class="gif-container gif-container-styled" data-glightbox-disabled>
-    <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/mini.png?raw=true"
-         data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini.gif?raw=true"
-         alt="mini" data-glightbox="false" width="600" />
-  </div>
-</figure>
+## Usage
 
+Run in a Lean project with its toolchain and dependencies installed:
+
+```bash
+leani -c mini.yaml -c environment.cwd=/absolute/path/to/lean-project \
+  -t "Complete the proof of Example.target in Example.lean and check it."
+```
 
 ## Command line options
 
 Useful switches:
 
-- `-h`/`--help`: Show help
-- `-t`/`--task`: Specify a task to run (else you will be prompted)
-- `-c`/`--config`: Specify a config file to use, else we will use [`mini.yaml`](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/config/mini.yaml) or the config `MSWEA_MINI_CONFIG_PATH` environment variable (see [global configuration](../advanced/global_configuration.md)).
-  It's enough to specify the name of the config file, e.g., `-c mini.yaml` (see [global configuration](../advanced/global_configuration.md) for how it is resolved).
-- `-m`/`--model`: Specify a model to use, else we will use the model `MSWEA_MODEL_NAME` environment variable (see [global configuration](../advanced/global_configuration.md))
-- `-y`/`--yolo`: Start in `yolo` mode (see below)
+- `--help` - Show help and all options.
+- `-t`, `--task` - Task to run; prompts when omitted.
+- `-m`, `--model` - Model name; otherwise uses configuration or `LEANA_MODEL_NAME`.
+- `-c`, `--config` - Config file or key-value override. The default is `mini.yaml`,
+  or the file selected by `LEANA_MINI_CONFIG_PATH`.
+- `-o`, `--output` - Trajectory file; defaults to `last_mini_run.traj.json` in the
+  global config directory.
+- `-y`, `--yolo` - Execute commands without confirmation.
+- `-l`, `--cost-limit` - Cost limit; `0` disables it.
+
+!!! note "Configuration overrides"
+
+    If you pass `-c`, include a base config before overrides, for example
+    `-c mini.yaml -c agent.step_limit=100`. See the
+    [configuration guide](../advanced/yaml_configuration.md).
 
 ## Modes of operation
 
-`mini` provides three different modes of operation
+- `confirm` (`/c`) - Confirm or reject each proposed command.
+- `yolo` (`/y`) - Execute proposed commands immediately.
+- `human` (`/u`) - Type and execute commands yourself.
 
-- `confirm` (`/c`): The LM proposes an action and the user is prompted to confirm (press Enter) or reject (enter a rejection message)
-- `yolo` (`/y`): The action from the LM is executed immediately without confirmation
-- `human` (`/u`): The user takes over to type and execute commands
+The default is `confirm`; use `-y` to start in `yolo`. Enter `/c`, `/y` or `/u`
+when the agent is waiting for input to switch modes. `Ctrl+C` interrupts the
+agent and returns control to you.
 
-You can switch between the modes with the `/c`, `/y`, and `/u` commands that you can enter any time the agent is waiting for input.
-You can also press `Ctrl+C` to interrupt the agent at any time, allowing you to switch between modes.
+!!! warning "Local execution"
 
-`mini` starts in `confirm` mode by default. To start in `yolo` mode, you can add `-y`/`--yolo` to the command line.
+    Confirmation is not a filesystem sandbox. Use a suitable
+    [environment](../advanced/environments.md) for untrusted commands.
 
-## Miscellaneous tips
-
-- `mini` saves the full history of your last run to your global config directory.
-  The path to the directory is printed when you start `mini`.
+See [output files](output_files.md) to inspect the saved trajectory. The global
+config directory is printed at startup.
 
 ## Implementation
 
 ??? note "Default config"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/config/mini.yaml)
+    - [Read on GitHub](https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/config/mini.yaml)
 
     ```yaml
     --8<-- "src/leanimum/config/mini.yaml"
@@ -54,7 +65,7 @@ You can also press `Ctrl+C` to interrupt the agent at any time, allowing you to 
 
 ??? note "Run script"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/run/mini.py)
+    - [Read on GitHub](https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/run/mini.py)
     - [API reference](../reference/run/mini.md)
 
     ```python
@@ -63,7 +74,7 @@ You can also press `Ctrl+C` to interrupt the agent at any time, allowing you to 
 
 ??? note "Agent class"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/agents/interactive.py)
+    - [Read on GitHub](https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/agents/interactive.py)
     - [API reference](../reference/agents/interactive.md)
 
     ```python

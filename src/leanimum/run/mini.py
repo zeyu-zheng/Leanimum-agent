@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """Run Leanimum-agent in your local environment. This is the default executable `leani`."""
-# Read this first: https://mini-swe-agent.com/latest/usage/mini/  (usage)
+# Read this first: https://github.com/zeyu-zheng/Leanimum-agent/blob/main/docs/usage/mini.md  (usage)
 
 import os
 from pathlib import Path
@@ -19,7 +19,7 @@ from leanimum.models import get_model
 from leanimum.run.utilities.config import configure_if_first_time
 from leanimum.utils.serialize import UNSET, recursive_merge
 
-DEFAULT_CONFIG_FILE = Path(os.getenv("MSWEA_MINI_CONFIG_PATH", builtin_config_dir / "mini.yaml"))
+DEFAULT_CONFIG_FILE = Path(os.getenv("LEANA_MINI_CONFIG_PATH", builtin_config_dir / "mini.yaml"))
 DEFAULT_OUTPUT_FILE = global_config_dir / "last_mini_run.traj.json"
 
 
@@ -43,7 +43,7 @@ Examples:
 
 [bold green]-c mini.yaml -c model.model_kwargs.temperature=0.5[/bold green]
 
-[bold green]-c swebench.yaml agent.mode=yolo[/bold green]
+[bold green]-c mini.yaml -c environment.timeout=600[/bold green]
 """
 
 console = Console(highlight=False)
@@ -57,7 +57,7 @@ def main(
     model_class: str | None = typer.Option(None, "--model-class", help="Model class to use (e.g., 'litellm' or 'leanimum.models.litellm_model.LitellmModel')", rich_help_panel="Advanced"),
     agent_class: str | None = typer.Option(None, "--agent-class", help="Agent class to use (e.g., 'interactive' or 'leanimum.agents.interactive.InteractiveAgent')", rich_help_panel="Advanced"),
     environment_class: str | None = typer.Option(None, "--environment-class", help="Environment class to use (e.g., 'local' or 'leanimum.environments.local.LocalEnvironment')", rich_help_panel="Advanced"),
-    task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
+    task: str | None = typer.Option(None, "-t", "--task", help="Lean proof or programming task", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
     cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
     config_spec: list[str] = typer.Option([str(DEFAULT_CONFIG_FILE)], "-c", "--config", help=_CONFIG_SPEC_HELP_TEXT),

@@ -1,4 +1,4 @@
-"""Basic agent class. See https://mini-swe-agent.com/latest/advanced/control_flow/ for visual explanation
+"""Basic agent class. See https://github.com/zeyu-zheng/Leanimum-agent/blob/main/docs/advanced/control_flow.md for visual explanation
 or https://minimal-agent.com for a tutorial on the basic building principles.
 """
 
@@ -175,7 +175,7 @@ class DefaultAgent:
                 "submission": last_extra.get("submission", ""),
             },
             "messages": self.messages,
-            "trajectory_format": "mini-swe-agent-1.1",
+            "trajectory_format": "leanimum-agent-1.1",
         }
         return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)
 

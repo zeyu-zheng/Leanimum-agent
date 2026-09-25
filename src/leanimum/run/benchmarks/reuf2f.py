@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-"""Run Leanimum-agent on SWE-bench instances in batch mode."""
-# Read this first: https://mini-swe-agent.com/latest/usage/swebench/  (usage docs)
+"""Run Leanimum-agent on ReuF2F instances in batch mode."""
+
 
 import concurrent.futures
 import json
@@ -22,20 +22,20 @@ from leanimum.environments import get_environment
 from leanimum.models import get_model
 from leanimum.run.benchmarks.utils.batch_progress import RunBatchProgressManager
 from leanimum.run.benchmarks.utils.common import ProgressTrackingAgent
+from leanimum.run.benchmarks.utils.reuf2f import prepare_environment
 from leanimum.utils.log import add_file_handler, logger
 from leanimum.utils.serialize import UNSET, recursive_merge
 
-_HELP_TEXT = """Run Leanimum-agent on SWEBench instances.
+_HELP_TEXT = """Run Leanimum-agent on ReuF2F instances.
 
-[not dim]
-More information about the usage: [bold green]https://mini-swe-agent.com/latest/usage/swebench/[/bold green]
-[/not dim]
+Pass the dataset built by `reuf2f dataset build` (test.jsonl) with --subset.
+Candidate generation and independent Comparator grading are separate.
 """
 
 _CONFIG_SPEC_HELP_TEXT = """Path to config files, filenames, or key-value pairs.
 
 [bold red]IMPORTANT:[/bold red] [red]If you set this option, the default config file will not be used.[/red]
-So you need to explicitly set it e.g., with [bold green]-c swebench.yaml <other options>[/bold green]
+So you need to explicitly set it e.g., with [bold green]-c reuf2f.yaml <other options>[/bold green]
 
 Multiple configs will be recursively merged.
 
@@ -43,47 +43,23 @@ Examples:
 
 [bold red]-c model.model_kwargs.temperature=0[/bold red] [red]You forgot to add the default config file! See above.[/red]
 
-[bold green]-c swebench.yaml -c model.model_kwargs.temperature=0.5[/bold green]
+[bold green]-c reuf2f.yaml -c model.model_kwargs.temperature=0.5[/bold green]
 
-[bold green]-c swebench.yaml -c agent.max_iterations=50[/bold green]
+[bold green]-c reuf2f.yaml -c agent.step_limit=50[/bold green]
 """
 
-DEFAULT_CONFIG_FILE = builtin_config_dir / "benchmarks" / "swebench.yaml"
-
-DATASET_MAPPING = {
-    "full": "princeton-nlp/SWE-Bench",
-    "verified": "princeton-nlp/SWE-Bench_Verified",
-    "lite": "princeton-nlp/SWE-Bench_Lite",
-    "multimodal": "princeton-nlp/SWE-Bench_Multimodal",
-    "multilingual": "swe-bench/SWE-Bench_Multilingual",
-    "smith": "SWE-bench/SWE-smith",
-    "_test": "klieret/swe-bench-dummy-test-dataset",
-    "rebench": "nebius/SWE-rebench",
-}
+DEFAULT_CONFIG_FILE = builtin_config_dir / "benchmarks" / "reuf2f.yaml"
 
 app = typer.Typer(rich_markup_mode="rich", add_completion=False)
+
 _OUTPUT_FILE_LOCK = threading.Lock()
 
 
-def get_swebench_docker_image_name(instance: dict) -> str:
-    """Get the image name for a SWEBench instance."""
-    image_name = instance.get("image_name", None) or instance.get("docker_image", None)
-    if image_name is None:
-        # Docker doesn't allow double underscore, so we replace them with a magic token
-        iid = instance["instance_id"]
-        id_docker_compatible = iid.replace("__", "_1776_")
-        image_name = f"docker.io/swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
-    return image_name
-
-
-def get_sb_environment(config: dict, instance: dict) -> Environment:
+def get_reuf2f_environment(config: dict, instance: dict) -> Environment:
     env_config = {**config.get("environment", {})}
     env_config["environment_class"] = env_config.get("environment_class", "docker")
-    image_name = get_swebench_docker_image_name(instance)
-    if env_config["environment_class"] in ["docker", "swerex_modal"]:
-        env_config["image"] = image_name
-    elif env_config["environment_class"] in ["singularity", "contree"]:
-        env_config["image"] = "docker://" + image_name
+    if env_config["environment_class"] == "docker":
+        env_config["image"] = instance["image"]
 
     env = get_environment(env_config)
     if startup_command := config.get("run", {}).get("env_startup_command"):
@@ -91,6 +67,8 @@ def get_sb_environment(config: dict, instance: dict) -> Environment:
         out = env.execute({"command": startup_command})
         if out["returncode"] != 0:
             raise RuntimeError(f"Error executing startup command: {out}")
+    # The shared image has no task in it yet
+    prepare_environment(env, instance)
     return env
 
 
@@ -125,7 +103,7 @@ def process_instance(
     config: dict,
     progress_manager: RunBatchProgressManager,
 ) -> None:
-    """Process a single SWEBench instance."""
+    """Process a single ReuF2F instance."""
     instance_id = instance["instance_id"]
     instance_dir = output_dir / instance_id
     # avoid inconsistent state if something here fails and there's leftover previous files
@@ -143,7 +121,7 @@ def process_instance(
     extra_info = {}
 
     try:
-        env = get_sb_environment(config, instance)
+        env = get_reuf2f_environment(config, instance)
         agent = ProgressTrackingAgent(
             model,
             env,
@@ -180,7 +158,7 @@ def process_instance(
 def filter_instances(
     instances: list[dict], *, filter_spec: str, slice_spec: str = "", shuffle: bool = False
 ) -> list[dict]:
-    """Filter and slice a list of SWEBench instances."""
+    """Filter and slice a list of ReuF2F instances."""
     if shuffle:
         instances = sorted(instances.copy(), key=lambda x: x["instance_id"])
         random.seed(42)
@@ -200,8 +178,7 @@ def filter_instances(
 # fmt: off
 @app.command(help=_HELP_TEXT)
 def main(
-    subset: str = typer.Option("lite", "--subset", help="SWEBench subset to use or path to a dataset", rich_help_panel="Data selection"),
-    split: str = typer.Option("dev", "--split", help="Dataset split", rich_help_panel="Data selection"),
+    subset: str = typer.Option(..., "--subset", help="Path to the ReuF2F dataset (test.jsonl)", rich_help_panel="Data selection"),
     slice_spec: str = typer.Option("", "--slice", help="Slice specification (e.g., '0:5' for first 5 instances)", rich_help_panel="Data selection"),
     filter_spec: str = typer.Option("", "--filter", help="Filter instance IDs by regex", rich_help_panel="Data selection"),
     shuffle: bool = typer.Option(False, "--shuffle", help="Shuffle instances", rich_help_panel="Data selection"),
@@ -211,7 +188,7 @@ def main(
     model_class: str | None = typer.Option(None, "--model-class", help="Model class to use (e.g., 'anthropic' or 'leanimum.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
     redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances", rich_help_panel="Data selection"),
     config_spec: list[str] = typer.Option([str(DEFAULT_CONFIG_FILE)], "-c", "--config", help=_CONFIG_SPEC_HELP_TEXT, rich_help_panel="Basic"),
-    environment_class: str | None = typer.Option(None, "--environment-class", help="Environment type to use. Recommended are docker or singularity", rich_help_panel="Advanced"),
+    environment_class: str | None = typer.Option(None, "--environment-class", help="Environment type to use", rich_help_panel="Advanced"),
 ) -> None:
     # fmt: on
     output_path = Path(output)
@@ -219,11 +196,8 @@ def main(
     logger.info(f"Results will be saved to {output_path}")
     add_file_handler(output_path / "leanimum.log")
 
-    from datasets import load_dataset
-
-    dataset_path = DATASET_MAPPING.get(subset, subset)
-    logger.info(f"Loading dataset {dataset_path}, split {split}...")
-    instances = list(load_dataset(dataset_path, split=split))
+    logger.info(f"Loading dataset {subset}...")
+    instances = [json.loads(line) for line in Path(subset).read_text().splitlines()]
 
     instances = filter_instances(instances, filter_spec=filter_spec, slice_spec=slice_spec, shuffle=shuffle)
     if not redo_existing and (output_path / "preds.json").exists():

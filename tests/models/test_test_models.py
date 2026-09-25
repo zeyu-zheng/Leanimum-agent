@@ -22,21 +22,21 @@ def test_basic_functionality_and_cost_tracking(reset_global_stats):
     """Test basic model functionality, cost tracking, and default configuration."""
     model = DeterministicModel(
         outputs=[
-            make_output("```mswea_bash_command\necho hello\n```", [{"command": "echo hello"}]),
-            make_output("```mswea_bash_command\necho world\n```", [{"command": "echo world"}]),
+            make_output("```leana_bash_command\necho hello\n```", [{"command": "echo hello"}]),
+            make_output("```leana_bash_command\necho world\n```", [{"command": "echo world"}]),
         ]
     )
 
     # Test first call with defaults
     result = model.query([{"role": "user", "content": "test"}])
-    assert result["content"] == "```mswea_bash_command\necho hello\n```"
+    assert result["content"] == "```leana_bash_command\necho hello\n```"
     assert result["extra"]["actions"] == [{"command": "echo hello"}]
     assert leanimum.models.GLOBAL_MODEL_STATS.n_calls == 1
     assert leanimum.models.GLOBAL_MODEL_STATS.cost == 1.0
 
     # Test second call and sequential outputs
     result = model.query([{"role": "user", "content": "test"}])
-    assert result["content"] == "```mswea_bash_command\necho world\n```"
+    assert result["content"] == "```leana_bash_command\necho world\n```"
     assert result["extra"]["actions"] == [{"command": "echo world"}]
     assert leanimum.models.GLOBAL_MODEL_STATS.n_calls == 2
     assert leanimum.models.GLOBAL_MODEL_STATS.cost == 2.0
@@ -45,18 +45,18 @@ def test_basic_functionality_and_cost_tracking(reset_global_stats):
 def test_custom_cost_and_multiple_models(reset_global_stats):
     """Test custom cost configuration and global tracking across multiple models."""
     model1 = DeterministicModel(
-        outputs=[make_output("```mswea_bash_command\necho r1\n```", [{"command": "echo r1"}])], cost_per_call=2.5
+        outputs=[make_output("```leana_bash_command\necho r1\n```", [{"command": "echo r1"}])], cost_per_call=2.5
     )
     model2 = DeterministicModel(
-        outputs=[make_output("```mswea_bash_command\necho r2\n```", [{"command": "echo r2"}])], cost_per_call=3.0
+        outputs=[make_output("```leana_bash_command\necho r2\n```", [{"command": "echo r2"}])], cost_per_call=3.0
     )
 
     result1 = model1.query([{"role": "user", "content": "test"}])
-    assert result1["content"] == "```mswea_bash_command\necho r1\n```"
+    assert result1["content"] == "```leana_bash_command\necho r1\n```"
     assert leanimum.models.GLOBAL_MODEL_STATS.cost == 2.5
 
     result2 = model2.query([{"role": "user", "content": "test"}])
-    assert result2["content"] == "```mswea_bash_command\necho r2\n```"
+    assert result2["content"] == "```leana_bash_command\necho r2\n```"
     assert leanimum.models.GLOBAL_MODEL_STATS.cost == 5.5
     assert leanimum.models.GLOBAL_MODEL_STATS.n_calls == 2
 
@@ -80,24 +80,24 @@ def test_sleep_and_warning_commands(caplog):
     model = DeterministicModel(
         outputs=[
             make_output("", [{"command": "/sleep 0.1"}]),
-            make_output("```mswea_bash_command\necho after_sleep\n```", [{"command": "echo after_sleep"}]),
+            make_output("```leana_bash_command\necho after_sleep\n```", [{"command": "echo after_sleep"}]),
         ]
     )
     start_time = time.time()
     result = model.query([{"role": "user", "content": "test"}])
-    assert result["content"] == "```mswea_bash_command\necho after_sleep\n```"
+    assert result["content"] == "```leana_bash_command\necho after_sleep\n```"
     assert time.time() - start_time >= 0.1
 
     # Test warning command - processes warning then returns actual output (counts as 1 call)
     model2 = DeterministicModel(
         outputs=[
             make_output("", [{"command": "/warning Test message"}]),
-            make_output("```mswea_bash_command\necho after_warning\n```", [{"command": "echo after_warning"}]),
+            make_output("```leana_bash_command\necho after_warning\n```", [{"command": "echo after_warning"}]),
         ]
     )
     with caplog.at_level(logging.WARNING):
         result2 = model2.query([{"role": "user", "content": "test"}])
-        assert result2["content"] == "```mswea_bash_command\necho after_warning\n```"
+        assert result2["content"] == "```leana_bash_command\necho after_warning\n```"
     assert "Test message" in caplog.text
 
 

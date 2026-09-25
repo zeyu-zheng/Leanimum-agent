@@ -9,14 +9,14 @@ agent:
     <format_example>
     Your reasoning and analysis here. Explain why you want to perform the action.
 
-    ```mswea_bash_command
+    ```leana_bash_command
     your_command_here
     ```
     </format_example>
 
     Failure to follow these rules will cause your response to be rejected.
   instance_template: |
-    Please solve this issue: {{task}}
+    Please complete this Lean task: {{task}}
 
     You can execute bash commands and edit files to implement the necessary changes.
 
@@ -25,10 +25,10 @@ agent:
     This workflow should be done step-by-step so that you can iterate on your changes and any possible problems.
 
     1. Analyze the codebase by finding and reading relevant files
-    2. Create a script to reproduce the issue
-    3. Edit the source code to resolve the issue
-    4. Verify your fix works by running your script again
-    5. Test edge cases to ensure your fix is robust
+    2. Search the project and Mathlib for relevant definitions and lemmas
+    3. Edit the Lean code, preserving theorem statements and avoiding `sorry` or new axioms
+    4. Check your changes with `lake env lean path/to/Target.lean` using the project's `lean-toolchain`
+    5. Verify proofs with [Comparator](https://github.com/leanprover/comparator); follow its setup instructions if needed
     6. Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.
        Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>
 
@@ -50,7 +50,7 @@ agent:
     <example_response>
     THOUGHT: I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.
 
-    ```mswea_bash_command
+    ```leana_bash_command
     ls -la
     ```
     </example_response>
@@ -59,11 +59,11 @@ agent:
 
     ### Create a new file:
 
-    ```mswea_bash_command
-    cat <<'EOF' > newfile.py
-    import numpy as np
-    hello = "world"
-    print(hello)
+    ```leana_bash_command
+    cat <<'EOF' > newfile.lean
+    import Mathlib
+    example (n : Nat) : n + 0 = n := by
+      simp
     EOF
     ```
 
@@ -75,35 +75,36 @@ agent:
     </important>
     {%- endif -%}
 
-    ```mswea_bash_command
+    ```leana_bash_command
     # Replace all occurrences
-    sed -i 's/old_string/new_string/g' filename.py
+    sed -i 's/old_string/new_string/g' filename.lean
 
     # Replace only first occurrence
-    sed -i 's/old_string/new_string/' filename.py
+    sed -i 's/old_string/new_string/' filename.lean
 
     # Replace first occurrence on line 1
-    sed -i '1s/old_string/new_string/' filename.py
+    sed -i '1s/old_string/new_string/' filename.lean
 
     # Replace all occurrences in lines 1-10
-    sed -i '1,10s/old_string/new_string/g' filename.py
+    sed -i '1,10s/old_string/new_string/g' filename.lean
     ```
 
     ### View file content:
 
-    ```mswea_bash_command
+    ```leana_bash_command
     # View specific lines with numbers
-    nl -ba filename.py | sed -n '10,20p'
+    nl -ba filename.lean | sed -n '10,20p'
     ```
 
     ### Any other command you want to run
 
-    ```mswea_bash_command
-    anything
+    ```leana_bash_command
+    rg -n --hidden --no-ignore 'lemma_name' .lake/packages/mathlib/Mathlib
     ```
   step_limit: 0
   cost_limit: 0.
 environment:
+  timeout: 600
   env:
     PAGER: cat
     MANPAGER: cat
@@ -111,6 +112,7 @@ environment:
     PIP_PROGRESS_BAR: 'off'
     TQDM_DISABLE: '1'
 model:
+  model_class: litellm_textbased
   observation_template: |
     {% if output.exception_info -%}
     <exception>{{output.exception_info}}</exception>
@@ -161,11 +163,11 @@ model:
     <response_example>
     Here are some thoughts about why you want to perform the action.
 
-    ```mswea_bash_command
+    ```leana_bash_command
     <action>
     ```
     </response_example>
 
     Note: In rare cases, if you need to reference a similar format in your command, you might have
-    to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```mswea_bash_command.
+    to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```leana_bash_command.
     {%- endif %}

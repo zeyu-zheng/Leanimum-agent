@@ -1,1 +1,1 @@
-"""Benchmark run scripts for Leanimum-agent (e.g., SWE-bench)."""
+"""ReuF2F benchmark runner and reusable batch utilities."""

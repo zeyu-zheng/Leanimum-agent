@@ -17,9 +17,9 @@ class GlobalModelStats:
         self._cost = 0.0
         self._n_calls = 0
         self._lock = threading.Lock()
-        self.cost_limit = float(os.getenv("MSWEA_GLOBAL_COST_LIMIT", "0"))
-        self.call_limit = int(os.getenv("MSWEA_GLOBAL_CALL_LIMIT", "0"))
-        if (self.cost_limit > 0 or self.call_limit > 0) and not os.getenv("MSWEA_SILENT_STARTUP"):
+        self.cost_limit = float(os.getenv("LEANA_GLOBAL_COST_LIMIT", "0"))
+        self.call_limit = int(os.getenv("LEANA_GLOBAL_CALL_LIMIT", "0"))
+        if (self.cost_limit > 0 or self.call_limit > 0) and not os.getenv("LEANA_SILENT_STARTUP"):
             print(f"Global cost/call limit: ${self.cost_limit:.4f} / {self.call_limit}")
 
     def add(self, cost: float) -> None:
@@ -70,7 +70,7 @@ def get_model_name(input_model_name: str | None = None, config: dict | None = No
         return input_model_name
     if from_config := config.get("model_name"):
         return from_config
-    if from_env := os.getenv("MSWEA_MODEL_NAME"):
+    if from_env := os.getenv("LEANA_MODEL_NAME"):
         return from_env
     raise ValueError("No default model set. Please run `leani-extra config setup` to set one.")
 

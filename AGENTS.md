@@ -1,21 +1,63 @@
-# Leanimum-agent overview
+# Leanimum-agent
 
-- Leanimum-agent is derived from mini-SWE-agent and is evolving toward bash-only Lean workflows.
-- This initial revision changes names and documentation only. The upstream agent behavior, prompts, environments, and benchmark runners are unchanged.
-- The idea of this project is to write the simplest, smallest, most readable agent.
+Keep Leanimum-agent small, bash-only and readable. Third-party notices belong in
+`LICENSE.md`, not repeated adaptation comments.
 
-The project is structured as
+## Repository layout
 
-```bash
-leanimum/__init__  # Protocols/interfaces for all base classes
-leanimum/agents  # Agent control flow & loop
-leanimum/environments  # Executing agent actions
-leanimum/models  # LM interfaces
-leanimum/run  # Run scripts that serve as an entry point
+```text
+src/leanimum/
+  agents/        Agent control flow and interactive mode
+  models/        Model adapters and action/response formatting
+  environments/  Shell execution backends
+  config/        Prompts and configuration
+  run/           CLI, utilities and benchmark runner
 ```
 
-- The project embraces polymorphism: Every individual class should be simple, but we offer alternatives
-- Every use case should start with a run script, that picks one agent, environment, and model class to run
+Each run script selects the model, agent and environment. Preserve active
+execution paths; remove only demonstrably unused private helpers, not
+configurable backends or public interfaces.
+
+## ReuF2F boundary
+
+- ReuF2F is the only built-in benchmark. Consume its dataset (`test.jsonl`, built by
+  `reuf2f dataset build`) with `--subset`; do not edit trusted benchmark sources,
+  export targets or grade here.
+- Keep `run/benchmarks/reuf2f.py` aligned with mini-swe-agent's
+  `run/benchmarks/swebench.py`. Read `instance_id`, `problem_statement`, `challenge`
+  and `image` from each record; do not regenerate negation or hard-code a namespace.
+- Each task runs in its record's `image` (shared, `linux/amd64`, x86_64 hosts). The
+  only step beyond mini-swe-agent is `prepare_environment`: copy `challenge` to
+  `/testbed/INSTANCE_ID.lean`, change only Project's `Main` root to that module,
+  build it and create a local Git commit. Trust the image; no release consistency checks.
+- Agents may add local Lean libraries and submit TOML layout changes. Do not impose
+  a Helpers directory or generate a separate answer library.
+- Retain `git add PATHS && git diff --cached > patch.txt`, `Do NOT commit your
+  changes.`, completion marker and `submission` -> `model_patch` flow. No post-run
+  source collector, archive or extra task/result JSON schema.
+- Initialize the model before per-instance try/finally. Initialization
+  errors write no prediction/trajectory and remain retryable; later setup/agent
+  errors retain empty-submission handling.
+- The ReuF2F runner enables `docker` (including Podman) and explicit `local` only.
+  Local uses a prepared project at `environment.cwd`, separate attempt directories
+  and linked dependencies; it has no task isolation. Never fall back to local after
+  a Docker failure. Generic CLI backends remain available.
+- Benchmark defaults: command timeout 1200 seconds, no agent wall-clock limit,
+  3-hour container lifetime, 250 steps and $3 cost limit. Do not change generic
+  configurations as a side effect of benchmark work.
+- Image build/push and independent Comparator grading belong to ReuF2F. Solver and
+  grader use the same image, not the same container. Do not forward host paths,
+  Docker sockets or provider credentials by default. `Submitted` is not acceptance.
+- Comparator is an external CLI. Keep the model tool interface bash-only; do not
+  add LSP or a custom verifier tool.
+
+## Documentation
+
+Use English, short task-oriented sections and executable command examples. Keep
+README as an entry point, runner details in `docs/usage/reuf2f.md`, output schemas
+in `docs/usage/output_files.md`, and third-party notices in `LICENSE.md`. Use existing
+MkDocs admonitions and source/API references rather than duplicating implementation
+code or migration histories. Validate links, option names and defaults.
 
 # Style guide
 
@@ -105,6 +147,6 @@ Use these component names in parentheses for `fix`, `feat`, `enh`, and `ref` com
 - `env` - Changes to environments (docker, local, singularity, bubblewrap, swerex)
 - `config` - Changes to configuration files or config handling
 - `run` - Changes to run scripts (mini, hello_world)
-- `benchmarks` - Changes to benchmark runners (swebench, inspector)
+- `benchmarks` - Changes to the ReuF2F runner and batch utilities
 - `cli` - Changes to CLI argument handling
 - `deps` - Dependency updates

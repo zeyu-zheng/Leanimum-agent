@@ -15,7 +15,7 @@ from leanimum.models.utils.openai_multimodal import (
             [{"type": "text", "text": "Just plain text"}],
         ),
         (
-            "Text before <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>https://example.com/image.png</MSWEA_MULTIMODAL_CONTENT> text after",
+            "Text before <LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>https://example.com/image.png</LEANA_MULTIMODAL_CONTENT> text after",
             [
                 {"type": "text", "text": "Text before "},
                 {"type": "image_url", "image_url": {"url": "https://example.com/image.png"}},
@@ -23,7 +23,7 @@ from leanimum.models.utils.openai_multimodal import (
             ],
         ),
         (
-            "<MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>data:image/png;base64,iVBORw0KGgoAAAANS</MSWEA_MULTIMODAL_CONTENT>",
+            "<LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>data:image/png;base64,iVBORw0KGgoAAAANS</LEANA_MULTIMODAL_CONTENT>",
             [{"type": "image_url", "image_url": {"url": "data:image/png;base64,iVBORw0KGgoAAAANS"}}],
         ),
     ],
@@ -36,8 +36,8 @@ def test_expand_content_string(content, expected):
 def test_expand_content_string_multiple_images():
     """Test _expand_content_string with multiple images."""
     content = (
-        "First <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image1.png</MSWEA_MULTIMODAL_CONTENT> "
-        "middle <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image2.jpg</MSWEA_MULTIMODAL_CONTENT> end"
+        "First <LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image1.png</LEANA_MULTIMODAL_CONTENT> "
+        "middle <LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image2.jpg</LEANA_MULTIMODAL_CONTENT> end"
     )
     result = _expand_content_string(content=content, pattern=DEFAULT_MULTIMODAL_REGEX)
     assert len(result) == 5
@@ -51,8 +51,8 @@ def test_expand_content_string_multiple_images():
 def test_expand_content_string_multiline():
     """Test _expand_content_string handles multiline image content."""
     content = """Here is an image:
-<MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>data:image/png;base64,
-iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk</MSWEA_MULTIMODAL_CONTENT>
+<LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk</LEANA_MULTIMODAL_CONTENT>
 After image"""
     result = _expand_content_string(content=content, pattern=DEFAULT_MULTIMODAL_REGEX)
     assert len(result) == 3
@@ -64,7 +64,7 @@ After image"""
 
 def test_expand_content_string_whitespace_handling():
     """Test that whitespace in image URLs is stripped but preserved in text."""
-    content = "Text  \n<MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>  image_url  </MSWEA_MULTIMODAL_CONTENT>  \nMore text"
+    content = "Text  \n<LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>  image_url  </LEANA_MULTIMODAL_CONTENT>  \nMore text"
     result = _expand_content_string(content=content, pattern=DEFAULT_MULTIMODAL_REGEX)
     assert result[0]["text"] == "Text  \n"
     assert result[1]["image_url"]["url"] == "image_url"
@@ -74,8 +74,8 @@ def test_expand_content_string_whitespace_handling():
 def test_expand_content_string_adjacent_images():
     """Test multiple images with no text between them."""
     content = (
-        "<MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>img1</MSWEA_MULTIMODAL_CONTENT>"
-        "<MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>img2</MSWEA_MULTIMODAL_CONTENT>"
+        "<LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>img1</LEANA_MULTIMODAL_CONTENT>"
+        "<LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>img2</LEANA_MULTIMODAL_CONTENT>"
     )
     result = _expand_content_string(content=content, pattern=DEFAULT_MULTIMODAL_REGEX)
     assert len(result) == 2
@@ -86,7 +86,7 @@ def test_expand_content_string_adjacent_images():
 def test_expand_multimodal_content_string():
     """Test expand_multimodal_content with string input."""
     content = (
-        "Text <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</MSWEA_MULTIMODAL_CONTENT> more"
+        "Text <LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</LEANA_MULTIMODAL_CONTENT> more"
     )
     result = expand_multimodal_content(content, pattern=DEFAULT_MULTIMODAL_REGEX)
     assert len(result) == 3
@@ -99,7 +99,7 @@ def test_expand_multimodal_content_list():
     """Test expand_multimodal_content with list input."""
     content = [
         "plain text",
-        "text <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</MSWEA_MULTIMODAL_CONTENT> more",
+        "text <LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</LEANA_MULTIMODAL_CONTENT> more",
     ]
     result = expand_multimodal_content(content, pattern=DEFAULT_MULTIMODAL_REGEX)
     assert len(result) == 2
@@ -111,7 +111,7 @@ def test_expand_multimodal_content_dict():
     """Test expand_multimodal_content with dict input."""
     content = {
         "role": "user",
-        "content": "text <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</MSWEA_MULTIMODAL_CONTENT>",
+        "content": "text <LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</LEANA_MULTIMODAL_CONTENT>",
     }
     result = expand_multimodal_content(content, pattern=DEFAULT_MULTIMODAL_REGEX)
     assert result["role"] == "user"
@@ -129,7 +129,7 @@ def test_expand_multimodal_content_nested():
     content = {
         "role": "user",
         "content": [
-            "text <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</MSWEA_MULTIMODAL_CONTENT>",
+            "text <LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</LEANA_MULTIMODAL_CONTENT>",
             {"nested": "value"},
         ],
     }
@@ -143,7 +143,7 @@ def test_expand_multimodal_content_preserves_original():
     """Test that expand_multimodal_content deep copies and doesn't modify original."""
     original = {
         "role": "user",
-        "content": "text <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</MSWEA_MULTIMODAL_CONTENT>",
+        "content": "text <LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</LEANA_MULTIMODAL_CONTENT>",
     }
     original_content = original["content"]
     expand_multimodal_content(original, pattern=DEFAULT_MULTIMODAL_REGEX)
@@ -157,7 +157,7 @@ def test_model_format_message_with_multimodal():
     model = DeterministicModel(outputs=[], multimodal_regex=DEFAULT_MULTIMODAL_REGEX)
     result = model.format_message(
         role="user",
-        content="Hello <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</MSWEA_MULTIMODAL_CONTENT>",
+        content="Hello <LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</LEANA_MULTIMODAL_CONTENT>",
     )
     assert result["role"] == "user"
     assert len(result["content"]) == 2
@@ -177,7 +177,7 @@ def test_model_format_message_without_multimodal():
 def test_unknown_content_type_ignored():
     """Test that unknown content types are ignored."""
     content = (
-        "Text <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>unknown_type</CONTENT_TYPE>data</MSWEA_MULTIMODAL_CONTENT> more"
+        "Text <LEANA_MULTIMODAL_CONTENT><CONTENT_TYPE>unknown_type</CONTENT_TYPE>data</LEANA_MULTIMODAL_CONTENT> more"
     )
     result = _expand_content_string(content=content, pattern=DEFAULT_MULTIMODAL_REGEX)
     # Unknown type is not added, so we get text before, nothing for unknown, text after

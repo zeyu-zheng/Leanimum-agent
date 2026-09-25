@@ -1,31 +1,11 @@
 # Leanimum-agent
 
-A minimal, bash-only agent, evolving toward theorem proving and programming in Lean.
-Derived from [mini-SWE-agent](https://github.com/SWE-agent/mini-swe-agent).
+A minimal bash-only agent for Lean proofs and programs. It reads and edits files,
+searches Mathlib, and iterates on compiler feedback through one shell tool.
 
-> **Current status:** this initial revision establishes the project name, Python
-> package, CLI names, and repository documentation. It does **not** add Lean-specific
-> prompts, proof validation, or benchmark logic. The upstream agent loop, models,
-> execution environments, and benchmark runners are retained without functional changes.
+## Installation
 
-## Names
-
-| Purpose | Name |
-| --- | --- |
-| Display name | Leanimum-agent |
-| Python distribution | `leanimum-agent` |
-| Python package | `leanimum` |
-| Main command | `leani` |
-| Auxiliary commands | `leani-extra`, `leani-e` |
-
-`leanimum-agent` is also an alias for the main command. The upstream CLI aliases
-(`mini`, `mini-swe-agent`, `mini-extra`, and `mini-e`) remain available during this
-naming-only transition. Installing both distributions into the same Python
-environment can overwrite those shared aliases; use a separate virtual environment.
-
-## Install from source
-
-Use Python 3.10 or newer:
+Use Python 3.10 or newer and install from source:
 
 ```bash
 git clone https://github.com/zeyu-zheng/Leanimum-agent.git
@@ -33,68 +13,56 @@ cd Leanimum-agent
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .
-```
-
-The commands above install this checkout; they do not assume that a
-`leanimum-agent` release has been published to PyPI.
-
-## Run
-
-```bash
-leani --help
-leani-extra --help
-python -m leanimum --help
-```
-
-Configure a model and credentials using the existing configuration interface:
-
-```bash
 leani-extra config setup
 ```
 
-Then run a task from the project directory you want the agent to work in:
+Use `leani` for interactive tasks and `leani-extra` for utilities and batch runs.
+The Python package is `leanimum`. See [configuration](docs/advanced/global_configuration.md)
+for `LEANA_*` settings.
+
+## Usage
+
+Run in a prepared Lean project:
 
 ```bash
-leani -t "Inspect this project and describe its structure."
+leani -c mini.yaml -c environment.cwd=/absolute/path/to/lean-project \
+  -t "Complete the proof of Example.target in Example.lean and check it."
 ```
 
-The default interactive mode asks for confirmation before executing commands.
-The local environment executes commands on your machine; it is not a sandbox.
-All upstream execution backends, including Docker and SWE-ReX, remain available.
+Commands require confirmation by default. Use `mini_textbased.yaml` instead of
+`mini.yaml` for text command blocks. See [CLI usage](docs/usage/mini.md) for options.
 
-The existing `MSWEA_*` environment variables, default `mini-swe-agent` configuration
-directory, configuration filenames, and `mini-swe-agent-1.1` trajectory format are
-unchanged. To keep configuration separate from an upstream installation, set
-`MSWEA_GLOBAL_CONFIG_DIR` to a different directory before running the CLI.
+Local execution is not sandboxed. Choose a suitable
+[environment](docs/advanced/environments.md) for untrusted commands.
+
+## ReuF2F
+
+Run the built-in benchmark on the dataset built by ReuF2F:
+
+```bash
+leani-extra reuf2f --subset /path/to/ReuF2F/test.jsonl \
+  --filter '^gu2020hat$' -m YOUR_MODEL -o /tmp/reuf2f-run
+```
+
+The runner starts a Docker container per task and saves patch predictions.
+ReuF2F owns task preparation, shared images and independent Comparator grading;
+an agent's completion message is not proof acceptance. Follow the
+[ReuF2F guide](docs/usage/reuf2f.md) for setup, options and evaluation.
+
+## Documentation
+
+- [Quick start](docs/quickstart.md)
+- [Configuration](docs/advanced/yaml_configuration.md)
+- [Python bindings](docs/usage/python_bindings.md)
+- [Output files and inspector](docs/usage/output_files.md)
+- [FAQ](docs/faq.md)
 
 ## Development
 
-```bash
-python -m pip install -e '.[dev]'
-pytest
-```
+See the [contributing guide](docs/contributing.md#development-setup) for dependency
+installation, tests and documentation builds.
 
-Some integration tests require optional backends or container tooling. Real model
-API tests are opt-in and may incur charges.
+## License
 
-```text
-src/leanimum/
-  agents/        Agent loop and interactive mode
-  models/        Model adapters and response handling
-  environments/  Command execution backends
-  config/        Existing configuration templates
-  run/           CLI, utilities, and benchmark runners
-  utils/         Logging and serialization
-```
-
-The documentation under `docs/` is inherited from upstream. Python import paths
-are updated, but the upstream guides, benchmark claims, and feature descriptions
-are historical reference, not a report of Leanimum-agent evaluation results.
-See the [upstream documentation](https://mini-swe-agent.com/latest/) for the
-inherited interfaces, substituting `leanimum` for `minisweagent` and `leani` for
-`mini` when using this checkout.
-
-## Upstream and license
-
-Leanimum-agent retains the upstream [MIT license and copyright notice](LICENSE.md).
-Credit for mini-SWE-agent belongs to its original authors and contributors.
+Original project code and modifications are licensed under MIT.
+Third-party notices are included in [LICENSE.md](LICENSE.md).
