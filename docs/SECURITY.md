@@ -2,4 +2,5 @@
 
 ## Reporting a Vulnerability
 
-Please contact Kilian Lieret (kl5675@princeton.edu), John Yang (johnby@stanford.edu), Carlos E. Jimenez (carlosej@princeton.edu), and Ofir Press (ofirp@princeton.edu).
+Contact the project maintainers privately before disclosing a vulnerability.
+Do not include credentials or exploit details in public issues.

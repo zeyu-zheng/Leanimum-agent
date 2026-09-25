@@ -2,7 +2,7 @@
 
 !!! note "Singularity Environment class"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/environments/singularity.py)
+    - [Read on GitHub](https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/environments/singularity.py)
 
     ??? note "Full source code"
 

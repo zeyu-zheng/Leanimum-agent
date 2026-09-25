@@ -214,7 +214,7 @@ def test_response_api_model_retry_on_rate_limit():
 
     with (
         patch("leanimum.models.portkey_response_model.Portkey", mock_portkey_class),
-        patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key", "MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT": "2"}),
+        patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key", "LEANA_MODEL_RETRY_STOP_AFTER_ATTEMPT": "2"}),
         patch("leanimum.models.portkey_response_model.litellm.cost_calculator.completion_cost", return_value=0.01),
     ):
         call_count = 0

@@ -7,12 +7,16 @@
 
 We support various environments for executing code through different backends.
 
-If you run the [`mini`](../usage/mini.md) CLI, you will run in the `local` environment by default.
+If you run the [`leani`](../usage/mini.md) CLI, you will run in the `local` environment by default.
 
-However, particularly for evaluating on SWE-bench, you want to run in isolated environments, so we offer multiple "backends" that you can use.
+However, when running untrusted Lean code, you want to run in isolated environments, so we offer multiple "backends" that you can use.
 
 You can specify the environment class with the `--environment-class` flag or the
 `environment.environment_class` key in the [agent config file](yaml_configuration.md).
+
+The generic CLI exposes the backends below. The ReuF2F runner currently integrates
+task preparation for `docker` (Docker/Podman) and explicitly selected `local`; see its
+[usage guide](../usage/reuf2f.md) for the narrower supported set and prerequisites.
 
 * **`local`** ([`LocalEnvironment`](../reference/environments/local.md)). Executes commands directly on the host machine using `subprocess.run`. No isolation. Directly works in your current python environment.
 
@@ -29,4 +33,3 @@ On top, there are a few more specialized environment classes that you can use:
 * **`bubblewrap`** ([`BubblewrapEnvironment`](../reference/environments/bubblewrap.md)) - **Linux only**. Uses [bubblewrap](https://github.com/containers/bubblewrap) for lightweight, unprivileged sandboxing. Experimental.
 
 * **`contree`** ([`ContreeEnvironment`](../reference/environments/contree.md)) - Uses [ConTree](https://contree.dev/) for safe code execution sandboxing. Platform that built for agents and supports Git-like execution.
-

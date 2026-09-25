@@ -1,139 +1,98 @@
 # Global configuration
 
-!!! abstract "Configuring mini"
+!!! abstract "Overview"
 
-    * This guide shows how to configure the `mini` agent's global settings (API keys, default model, etc.).
-      Basically anything that is set as environment variables or similar.
-    * You should already be familiar with the [quickstart guide](../quickstart.md).
-    * For more agent specific settings, see the [yaml configuration file guide](yaml_configuration.md).
-
-!!! tip "Setting up models"
-
-    Setting up models is also covered in the [quickstart guide](../quickstart.md).
+    * Global settings include provider credentials, the default model and cost limits.
+    * For prompts and per-run options, see [YAML configuration](yaml_configuration.md).
+    * See [model setup](../models/quickstart.md) for provider-specific settings.
 
 ## Setting global configuration
 
-All global configuration can be either set as environment variables, or in the `.env` file (the exact location is printed when you run `mini`).
-Environment variables take precedence over variables set in the `.env` file.
+Settings come from environment variables or the global `.env` file. At startup,
+environment variables take precedence over values in that file. The default
+location is the platform-specific configuration directory for `leanimum-agent`;
+set `LEANA_GLOBAL_CONFIG_DIR` before launch to use another directory.
 
-We provide several helper functions to update the global configuration.
-
-For example, to set the default model and API keys, you can run:
-
-```bash
-mini-extra config setup
-```
-
-or to update specific settings:
-
-```
-mini-extra config set KEY VALUE
-# e.g.,
-mini-extra config set MSWEA_MODEL_NAME "anthropic/claude-sonnet-4-5-20250929"
-mini-extra config set ANTHROPIC_API_KEY "sk-..."
-```
-
-or to unset a key:
+Configure a model and API key interactively:
 
 ```bash
-mini-extra config unset KEY
-# e.g.,
-mini-extra config unset ANTHROPIC_API_KEY
+leani-extra config setup
 ```
 
-You can also edit the `.env` file directly and we provide a helper function for that:
+Use [config commands](../usage/config.md) to set, remove or edit saved values.
+For a temporary shell setting:
 
-```bash
-mini-extra config edit
-```
+=== "Bash"
 
-To set environment variables (recommended for temporary experimentation or API keys):
+    ```bash
+    export LEANA_MODEL_NAME="YOUR_MODEL"
+    ```
 
-```bash
-export KEY="value"
-# windows:
-setx KEY "value"
-```
+=== "PowerShell"
+
+    ```powershell
+    $env:LEANA_MODEL_NAME = "YOUR_MODEL"
+    ```
+
+The Bash examples below use `export`. In the `.env` file, use `KEY="value"`
+without `export`.
 
 ## Models, keys, costs
 
-!!! tip "See also"
-
-    Read the [quickstart guide](../quickstart.md) first—it already covers most of this.
-
-```bash
-# Default model name
-# (default: not set)
-MSWEA_MODEL_NAME="anthropic/claude-sonnet-4-5-20250929"
-```
-
-To ignore errors from cost tracking checks (for example for free models), set:
+`LEANA_MODEL_NAME` supplies the default model when neither the CLI nor the YAML
+configuration selects one. Provider credentials use their own names, such as
+`ANTHROPIC_API_KEY`.
 
 ```bash
-# CAREFUL: This can lead to unmanaged spending!
-MSWEA_COST_TRACKING="ignore_errors"
+# Process-wide call and cost limits (default: 0, no limit)
+export LEANA_GLOBAL_CALL_LIMIT="100"
+export LEANA_GLOBAL_COST_LIMIT="10.00"
+
+# Retry attempts for model API calls (default: 10)
+export LEANA_MODEL_RETRY_STOP_AFTER_ATTEMPT="10"
 ```
 
-To register extra models to litellm (see [local models](../models/local_models.md) for more details), you can either specify the path in the agent file, or set
+To add cost metadata for a model, set `model.litellm_model_registry` in YAML or:
 
 ```bash
-LITELLM_MODEL_REGISTRY_PATH="/path/to/your/model/registry.json"
+export LITELLM_MODEL_REGISTRY_PATH="/path/to/model_registry.json"
 ```
 
-Global cost limits:
+See [local models](../models/local_models.md#cost-tracking) for the registry format.
+For models without usable cost information:
 
 ```bash
-# Global limit on number of model calls (0 = no limit)
-# (default: 0)
-MSWEA_GLOBAL_CALL_LIMIT="100"
-
-# Global cost limit in dollars (0 = no limit)
-# (default: 0)
-MSWEA_GLOBAL_COST_LIMIT="10.00"
-
-# Number of retry attempts for model API calls
-# (default: 10)
-MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT="10"
+export LEANA_COST_TRACKING="ignore_errors"
 ```
+
+!!! warning "Cost tracking"
+
+    Ignoring cost errors can leave spending untracked. Cost-based limits cannot
+    account for charges the model adapter cannot measure.
 
 ## Default config files
 
 ```bash
-# Set a custom directory for agent config files in addition to the builtin ones
-# This allows to specify them by names
-MSWEA_CONFIG_DIR="/path/to/your/own/config/dir"
+# Additional directory for YAML configs selected by name
+export LEANA_CONFIG_DIR="/path/to/configs"
 
-# Config path for mini run script
-# (default: package_dir / "config" / "mini.yaml")
-MSWEA_MINI_CONFIG_PATH="/path/to/your/own/config"
+# Default leani config (default: bundled mini.yaml)
+export LEANA_MINI_CONFIG_PATH="/path/to/agent.yaml"
 
-# Custom style path for trajectory inspector
-# (default: package_dir / "config" / "inspector.tcss")
-MSWEA_INSPECTOR_STYLE_PATH="/path/to/your/inspector/style.tcss"
+# Inspector stylesheet (default: bundled inspector.tcss)
+export LEANA_INSPECTOR_STYLE_PATH="/path/to/inspector.tcss"
 ```
 
-### Settings for environments
+## Settings for environments
+
+These variables choose the backend executable; the values shown are the defaults:
 
 ```bash
-# Path/name to the singularity/apptainer executable
-# (default: "singularity")
-MSWEA_SINGULARITY_EXECUTABLE="singularity"
-
-# Path/name to the docker executable
-# (default: "docker")
-MSWEA_DOCKER_EXECUTABLE="docker"
-
-# Path/name to the bubblewrap executable
-# (default: "bwrap")
-MSWEA_BUBBLEWRAP_EXECUTABLE="bwrap"
+export LEANA_DOCKER_EXECUTABLE="docker"
+export LEANA_SINGULARITY_EXECUTABLE="singularity"
+export LEANA_BUBBLEWRAP_EXECUTABLE="bwrap"
 ```
 
-## Default run files
+See [environments](environments.md) for backend selection and requirements.
 
-```bash
-# Default run script entry point for the main CLI
-# (default: "leanimum.run.mini")
-MSWEA_DEFAULT_RUN="leanimum.run.mini"
-```
-
-{% include-markdown "_footer.md" %}
+{% include-markdown "../_footer.md" %}

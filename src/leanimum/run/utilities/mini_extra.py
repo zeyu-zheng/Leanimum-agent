@@ -13,9 +13,7 @@ from rich.console import Console
 subcommands = [
     ("leanimum.run.utilities.config", ["config"], "Manage the global config file"),
     ("leanimum.run.utilities.inspector", ["inspect", "i", "inspector"], "Run inspector (browse trajectories)"),
-    ("leanimum.run.benchmarks.swebench", ["swebench"], "Evaluate on SWE-bench (batch mode)"),
-    ("leanimum.run.benchmarks.swebench_single", ["swebench-single"], "Evaluate on SWE-bench (single instance)"),
-    ("leanimum.run.benchmarks.programbench", ["programbench"], "Run on ProgramBench (batch mode)"),
+    ("leanimum.run.benchmarks.reuf2f", ["reuf2f"], "Run ReuF2F instances with Docker or local execution"),
 ]
 
 

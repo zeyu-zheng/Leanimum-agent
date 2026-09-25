@@ -1,32 +1,25 @@
-# Inspector: Browse agent trajectories
+# Inspector
 
 !!! abstract "Overview"
 
-    * The `inspector` is a tool that allows you to browse `.traj.json` files that show the history of a mini-SWE-agent run.
-    * Quickly start it with `mini-e i` or `mini-extra inspector`.
-    * See [output files](output_files.md) for the trajectory file format.
-    * Alternative: [jless](https://jless.io/) is a great command-line JSON viewer for browsing trajectories.
-
-<figure markdown="span">
-  <div class="gif-container gif-container-styled" data-glightbox-disabled>
-    <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/inspector.png?raw=true"
-         data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/inspector.gif?raw=true"
-         alt="inspector" data-glightbox="false" width="600" />
-  </div>
-</figure>
+    * Browse `.traj.json` files with `leani-extra inspector` or `leani-e i`.
+    * See [output files](output_files.md) for the trajectory format.
+    * Use [jless](https://jless.io/) to inspect raw JSON.
 
 ## Usage
 
 ```bash
-# Find all .traj.json files recursively from current directory
-mini-extra inspector
-# or shorter
-mini-e i
-# Open the inspector for a specific file
-mini-e i <path_to_traj.json>
-# Search for trajectory files in a specific directory
-mini-e i <path_to_directory>
+# Search the current directory recursively
+leani-extra inspector
+
+# Open one trajectory
+leani-extra inspector /path/to/task.traj.json
+
+# Search another directory
+leani-extra inspector /path/to/results
 ```
+
+Use `--no-reasoning` to hide reasoning initially.
 
 ## Key bindings
 
@@ -37,9 +30,11 @@ mini-e i <path_to_directory>
 - `k`/`UP`: Scroll up
 - `H`: Previous trajectory
 - `L`: Next trajectory
-- `e`: Open current step in [jless](https://jless.io/)
+- `e` / `E`: Open the current step / full trajectory in jless
+- `r`: Toggle reasoning
+- `R`: Reload the trajectory from disk
 
-### FAQ
+## FAQ
 
 > How can I select/copy text on the screen?
 
@@ -51,7 +46,7 @@ The inspector is implemented with [textual](https://textual.textualize.io/).
 
 ??? note "Implementation"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/run/utilities/inspector.py)
+    - [Read on GitHub](https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/run/utilities/inspector.py)
 
     ```python linenums="1"
     --8<-- "src/leanimum/run/utilities/inspector.py"

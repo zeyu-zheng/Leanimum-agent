@@ -88,10 +88,10 @@ def test_litellm_model_cost_tracking_ignore_errors():
     with patch("litellm.completion") as mock_completion:
         mock_response = Mock()
         mock_message = Mock()
-        mock_message.content = "```mswea_bash_command\necho test\n```"
+        mock_message.content = "```leana_bash_command\necho test\n```"
         mock_message.model_dump.return_value = {
             "role": "assistant",
-            "content": "```mswea_bash_command\necho test\n```",
+            "content": "```leana_bash_command\necho test\n```",
         }
         mock_response.choices = [Mock(message=mock_message)]
         mock_response.model_dump.return_value = {"test": "response"}
@@ -101,7 +101,7 @@ def test_litellm_model_cost_tracking_ignore_errors():
             messages = [{"role": "user", "content": "test"}]
             result = model.query(messages)
 
-            assert result["content"] == "```mswea_bash_command\necho test\n```"
+            assert result["content"] == "```leana_bash_command\necho test\n```"
             assert result["extra"]["actions"] == [{"command": "echo test"}]
             assert GLOBAL_MODEL_STATS.cost == initial_cost
 
@@ -123,4 +123,4 @@ def test_litellm_model_cost_validation_zero_cost():
                 model.query(messages)
 
             assert "Cost must be > 0.0, got 0.0" in str(exc_info.value)
-            assert "MSWEA_COST_TRACKING='ignore_errors'" in str(exc_info.value)
+            assert "LEANA_COST_TRACKING='ignore_errors'" in str(exc_info.value)

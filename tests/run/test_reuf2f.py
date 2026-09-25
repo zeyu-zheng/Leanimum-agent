@@ -1,133 +1,112 @@
 import json
-import re
 from unittest.mock import MagicMock, patch
 
 import pytest
 from pydantic import BaseModel
 
 from leanimum import package_dir
+from leanimum.environments.docker import DockerEnvironment
 from leanimum.models.test_models import DeterministicModel, make_output
-from leanimum.run.benchmarks.swebench import (
+from leanimum.run.benchmarks.reuf2f import (
     filter_instances,
-    get_sb_environment,
-    get_swebench_docker_image_name,
+    get_reuf2f_environment,
     main,
     remove_from_preds_file,
     update_preds_file,
 )
+from leanimum.run.benchmarks.utils.reuf2f import prepare_environment
+
+CONFIG = str(package_dir / "config" / "benchmarks" / "reuf2f.yaml")
+INSTANCE = {
+    "instance_id": "first",
+    "declaration": "first.target",
+    "problem_statement": "In first.lean, prove either first.target or refute it by proving its logical negation first.target_neg.",
+    "challenge": "theorem first.target : True := by sorry\ntheorem first.target_neg : Not True := by sorry\n",
+    "image": "zeyuzhenghub/lean4:v4.34.0",
+}
+
+OUTPUTS = [
+    make_output("Prove", [{"command": "sed -i 's/True := by sorry/True := by trivial/' first.lean"}], cost=0),
+    make_output("Patch", [{"command": "git add first.lean && git diff --cached > patch.txt"}], cost=0),
+    make_output("Submit", [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && cat patch.txt"}], cost=0),
+]
 
 
-def _make_model_from_fixture(text_outputs: list[str], cost_per_call: float = 1.0, **kwargs) -> DeterministicModel:
-    """Create a DeterministicModel from trajectory fixture data (raw text outputs)."""
-
-    def parse_command(text: str) -> list[dict]:
-        match = re.search(r"```mswea_bash_command\s*\n(.*?)\n```", text, re.DOTALL)
-        return [{"command": match.group(1)}] if match else []
-
-    return DeterministicModel(
-        outputs=[make_output(text, parse_command(text), cost=cost_per_call) for text in text_outputs],
-        cost_per_call=cost_per_call,
-        **kwargs,
-    )
+@pytest.fixture
+def dataset(tmp_path):
+    path = tmp_path / "test.jsonl"
+    path.write_text(json.dumps(INSTANCE) + "\n")
+    return path
 
 
 @pytest.mark.slow
 @pytest.mark.parametrize("workers", [1, 2])
-def test_swebench_end_to_end(github_test_data, tmp_path, workers, container_executable):
-    """Test the complete SWEBench flow using the _test subset with deterministic model"""
-
-    model_responses = github_test_data["model_responses"]
-
-    with patch("leanimum.run.benchmarks.swebench.get_model") as mock_get_model:
+def test_reuf2f_end_to_end(dataset, tmp_path, workers, container_executable):
+    """Test the complete ReuF2F flow on one instance with a deterministic model"""
+    with patch("leanimum.run.benchmarks.reuf2f.get_model") as mock_get_model:
         # Use side_effect to create a new model instance for each worker
-        mock_get_model.side_effect = lambda **kwargs: _make_model_from_fixture(model_responses, cost_per_call=0.1)
+        mock_get_model.side_effect = lambda **kwargs: DeterministicModel(outputs=OUTPUTS, cost_per_call=0)
 
         main(
-            subset="_test",
-            split="test",
+            subset=str(dataset),
             slice_spec="0:1",
             output=str(tmp_path),
             workers=workers,
-            filter_spec="swe-agent__test-repo-1",
-            config_spec=[str(package_dir / "config" / "benchmarks" / "swebench.yaml")],
+            filter_spec="first",
+            config_spec=[CONFIG],
             environment_class="docker",
         )
 
-    traj_file_path = package_dir.parent.parent / "tests" / "test_data" / "github_issue.traj.json"
-    trajectory = json.loads(traj_file_path.read_text())
-
-    last_message = trajectory[-1]["content"]
-
-    instance_id = "swe-agent__test-repo-1"
-    expected_result = {
-        instance_id: {
-            "model_name_or_path": "deterministic",
-            "instance_id": instance_id,
-            "model_patch": last_message,
-        }
-    }
-
+    instance_id = "first"
     with open(tmp_path / "preds.json") as f:
         actual_result = json.load(f)
 
-    assert actual_result == expected_result
+    assert actual_result[instance_id]["model_name_or_path"] == "deterministic"
+    assert "+theorem first.target : True := by trivial" in actual_result[instance_id]["model_patch"]
 
     traj_output_file = tmp_path / instance_id / f"{instance_id}.traj.json"
-    output_trajectory = json.loads(traj_output_file.read_text())
-    assert output_trajectory["messages"][-1]["content"] == last_message
+    trajectory = json.loads(traj_output_file.read_text())
+    assert trajectory["info"]["exit_status"] == "Submitted"
+    assert INSTANCE["problem_statement"] in trajectory["messages"][1]["content"]
 
 
-def test_get_image_name_with_existing_image_name():
-    """Test get_image_name when image_name is already provided"""
-    instance = {"image_name": "custom/image:tag", "instance_id": "test__repo__1"}
-    assert get_swebench_docker_image_name(instance) == "custom/image:tag"
+@pytest.mark.slow
+def test_prepare_environment_commits_the_challenge(container_executable):
+    """The shared image's project roots the task and commits it, as a per-instance image would."""
+    env = DockerEnvironment(image=INSTANCE["image"], cwd="/testbed", executable=container_executable, timeout=1200)
+    prepare_environment(env, INSTANCE)
+    assert env.execute({"command": "cat first.lean"})["output"] == INSTANCE["challenge"]
+    assert 'roots = ["first"]' in env.execute({"command": "cat lakefile.toml"})["output"]
+    assert env.execute({"command": "git status --porcelain"})["output"] == ""
+    assert env.execute({"command": "git rev-list --count HEAD"})["output"].strip() == "1"
 
 
-def test_get_image_name_without_image_name():
-    """Test get_image_name when image_name needs to be constructed"""
-    instance = {"instance_id": "swe-agent__test-repo__1"}
-    expected = "docker.io/swebench/sweb.eval.x86_64.swe-agent_1776_test-repo_1776_1:latest"
-    assert get_swebench_docker_image_name(instance) == expected
+def test_get_reuf2f_environment_does_not_mutate_shared_config():
+    """The config dict is shared across worker threads, so resolving the per-instance image must not mutate it."""
+    config = {"environment": {"environment_class": "docker"}}
+    with (
+        patch("leanimum.run.benchmarks.reuf2f.get_environment", return_value=MagicMock()) as mock_get_environment,
+        patch("leanimum.run.benchmarks.reuf2f.prepare_environment"),
+    ):
+        get_reuf2f_environment(config, INSTANCE)
+
+    assert mock_get_environment.call_args.args[0]["image"] == INSTANCE["image"]
+    assert "image" not in config["environment"]
 
 
-def test_get_image_name_with_none_image_name():
-    """Test get_image_name when image_name is explicitly None"""
-    instance = {"image_name": None, "instance_id": "django__django__4.0"}
-    expected = "docker.io/swebench/sweb.eval.x86_64.django_1776_django_1776_4.0:latest"
-    assert get_swebench_docker_image_name(instance) == expected
-
-
-def test_get_image_name_with_complex_instance_id():
-    """Test get_image_name with complex instance_id containing multiple double underscores"""
-    instance = {"instance_id": "project__sub__module__version__1.2.3"}
-    expected = "docker.io/swebench/sweb.eval.x86_64.project_1776_sub_1776_module_1776_version_1776_1.2.3:latest"
-    assert get_swebench_docker_image_name(instance) == expected
-
-
-def test_get_sb_environment_runs_startup_command_as_dict():
+def test_get_reuf2f_environment_runs_startup_command_as_dict():
     """startup_command must be passed to env.execute() as a dict, not a bare string."""
     fake_env = MagicMock()
     fake_env.execute.return_value = {"returncode": 0, "output": ""}
-    instance = {"instance_id": "repo1__test1", "image_name": "custom/image:tag"}
-    # The startup_command with {{instance_id}} tested the Jinja render as well.
     config = {"run": {"env_startup_command": "echo {{instance_id}}"}}
 
-    with patch("leanimum.run.benchmarks.swebench.get_environment", return_value=fake_env):
-        get_sb_environment(config, instance)
+    with (
+        patch("leanimum.run.benchmarks.reuf2f.get_environment", return_value=fake_env),
+        patch("leanimum.run.benchmarks.reuf2f.prepare_environment"),
+    ):
+        get_reuf2f_environment(config, INSTANCE)
 
-    fake_env.execute.assert_called_once_with({"command": "echo repo1__test1"})
-
-
-def test_get_sb_environment_does_not_mutate_shared_config():
-    """The config dict is shared across worker threads, so resolving the per-instance image must not mutate it."""
-    config = {"environment": {"environment_class": "docker"}}
-    instance = {"instance_id": "repo1__test1", "image_name": "custom/image:tag"}
-
-    with patch("leanimum.run.benchmarks.swebench.get_environment", return_value=MagicMock()) as mock_get_environment:
-        get_sb_environment(config, instance)
-
-    assert mock_get_environment.call_args.args[0]["image"] == "custom/image:tag"
-    assert "image" not in config["environment"]
+    fake_env.execute.assert_called_once_with({"command": "echo first"})
 
 
 def test_filter_instances_no_filters():
@@ -337,33 +316,30 @@ def test_remove_from_preds_file_no_file(tmp_path):
 
 
 @pytest.mark.slow
-def test_redo_existing_false_skips_existing(github_test_data, tmp_path):
+def test_redo_existing_false_skips_existing(dataset, tmp_path):
     """Test that redo_existing=False skips instances that already have results"""
-    model_responses = github_test_data["model_responses"]
-
     # Create existing preds.json with one instance
     preds_file = tmp_path / "preds.json"
     existing_data = {
-        "swe-agent__test-repo-1": {
+        "first": {
             "model_name_or_path": "previous_model",
-            "instance_id": "swe-agent__test-repo-1",
+            "instance_id": "first",
             "model_patch": "previous_result",
         }
     }
     preds_file.write_text(json.dumps(existing_data))
 
-    with patch("leanimum.run.benchmarks.swebench.get_model") as mock_get_model:
-        mock_get_model.side_effect = lambda **kwargs: _make_model_from_fixture(model_responses)
+    with patch("leanimum.run.benchmarks.reuf2f.get_model") as mock_get_model:
+        mock_get_model.side_effect = lambda **kwargs: DeterministicModel(outputs=[], cost_per_call=0)
 
         main(
-            subset="_test",
-            split="test",
+            subset=str(dataset),
             slice_spec="0:1",
             output=str(tmp_path),
             workers=1,
-            filter_spec="swe-agent__test-repo-1",
+            filter_spec="first",
             redo_existing=False,
-            config_spec=[str(package_dir / "config" / "benchmarks" / "swebench.yaml")],
+            config_spec=[CONFIG],
         )
 
     # Should still have the original result
@@ -372,44 +348,37 @@ def test_redo_existing_false_skips_existing(github_test_data, tmp_path):
 
 
 @pytest.mark.slow
-def test_redo_existing_true_overwrites_existing(github_test_data, tmp_path, container_executable):
+def test_redo_existing_true_overwrites_existing(dataset, tmp_path, container_executable):
     """Test that redo_existing=True processes instances even if they already have results"""
-    model_responses = github_test_data["model_responses"]
-
     # Create existing preds.json with one instance
     preds_file = tmp_path / "preds.json"
     existing_data = {
-        "swe-agent__test-repo-1": {
+        "first": {
             "model_name_or_path": "previous_model",
-            "instance_id": "swe-agent__test-repo-1",
+            "instance_id": "first",
             "model_patch": "previous_result",
         }
     }
     preds_file.write_text(json.dumps(existing_data))
 
-    with patch("leanimum.run.benchmarks.swebench.get_model") as mock_get_model:
-        mock_get_model.side_effect = lambda **kwargs: _make_model_from_fixture(model_responses, cost_per_call=0.1)
+    with patch("leanimum.run.benchmarks.reuf2f.get_model") as mock_get_model:
+        mock_get_model.side_effect = lambda **kwargs: DeterministicModel(outputs=OUTPUTS, cost_per_call=0.1)
 
         main(
-            subset="_test",
-            split="test",
+            subset=str(dataset),
             slice_spec="0:1",
             output=str(tmp_path),
             workers=1,
-            filter_spec="swe-agent__test-repo-1",
+            filter_spec="first",
             redo_existing=True,
-            config_spec=[str(package_dir / "config" / "benchmarks" / "swebench.yaml")],
+            config_spec=[CONFIG],
             environment_class="docker",
         )
 
     # Should have new result from deterministic model
-    traj_file_path = package_dir.parent.parent / "tests" / "test_data" / "github_issue.traj.json"
-    trajectory = json.loads(traj_file_path.read_text())
-    expected_result = trajectory[-1]["content"]
-
     result = json.loads(preds_file.read_text())
-    assert result["swe-agent__test-repo-1"]["model_patch"] == expected_result
-    assert result["swe-agent__test-repo-1"]["model_name_or_path"] == "deterministic"
+    assert "+theorem first.target : True := by trivial" in result["first"]["model_patch"]
+    assert result["first"]["model_name_or_path"] == "deterministic"
 
 
 class ExceptionModelConfig(BaseModel):
@@ -458,23 +427,22 @@ class ExceptionModel:
 
 @pytest.mark.slow
 @pytest.mark.parametrize("workers", [1, 2])
-def test_exception_handling_in_agent_run(tmp_path, workers, container_executable):
+def test_exception_handling_in_agent_run(dataset, tmp_path, workers, container_executable):
     """Test that exceptions during agent.run() are properly handled and recorded"""
-    with patch("leanimum.run.benchmarks.swebench.get_model") as mock_get_model:
+    with patch("leanimum.run.benchmarks.reuf2f.get_model") as mock_get_model:
         mock_get_model.return_value = ExceptionModel(RuntimeError, "Agent processing failed")
 
-        with patch("leanimum.run.benchmarks.swebench.RunBatchProgressManager") as mock_progress_class:
+        with patch("leanimum.run.benchmarks.reuf2f.RunBatchProgressManager") as mock_progress_class:
             mock_progress_manager = mock_progress_class.return_value
             mock_progress_manager.render_group = None  # For Live context manager
 
             main(
-                subset="_test",
-                split="test",
+                subset=str(dataset),
                 slice_spec="0:1",
                 output=str(tmp_path),
                 workers=workers,
-                filter_spec="swe-agent__test-repo-1",
-                config_spec=[str(package_dir / "config" / "benchmarks" / "swebench.yaml")],
+                filter_spec="first",
+                config_spec=[CONFIG],
                 environment_class="docker",
             )
 
@@ -483,7 +451,7 @@ def test_exception_handling_in_agent_run(tmp_path, workers, container_executable
     assert preds_file.exists()
 
     result = json.loads(preds_file.read_text())
-    instance_id = "swe-agent__test-repo-1"
+    instance_id = "first"
     assert instance_id in result
     assert result[instance_id]["model_patch"] == ""
     assert result[instance_id]["model_name_or_path"] == "exception_model"
@@ -500,61 +468,28 @@ def test_exception_handling_in_agent_run(tmp_path, workers, container_executable
 
 
 @pytest.mark.slow
-@pytest.mark.parametrize("workers", [1, 2])
-def test_different_exception_types(tmp_path, workers, container_executable):
-    """Test that different exception types are properly recorded"""
-    with patch("leanimum.run.benchmarks.swebench.get_model") as mock_get_model:
-        mock_get_model.return_value = ExceptionModel(ValueError, "Invalid input provided")
-
-        with patch("leanimum.run.benchmarks.swebench.RunBatchProgressManager") as mock_progress_class:
-            mock_progress_manager = mock_progress_class.return_value
-            mock_progress_manager.render_group = None  # For Live context manager
-
-            main(
-                subset="_test",
-                split="test",
-                slice_spec="0:1",
-                output=str(tmp_path),
-                workers=workers,
-                filter_spec="swe-agent__test-repo-1",
-                config_spec=[str(package_dir / "config" / "benchmarks" / "swebench.yaml")],
-                environment_class="docker",
-            )
-
-    # Check trajectory file for correct exception type
-    instance_id = "swe-agent__test-repo-1"
-    traj_file = tmp_path / instance_id / f"{instance_id}.traj.json"
-    traj_data = json.loads(traj_file.read_text())
-
-    assert traj_data["info"]["exit_status"] == "ValueError"
-    assert traj_data["info"]["submission"] == ""
-    assert traj_data["info"]["exception_str"] == "Invalid input provided"
-
-
-@pytest.mark.slow
-def test_exception_handling_with_progress_manager(tmp_path, container_executable):
+def test_exception_handling_with_progress_manager(dataset, tmp_path, container_executable):
     """Test that progress manager receives exception notifications in multithreaded mode"""
-    with patch("leanimum.run.benchmarks.swebench.get_model") as mock_get_model:
+    with patch("leanimum.run.benchmarks.reuf2f.get_model") as mock_get_model:
         mock_get_model.return_value = ExceptionModel(ConnectionError, "Network timeout")
 
-        with patch("leanimum.run.benchmarks.swebench.RunBatchProgressManager") as mock_progress_class:
+        with patch("leanimum.run.benchmarks.reuf2f.RunBatchProgressManager") as mock_progress_class:
             mock_progress_manager = mock_progress_class.return_value
             mock_progress_manager.render_group = None  # For Live context manager
 
             main(
-                subset="_test",
-                split="test",
+                subset=str(dataset),
                 slice_spec="0:1",
                 output=str(tmp_path),
-                workers=2,  # Use multithreaded to test progress manager
-                filter_spec="swe-agent__test-repo-1",
-                config_spec=[str(package_dir / "config" / "benchmarks" / "swebench.yaml")],
+                workers=2,
+                filter_spec="first",
+                config_spec=[CONFIG],
                 environment_class="docker",
             )
 
             # Verify progress manager methods were called
-            mock_progress_manager.on_instance_start.assert_called_once_with("swe-agent__test-repo-1")
-            mock_progress_manager.on_instance_end.assert_called_once_with("swe-agent__test-repo-1", "ConnectionError")
+            mock_progress_manager.on_instance_start.assert_called_once_with("first")
+            mock_progress_manager.on_instance_end.assert_called_once_with("first", "ConnectionError")
 
             # on_uncaught_exception should not be called since exceptions are handled properly
             mock_progress_manager.on_uncaught_exception.assert_not_called()

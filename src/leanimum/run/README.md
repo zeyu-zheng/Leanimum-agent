@@ -1,10 +1,9 @@
-# Entry points / run scripts
+# Run scripts
 
-## Work locally (i.e., without a sandbox)
+- `mini.py`: interactive `leani` CLI; local execution by default.
+- `hello_world.py`: minimal Python example with a configured agent.
+- `benchmarks/reuf2f.py`: batch patch generation from the ReuF2F dataset (`test.jsonl`).
+- `utilities/`: configuration, trajectory inspection and extra-command dispatch.
 
-* `hello_world.py` - Extremely simple example of how to use the `default.py` agent.
-* `mini.py` - Uses the `interactive.py` agent.
-
-## Extras
-
-* `extra/swebench.py` - Benchmark the performance of the `default.py` agent.
+ReuF2F owns image build/push and independent grading. See the
+[runner guide](../../../docs/usage/reuf2f.md) for task setup and outputs.

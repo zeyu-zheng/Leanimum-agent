@@ -34,18 +34,18 @@ def sample_simple_trajectory():
     return [
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": "Hello, solve this problem."},
-        {"role": "assistant", "content": "I'll help you solve this.\n\n```mswea_bash_command\nls -la\n```"},
+        {"role": "assistant", "content": "I'll help you solve this.\n\n```leana_bash_command\nls -la\n```"},
         {"role": "user", "content": "Command output here."},
         {
             "role": "assistant",
-            "content": "Now I'll finish.\n\n```mswea_bash_command\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+            "content": "Now I'll finish.\n\n```leana_bash_command\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
         },
     ]
 
 
 @pytest.fixture
-def sample_swebench_trajectory():
-    """Sample trajectory in SWEBench format (dict with messages array)."""
+def sample_reuf2f_trajectory():
+    """Sample trajectory in ReuF2F format (dict with messages array)."""
     return {
         "instance_id": "test-instance-1",
         "info": {
@@ -55,12 +55,12 @@ def sample_swebench_trajectory():
         },
         "messages": [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": [{"type": "text", "text": "Please solve this issue."}]},
-            {"role": "assistant", "content": "I'll analyze the issue.\n\n```mswea_bash_command\ncat file.py\n```"},
+            {"role": "user", "content": [{"type": "text", "text": "Complete this Lean task."}]},
+            {"role": "assistant", "content": "I'll analyze the issue.\n\n```leana_bash_command\ncat file.py\n```"},
             {"role": "user", "content": [{"type": "text", "text": "File contents here."}]},
             {
                 "role": "assistant",
-                "content": "Fixed!\n\n```mswea_bash_command\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+                "content": "Fixed!\n\n```leana_bash_command\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
             },
         ],
     }
@@ -98,7 +98,7 @@ def sample_response_api_trajectory():
 
 
 @pytest.fixture
-def temp_trajectory_files(sample_simple_trajectory, sample_swebench_trajectory):
+def temp_trajectory_files(sample_simple_trajectory, sample_reuf2f_trajectory):
     """Create temporary trajectory files for testing."""
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
@@ -107,15 +107,15 @@ def temp_trajectory_files(sample_simple_trajectory, sample_swebench_trajectory):
         simple_file = temp_path / "simple.traj.json"
         simple_file.write_text(json.dumps(sample_simple_trajectory, indent=2))
 
-        # SWEBench format trajectory
-        swebench_file = temp_path / "swebench.traj.json"
-        swebench_file.write_text(json.dumps(sample_swebench_trajectory, indent=2))
+        # ReuF2F format trajectory
+        reuf2f_file = temp_path / "reuf2f.traj.json"
+        reuf2f_file.write_text(json.dumps(sample_reuf2f_trajectory, indent=2))
 
         # Invalid JSON file
         invalid_file = temp_path / "invalid.traj.json"
         invalid_file.write_text("invalid json content")
 
-        yield [simple_file, swebench_file, invalid_file]
+        yield [simple_file, reuf2f_file, invalid_file]
 
 
 @pytest.mark.slow
@@ -175,7 +175,7 @@ async def test_trajectory_inspector_trajectory_navigation(temp_trajectory_files)
 
         # Navigate to next trajectory
         await pilot.press("L")
-        assert "Trajectory 2/2 - swebench.traj.json" in app.title
+        assert "Trajectory 2/2 - reuf2f.traj.json" in app.title
         await pilot.pause(0.1)
         content = get_screen_text(app)
         assert "You are a helpful assistant" in content
@@ -190,27 +190,27 @@ async def test_trajectory_inspector_trajectory_navigation(temp_trajectory_files)
 
         await pilot.press("L")  # Go to second
         await pilot.press("L")  # Try to go beyond
-        assert "Trajectory 2/2 - swebench.traj.json" in app.title  # Should stay at last
+        assert "Trajectory 2/2 - reuf2f.traj.json" in app.title  # Should stay at last
 
 
 @pytest.mark.slow
-async def test_trajectory_inspector_swebench_format(temp_trajectory_files):
-    """Test that SWEBench format trajectories are handled correctly."""
+async def test_trajectory_inspector_reuf2f_format(temp_trajectory_files):
+    """Test that ReuF2F format trajectories are handled correctly."""
     valid_files = [f for f in temp_trajectory_files if f.name != "invalid.traj.json"]
 
     app = TrajectoryInspector(valid_files)
 
     async with app.run_test() as pilot:
-        # Navigate to SWEBench trajectory
+        # Navigate to ReuF2F trajectory
         await pilot.press("L")
         await pilot.pause(0.1)
 
-        assert "Trajectory 2/2 - swebench.traj.json" in app.title
+        assert "Trajectory 2/2 - reuf2f.traj.json" in app.title
         assert "Step 1/3" in app.title
 
         # Check that list content is properly rendered - step 1 should have the initial user message
         content = get_screen_text(app)
-        assert "Please solve this issue" in content
+        assert "Complete this Lean task" in content
 
 
 @pytest.mark.slow
@@ -268,7 +268,7 @@ async def test_trajectory_inspector_invalid_file(temp_trajectory_files):
 
 
 def test_trajectory_inspector_load_trajectory_formats(
-    sample_simple_trajectory, sample_swebench_trajectory, sample_toolcall_trajectory, sample_response_api_trajectory
+    sample_simple_trajectory, sample_reuf2f_trajectory, sample_toolcall_trajectory, sample_response_api_trajectory
 ):
     """Test loading different trajectory formats."""
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -281,10 +281,10 @@ def test_trajectory_inspector_load_trajectory_formats(
         assert len(app.messages) == 5
         assert len(app.steps) == 3
 
-        # Test SWEBench format (dict with messages array)
-        swebench_file = temp_path / "swebench.traj.json"
-        swebench_file.write_text(json.dumps(sample_swebench_trajectory))
-        app = TrajectoryInspector([swebench_file])
+        # Test ReuF2F format (dict with messages array)
+        reuf2f_file = temp_path / "reuf2f.traj.json"
+        reuf2f_file.write_text(json.dumps(sample_reuf2f_trajectory))
+        app = TrajectoryInspector([reuf2f_file])
         assert len(app.messages) == 5
         assert len(app.steps) == 3
 

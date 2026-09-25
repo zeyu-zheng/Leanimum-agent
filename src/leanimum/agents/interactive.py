@@ -138,9 +138,6 @@ class InteractiveAgent(DefaultAgent):
             )
         return result
 
-    def _add_observation_messages(self, message: dict, outputs: list[dict]) -> list[dict]:
-        return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))
-
     def _check_for_new_task_or_submit(self, e: Submitted) -> NoReturn:
         """Check if user wants to add a new task or submit."""
         if self.config.confirm_exit:

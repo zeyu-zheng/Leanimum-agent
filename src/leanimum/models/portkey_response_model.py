@@ -33,7 +33,7 @@ class PortkeyResponseAPIModelConfig(BaseModel):
     model_kwargs: dict[str, Any] = {}
     litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
     litellm_model_name_override: str = ""
-    cost_tracking: Literal["default", "ignore_errors"] = os.getenv("MSWEA_COST_TRACKING", "default")
+    cost_tracking: Literal["default", "ignore_errors"] = os.getenv("LEANA_COST_TRACKING", "default")
     format_error_template: str = "{{ error }}"
     observation_template: str = (
         "{% if output.exception_info %}<exception>{{output.exception_info}}</exception>\n{% endif %}"
@@ -140,7 +140,7 @@ class PortkeyResponseAPIModel:
                 raise RuntimeError(
                     f"Error calculating cost for model {self.config.model_name}: {e}. "
                     "You can ignore this issue from your config file with cost_tracking: 'ignore_errors' or "
-                    "globally with export MSWEA_COST_TRACKING='ignore_errors' to ignore this error. "
+                    "globally with export LEANA_COST_TRACKING='ignore_errors' to ignore this error. "
                 ) from e
             cost = 0.0
         return {"cost": cost}

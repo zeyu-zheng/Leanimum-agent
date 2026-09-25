@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from leanimum.models import GLOBAL_MODEL_STATS
+from leanimum.models.test_models import DeterministicModel, make_output
 
 
 def pytest_addoption(parser):
@@ -32,12 +33,12 @@ def reset_global_stats():
     """
     with _global_stats_lock:
         # Reset at start
-        GLOBAL_MODEL_STATS._cost = 0.0  # noqa: protected-access
-        GLOBAL_MODEL_STATS._n_calls = 0  # noqa: protected-access
+        GLOBAL_MODEL_STATS._cost = 0.0
+        GLOBAL_MODEL_STATS._n_calls = 0
         yield
         # Reset at end to clean up
-        GLOBAL_MODEL_STATS._cost = 0.0  # noqa: protected-access
-        GLOBAL_MODEL_STATS._n_calls = 0  # noqa: protected-access
+        GLOBAL_MODEL_STATS._cost = 0.0
+        GLOBAL_MODEL_STATS._n_calls = 0
 
 
 def _get_container_executable() -> str | None:
@@ -55,12 +56,12 @@ def _get_container_executable() -> str | None:
 def container_executable(monkeypatch):
     """Provide the available container executable, skip if neither docker nor podman is available.
 
-    Sets MSWEA_DOCKER_EXECUTABLE so DockerEnvironment uses the right executable.
+    Sets LEANA_DOCKER_EXECUTABLE so DockerEnvironment uses the right executable.
     """
     exe = _get_container_executable()
     if exe is None:
         pytest.skip("Neither docker nor podman is available")
-    monkeypatch.setenv("MSWEA_DOCKER_EXECUTABLE", exe)
+    monkeypatch.setenv("LEANA_DOCKER_EXECUTABLE", exe)
     return exe
 
 
@@ -125,12 +126,15 @@ def assert_observations_match(expected_observations: list[str], messages: list[d
 
 
 @pytest.fixture
-def github_test_data():
-    """Load GitHub issue test fixtures"""
-    return get_test_data("github_issue")
-
-
-@pytest.fixture
 def local_test_data():
     """Load local test fixtures"""
     return get_test_data("local")
+
+
+@pytest.fixture
+def local_model(local_test_data, reset_global_stats):
+    outputs = []
+    for text in local_test_data["model_responses"]:
+        match = re.search(r"```leana_bash_command\s*\n(.*?)\n```", text, re.DOTALL)
+        outputs.append(make_output(text, [{"command": match[1]}] if match else [], cost=1.0))
+    return DeterministicModel(outputs=outputs, cost_per_call=1.0)

@@ -64,8 +64,7 @@ nav:
     - "Command line usage":
       - "<code>leani</code>": usage/mini.md
       - "Config": usage/config.md
-      - "SWE-bench": usage/swebench.md
-      - "ProgramBench": usage/programbench.md
+      - "ReuF2F": usage/reuf2f.md
       - "Inspector": usage/inspector.md
       - "Output files": usage/output_files.md
     - "Language models":
@@ -80,7 +79,6 @@ nav:
       - "Understanding the agent": advanced/control_flow.md
       - "Subclassing and more": advanced/cookbook.md
       - "Environments": advanced/environments.md
-      - "v2 migration guide": advanced/v2_migration.md
     - "FAQ": faq.md
     - "Contributing": contributing.md
   - API Reference:
@@ -113,11 +111,7 @@ nav:
       - "leani-extra": "reference/run/mini_extra.md"
       - "Config": "reference/run/config.md"
       - "Inspector": "reference/run/inspector.md"
-      - "SWE-bench (batch)": "reference/run/swebench.md"
-      - "SWE-bench (single)": "reference/run/swebench_single.md"
-      - "ProgramBench": "reference/run/programbench.md"
-  - Blog: https://www.swebench.com/blog.html
-  - Leaderboard: https://swebench.com
+      - "ReuF2F": "reference/run/reuf2f.md"
 plugins:
   - redirects:
       redirect_maps:

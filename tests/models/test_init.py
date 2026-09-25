@@ -1,3 +1,4 @@
+import copy
 import os
 from unittest.mock import patch
 
@@ -13,17 +14,17 @@ class TestGetModelName:
 
     def test_input_model_name_takes_precedence(self):
         """Test that explicit input_model_name overrides all other sources."""
-        with patch.dict(os.environ, {"MSWEA_MODEL_NAME": "env-model"}):
+        with patch.dict(os.environ, {"LEANA_MODEL_NAME": "env-model"}):
             assert get_model_name("input-model", self.CONFIG_WITH_MODEL_NAME) == "input-model"
 
     def test_config_takes_precedence_over_env(self):
         """Test that config takes precedence over environment variable."""
-        with patch.dict(os.environ, {"MSWEA_MODEL_NAME": "env-model"}):
+        with patch.dict(os.environ, {"LEANA_MODEL_NAME": "env-model"}):
             assert get_model_name(None, self.CONFIG_WITH_MODEL_NAME) == "config-model"
 
     def test_env_var_fallback(self):
         """Test that environment variable is used when no config provided."""
-        with patch.dict(os.environ, {"MSWEA_MODEL_NAME": "env-model"}):
+        with patch.dict(os.environ, {"LEANA_MODEL_NAME": "env-model"}):
             assert get_model_name(None, {}) == "env-model"
 
     def test_config_fallback(self):
@@ -79,34 +80,19 @@ class TestGetModelClass:
 
 class TestGetModel:
     def test_config_deep_copy(self):
-        """Test that get_model preserves original config via deep copy."""
-        original_config = {"model_kwargs": {"api_key": "original"}, "outputs": [make_output("test", [])]}
+        config = {
+            "model_class": "deterministic",
+            "outputs": [make_output("test", [{"command": "echo original"}])],
+        }
+        original = copy.deepcopy(config)
+        model = get_model("test-model", config)
+        assert isinstance(model, DeterministicModel)
+        assert model.config.model_name == "test-model"
+        assert config == original
 
-        with patch("leanimum.models.get_model_class") as mock_get_class:
-            mock_get_class.return_value = lambda **kwargs: DeterministicModel(
-                outputs=[make_output("test", [])], model_name="test"
-            )
-            get_model("test-model", original_config)
-            assert original_config["model_kwargs"]["api_key"] == "original"
-            assert "model_name" not in original_config
-
-    def test_integration_with_compatible_model(self):
-        """Test get_model works end-to-end with a model that handles extra kwargs."""
-        with patch("leanimum.models.get_model_class") as mock_get_class:
-            hello_output = make_output("hello", [])
-
-            def compatible_model(**kwargs):
-                # Filter to only what DeterministicModel accepts, provide defaults
-                config_args = {k: v for k, v in kwargs.items() if k in ["outputs", "model_name"]}
-                if "outputs" not in config_args:
-                    config_args["outputs"] = [make_output("default", [])]
-                return DeterministicModel(**config_args)
-
-            mock_get_class.return_value = compatible_model
-            model = get_model("test-model", {"outputs": [hello_output]})
-            assert isinstance(model, DeterministicModel)
-            assert model.config.outputs == [hello_output]
-            assert model.config.model_name == "test-model"
+        model.config.outputs[0]["extra"]["actions"][0]["command"] = "echo changed"
+        model.config.outputs.append(make_output("second", []))
+        assert config == original
 
     def test_config_api_key_used_when_no_env_var(self):
         """Test that config api_key is used when env var is not set."""
@@ -141,31 +127,31 @@ class TestGetModel:
 
 class TestGlobalModelStats:
     def test_prints_cost_limit_when_set(self, capsys):
-        """Test that cost limit is printed when MSWEA_GLOBAL_COST_LIMIT is set."""
-        with patch.dict(os.environ, {"MSWEA_GLOBAL_COST_LIMIT": "5.5"}, clear=True):
+        """Test that cost limit is printed when LEANA_GLOBAL_COST_LIMIT is set."""
+        with patch.dict(os.environ, {"LEANA_GLOBAL_COST_LIMIT": "5.5"}, clear=True):
             GlobalModelStats()
             captured = capsys.readouterr()
             assert "Global cost/call limit: $5.5000 / 0" in captured.out
 
     def test_prints_call_limit_when_set(self, capsys):
-        """Test that call limit is printed when MSWEA_GLOBAL_CALL_LIMIT is set."""
-        with patch.dict(os.environ, {"MSWEA_GLOBAL_CALL_LIMIT": "10"}, clear=True):
+        """Test that call limit is printed when LEANA_GLOBAL_CALL_LIMIT is set."""
+        with patch.dict(os.environ, {"LEANA_GLOBAL_CALL_LIMIT": "10"}, clear=True):
             GlobalModelStats()
             captured = capsys.readouterr()
             assert "Global cost/call limit: $0.0000 / 10" in captured.out
 
     def test_prints_both_limits_when_both_set(self, capsys):
         """Test that both limits are printed when both environment variables are set."""
-        with patch.dict(os.environ, {"MSWEA_GLOBAL_COST_LIMIT": "2.5", "MSWEA_GLOBAL_CALL_LIMIT": "5"}, clear=True):
+        with patch.dict(os.environ, {"LEANA_GLOBAL_COST_LIMIT": "2.5", "LEANA_GLOBAL_CALL_LIMIT": "5"}, clear=True):
             GlobalModelStats()
             captured = capsys.readouterr()
             assert "Global cost/call limit: $2.5000 / 5" in captured.out
 
     def test_no_print_when_silent_startup_set(self, capsys):
-        """Test that limits are not printed when MSWEA_SILENT_STARTUP is set."""
+        """Test that limits are not printed when LEANA_SILENT_STARTUP is set."""
         with patch.dict(
             os.environ,
-            {"MSWEA_GLOBAL_COST_LIMIT": "5.0", "MSWEA_GLOBAL_CALL_LIMIT": "10", "MSWEA_SILENT_STARTUP": "1"},
+            {"LEANA_GLOBAL_COST_LIMIT": "5.0", "LEANA_GLOBAL_CALL_LIMIT": "10", "LEANA_SILENT_STARTUP": "1"},
             clear=True,
         ):
             GlobalModelStats()
@@ -181,7 +167,7 @@ class TestGlobalModelStats:
 
     def test_no_print_when_limits_are_zero(self, capsys):
         """Test that nothing is printed when limits are explicitly set to zero."""
-        with patch.dict(os.environ, {"MSWEA_GLOBAL_COST_LIMIT": "0", "MSWEA_GLOBAL_CALL_LIMIT": "0"}, clear=True):
+        with patch.dict(os.environ, {"LEANA_GLOBAL_COST_LIMIT": "0", "LEANA_GLOBAL_CALL_LIMIT": "0"}, clear=True):
             GlobalModelStats()
             captured = capsys.readouterr()
             assert "Global cost/call limit" not in captured.out

@@ -2,7 +2,7 @@
 
 !!! note "Test Models class"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/models/test_models.py)
+    - [Read on GitHub](https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/models/test_models.py)
 
     ??? note "Full source code"
 

@@ -1,8 +1,8 @@
-# Local
+# Interactive CLI
 
-!!! note "Mini run script"
+!!! note "leani run script"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/leanimum/run/mini.py)
+    - [Read on GitHub](https://github.com/zeyu-zheng/Leanimum-agent/blob/main/src/leanimum/run/mini.py)
 
     ??? note "Full source code"
 

@@ -2,7 +2,7 @@ agent:
   system_template: |
     You are a helpful assistant that can interact with a computer.
   instance_template: |
-    Please solve this issue: {{task}}
+    Please complete this Lean task: {{task}}
 
     You can execute bash commands and edit files to implement the necessary changes.
 
@@ -11,10 +11,10 @@ agent:
     This workflow should be done step-by-step so that you can iterate on your changes and any possible problems.
 
     1. Analyze the codebase by finding and reading relevant files
-    2. Create a script to reproduce the issue
-    3. Edit the source code to resolve the issue
-    4. Verify your fix works by running your script again
-    5. Test edge cases to ensure your fix is robust
+    2. Search the project and Mathlib for relevant definitions and lemmas
+    3. Edit the Lean code, preserving theorem statements and avoiding `sorry` or new axioms
+    4. Check your changes with `lake env lean path/to/Target.lean` using the project's `lean-toolchain`
+    5. Verify proofs with [Comparator](https://github.com/leanprover/comparator); follow its setup instructions if needed
     6. Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.
        Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>
 
@@ -57,10 +57,10 @@ agent:
     ### Create a new file:
 
     ```bash
-    cat <<'EOF' > newfile.py
-    import numpy as np
-    hello = "world"
-    print(hello)
+    cat <<'EOF' > newfile.lean
+    import Mathlib
+    example (n : Nat) : n + 0 = n := by
+      simp
     EOF
     ```
 
@@ -74,34 +74,35 @@ agent:
 
     ```bash
     # Replace all occurrences
-    sed -i 's/old_string/new_string/g' filename.py
+    sed -i 's/old_string/new_string/g' filename.lean
 
     # Replace only first occurrence
-    sed -i 's/old_string/new_string/' filename.py
+    sed -i 's/old_string/new_string/' filename.lean
 
     # Replace first occurrence on line 1
-    sed -i '1s/old_string/new_string/' filename.py
+    sed -i '1s/old_string/new_string/' filename.lean
 
     # Replace all occurrences in lines 1-10
-    sed -i '1,10s/old_string/new_string/g' filename.py
+    sed -i '1,10s/old_string/new_string/g' filename.lean
     ```
 
     ### View file content:
 
     ```bash
     # View specific lines with numbers
-    nl -ba filename.py | sed -n '10,20p'
+    nl -ba filename.lean | sed -n '10,20p'
     ```
 
     ### Any other command you want to run
 
     ```bash
-    anything
+    rg -n --hidden --no-ignore 'lemma_name' .lake/packages/mathlib/Mathlib
     ```
   step_limit: 0
   cost_limit: 3.
   mode: confirm
 environment:
+  timeout: 600
   env:
     PAGER: cat
     MANPAGER: cat
